@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 09, 2025 at 02:30 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Apr 20, 2025 at 06:27 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -135,6 +135,18 @@ CREATE TABLE `product_images` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reply`
+--
+
+CREATE TABLE `reply` (
+  `id` int(11) NOT NULL,
+  `id_review` int(11) NOT NULL,
+  `content` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reviews`
 --
 
@@ -177,6 +189,17 @@ CREATE TABLE `users` (
   `address` text NOT NULL,
   `role` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `phone`, `address`, `role`) VALUES
+(1, 'Nguyen Van A', 'vana@example.com', 'e10adc3949ba59abbe56e057f20f883e', '0901234567', '123 Le Loi, District 1, HCMC', 1),
+(2, 'Tran Thi B', 'thib@example.com', 'e10adc3949ba59abbe56e057f20f883e', '0902234567', '456 Nguyen Trai, District 5, HCMC', 1),
+(3, 'Le Van C', 'vanc@example.com', 'e10adc3949ba59abbe56e057f20f883e', '0903234567', '789 Cach Mang Thang 8, District 3, HCMC', 1),
+(4, 'Pham Thi D', 'thid@example.com', 'e10adc3949ba59abbe56e057f20f883e', '0904234567', '12 Tran Hung Dao, District 1, HCMC', 2),
+(5, 'Hoang Van E', 'vane@example.com', 'e10adc3949ba59abbe56e057f20f883e', '0905234567', '98 Ly Thuong Kiet, District 10, HCMC', 2);
 
 --
 -- Indexes for dumped tables
@@ -240,6 +263,13 @@ ALTER TABLE `product_images`
   ADD KEY `product_id` (`product_id`);
 
 --
+-- Indexes for table `reply`
+--
+ALTER TABLE `reply`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reply review` (`id_review`);
+
+--
 -- Indexes for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -258,8 +288,7 @@ ALTER TABLE `transactions`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -308,6 +337,12 @@ ALTER TABLE `product_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `reply`
+--
+ALTER TABLE `reply`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
@@ -323,7 +358,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -373,6 +408,12 @@ ALTER TABLE `products`
 --
 ALTER TABLE `product_images`
   ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `reply`
+--
+ALTER TABLE `reply`
+  ADD CONSTRAINT `reply review` FOREIGN KEY (`id_review`) REFERENCES `reviews` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `reviews`
