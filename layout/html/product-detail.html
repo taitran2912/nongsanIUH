@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bơ Sáp Đắk Lắk - Nông Sản Xanh</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Products Page CSS -->
+    <link rel="stylesheet" href="products.css">
+    <!-- Product Detail CSS -->
+    <link rel="stylesheet" href="product-detail.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="sticky-top">
+        <!-- Top Bar -->
+        <div class="top-bar bg-success text-white py-2">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div>
+                    <span><i class="fas fa-phone-alt me-2"></i> 0123 456 789</span>
+                    <span class="ms-3"><i class="fas fa-envelope me-2"></i> info@nongsanxanh.com</span>
+                </div>
+                <div>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">
+                    <img src="https://via.placeholder.com/150x50?text=Nông+Sản+Xanh" alt="Nông Sản Xanh Logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Trang chủ</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                                Sản phẩm
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="products.html">Rau củ</a></li>
+                                <li><a class="dropdown-item" href="products.html">Trái cây</a></li>
+                                <li><a class="dropdown-item" href="products.html">Gạo & Ngũ cốc</a></li>
+                                <li><a class="dropdown-item" href="products.html">Thực phẩm chế biến</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Về chúng tôi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Chứng nhận</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Liên hệ</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex align-items-center">
+                        <a href="#" class="btn btn-outline-success me-2">
+                            <i class="fas fa-user"></i>
+                        </a>
+                        <a href="#" class="btn btn-outline-success me-2">
+                            <i class="fas fa-search"></i>
+                        </a>
+                        <a href="#" class="btn btn-success position-relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                3
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="bg-light py-2">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="products.html">Sản phẩm</a></li>
+                    <li class="breadcrumb-item"><a href="products.html">Trái cây</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Bơ sáp Đắk Lắk</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Product Detail Section -->
+    <section class="product-detail-section py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Product Images -->
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    <div class="product-images">
+                        <div class="product-main-img mb-3">
+                            <img src="https://via.placeholder.com/600x600?text=Bơ+Sáp+Đắk+Lắk" class="img-fluid" id="main-img" alt="Bơ sáp Đắk Lắk">
+                            <div class="product-badges">
+                                <span class="badge bg-danger">Hot</span>
+                                <span class="badge bg-success">Organic</span>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn-action" data-bs-toggle="tooltip" title="Yêu thích">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button class="btn-action" data-bs-toggle="tooltip" title="Chia sẻ">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-thumbnails">
+                            <div class="row g-2">
+                                <div class="col-3">
+                                    <div class="thumbnail active" data-img="https://via.placeholder.com/600x600?text=Bơ+Sáp+Đắk+Lắk">
+                                        <img src="https://via.placeholder.com/150x150?text=Bơ+Sáp+1" class="img-fluid" alt="Bơ sáp thumbnail 1">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="thumbnail" data-img="https://via.placeholder.com/600x600?text=Bơ+Sáp+Cắt">
+                                        <img src="https://via.placeholder.com/150x150?text=Bơ+Sáp+2" class="img-fluid" alt="Bơ sáp thumbnail 2">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="thumbnail" data-img="https://via.placeholder.com/600x600?text=Bơ+Sáp+Đóng+Gói">
+                                        <img src="https://via.placeholder.com/150x150?text=Bơ+Sáp+3" class="img-fluid" alt="Bơ sáp thumbnail 3">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="thumbnail" data-img="https://via.placeholder.com/600x600?text=Vườn+Bơ">
+                                        <img src="https://via.placeholder.com/150x150?text=Bơ+Sáp+4" class="img-fluid" alt="Bơ sáp thumbnail 4">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="col-lg-7">
+                    <div class="product-info">
+                        <h1 class="product-title">Bơ sáp Đắk Lắk (Loại 1)</h1>
+
+                        <div class="product-meta d-flex align-items-center flex-wrap mb-3">
+                            <div class="me-4">
+                                <span class="text-warning me-1">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </span>
+                                <span class="text-muted">(128 đánh giá)</span>
+                            </div>
+                            <div class="me-4">
+                                <span class="text-success">
+                                    <i class="fas fa-check-circle me-1"></i>Đã bán 1.5k+
+                                </span>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    <i class="fas fa-comment-dots me-1"></i>Chat
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="product-price-wrapper mb-4">
+                            <div class="product-price">
+                                <span class="current-price">65.000₫</span>
+                                <span class="old-price">75.000₫</span>
+                                <span class="discount-badge">-13%</span>
+                            </div>
+                            <div class="product-price-label mt-2">
+                                <span class="badge bg-success">Freeship</span>
+                                <span class="badge bg-warning text-dark">Mã giảm 10k</span>
+                            </div>
+                        </div>
+
+                        <div class="product-options mb-4">
+                            <div class="option-group mb-3">
+                                <div class="option-label">Phân loại:</div>
+                                <div class="option-values">
+                                    <button class="option-btn active">Loại 1 (300-400g/quả)</button>
+                                    <button class="option-btn">Loại 2 (200-300g/quả)</button>
+                                    <button class="option-btn">Combo 5kg</button>
+                                </div>
+                            </div>
+
+                            <div class="option-group mb-3">
+                                <div class="option-label">Đóng gói:</div>
+                                <div class="option-values">
+                                    <button class="option-btn active">Hộp 1kg</button>
+                                    <button class="option-btn">Hộp 2kg</button>
+                                    <button class="option-btn">Hộp 5kg</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="product-quantity mb-4">
+                            <div class="option-label">Số lượng:</div>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" id="decrease-quantity">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="100">
+                                <button class="quantity-btn" id="increase-quantity">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <span class="available-quantity ms-3">Còn 856 sản phẩm</span>
+                            </div>
+                        </div>
+
+                        <div class="product-actions-btn mb-4">
+                            <button class="btn btn-outline-success btn-lg me-2">
+                                <i class="fas fa-cart-plus me-2"></i>Thêm vào giỏ hàng
+                            </button>
+                            <button class="btn btn-success btn-lg">
+                                Mua ngay
+                            </button>
+                        </div>
+
+                        <div class="product-guarantee">
+                            <div class="guarantee-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Cam kết 100% hàng chính hãng</span>
+                            </div>
+                            <div class="guarantee-item">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Đổi trả trong vòng 24h</span>
+                            </div>
+                            <div class="guarantee-item">
+                                <i class="fas fa-truck"></i>
+                                <span>Giao hàng toàn quốc</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seller Info & Shipping -->
+    <section class="seller-shipping-section py-4">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Seller Info -->
+                <div class="col-lg-6">
+                    <div class="seller-info-card">
+                        <div class="seller-header d-flex align-items-center">
+                            <div class="seller-avatar me-3">
+                                <img src="https://via.placeholder.com/80x80?text=NSX" class="rounded-circle" alt="Nông Sản Xanh Shop">
+                            </div>
+                            <div class="seller-details">
+                                <h5 class="mb-1">Nông Sản Xanh Official</h5>
+                                <div class="seller-rating mb-2">
+                                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Chính hãng</span>
+                                    <span class="ms-2">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <span>4.9 (2.3k đánh giá)</span>
+                                    </span>
+                                </div>
+                                <div class="seller-actions">
+                                    <button class="btn btn-sm btn-outline-success me-2">
+                                        <i class="fas fa-store me-1"></i>Xem shop
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-heart me-1"></i>Theo dõi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="seller-stats mt-3">
+                            <div class="row text-center g-0">
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <div class="stat-value">98%</div>
+                                        <div class="stat-label">Phản hồi chat</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <div class="stat-value">100%</div>
+                                        <div class="stat-label">Đơn đúng hẹn</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-item">
+                                        <div class="stat-value">
+                                            < 12h</div>
+                                                <div class="stat-label">Thời gian phản hồi</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Info -->
+                    <div class="col-lg-6">
+                        <div class="shipping-info-card">
+                            <div class="shipping-header">
+                                <h5><i class="fas fa-truck me-2"></i>Thông tin vận chuyển</h5>
+                            </div>
+                            <div class="shipping-content">
+                                <div class="shipping-item d-flex align-items-start mb-3">
+                                    <div class="shipping-icon me-3">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="shipping-details">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Địa điểm</span>
+                                            <a href="#" class="text-success">Thay đổi</a>
+                                        </div>
+                                        <strong>Hồ Chí Minh, Quận 1, Phường Bến Nghé</strong>
+                                    </div>
+                                </div>
+                                <div class="shipping-item d-flex align-items-start mb-3">
+                                    <div class="shipping-icon me-3">
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </div>
+                                    <div class="shipping-details">
+                                        <div>Phí vận chuyển</div>
+                                        <div class="d-flex justify-content-between">
+                                            <strong>Freeship cho đơn từ 300.000đ</strong>
+                                            <span class="text-success">Miễn phí</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shipping-item d-flex align-items-start">
+                                    <div class="shipping-icon me-3">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="shipping-details">
+                                        <div>Thời gian giao hàng</div>
+                                        <strong>1-3 ngày (tùy khu vực)</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- Product Tabs -->
+    <section class="product-tabs-section py-5">
+        <div class="container">
+            <ul class="nav nav-tabs product-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Mô tả sản phẩm</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab" aria-controls="specifications" aria-selected="false">Thông số</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Đánh giá (128)</button>
+                </li>
+            </ul>
+            <div class="tab-content product-tab-content p-4 bg-white" id="productTabsContent">
+                <!-- Description Tab -->
+                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                    <div class="product-description">
+                        <h4>Bơ sáp Đắk Lắk - Trái cây đặc sản Tây Nguyên</h4>
+                        <p>Bơ sáp Đắk Lắk là một trong những đặc sản nổi tiếng của vùng đất Tây Nguyên. Với đặc điểm thịt dày, vị béo ngậy và mùi thơm đặc trưng, bơ sáp Đắk Lắk được nhiều người tiêu dùng ưa chuộng và tìm mua.</p>
+
+                        <div class="product-image-desc my-4">
+                            <img src="https://via.placeholder.com/800x400?text=Vườn+Bơ+Đắk+Lắk" class="img-fluid rounded" alt="Vườn bơ Đắk Lắk">
+                            <p class="text-center fst-italic mt-2">Vườn bơ hữu cơ tại Đắk Lắk</p>
+                        </div>
+
+                        <h5>Đặc điểm nổi bật</h5>
+                        <ul>
+                            <li><strong>Nguồn gốc:</strong> Được trồng tại các vùng đất đỏ bazan màu mỡ của Đắk Lắk.</li>
+                            <li><strong>Hình dáng:</strong> Quả bơ có hình oval, vỏ màu xanh đậm khi chưa chín và chuyển sang màu đen khi chín.</li>
+                            <li><strong>Thịt quả:</strong> Thịt quả có màu vàng nhạt, mềm mịn như sáp (do đó có tên gọi bơ sáp), không bị xơ.</li>
+                            <li><strong>Hương vị:</strong> Vị béo ngậy, thơm nhẹ, không bị đắng.</li>
+                            <li><strong>Hạt:</strong> Hạt nhỏ, chiếm tỷ lệ ít so với thịt quả.</li>
+                        </ul>
+
+                        <h5>Giá trị dinh dưỡng</h5>
+                        <p>Bơ sáp Đắk Lắk không chỉ thơm ngon mà còn chứa nhiều dưỡng chất có lợi cho sức khỏe:</p>
+                        <ul>
+                            <li>Giàu chất béo không bão hòa đơn, tốt cho tim mạch</li>
+                            <li>Chứa nhiều vitamin E, vitamin K, vitamin C và các vitamin nhóm B</li>
+                            <li>Giàu khoáng chất như kali, đồng, magie</li>
+                            <li>Chứa nhiều chất chống oxy hóa</li>
+                            <li>Hàm lượng chất xơ cao, tốt cho hệ tiêu hóa</li>
+                        </ul>
+
+                        <div class="product-image-desc my-4">
+                            <img src="https://via.placeholder.com/800x400?text=Bơ+Sáp+Cắt+Đôi" class="img-fluid rounded" alt="Bơ sáp cắt đôi">
+                            <p class="text-center fst-italic mt-2">Thịt bơ sáp mịn màng, béo ngậy</p>
+                        </div>
+
+                        <h5>Cách bảo quản</h5>
+                        <p>Để bảo quản bơ sáp Đắk Lắk được lâu và giữ nguyên hương vị, bạn có thể tham khảo các cách sau:</p>
+                        <ul>
+                            <li>Nếu bơ còn xanh, cứng: Để ở nhiệt độ phòng 2-3 ngày cho đến khi chín.</li>
+                            <li>Nếu bơ đã chín: Bảo quản trong tủ lạnh (ngăn mát) để giữ được 3-5 ngày.</li>
+                            <li>Nếu bơ đã cắt: Rưới vài giọt chanh lên phần thịt bơ, bọc kín bằng màng bọc thực phẩm và bảo quản trong tủ lạnh.</li>
+                        </ul>
+
+                        <h5>Cách sử dụng</h5>
+                        <p>Bơ sáp Đắk Lắk có thể được sử dụng trong nhiều món ăn và đồ uống:</p>
+                        <ul>
+                            <li>Sinh tố bơ: Kết hợp với sữa đặc, sữa tươi và đá viên.</li>
+                            <li>Salad bơ: Kết hợp với các loại rau xanh, cà chua, hành tây.</li>
+                            <li>Bánh mì bơ: Phết bơ lên bánh mì, rắc thêm một chút đường.</li>
+                            <li>Kem bơ: Làm kem từ bơ, sữa và đường.</li>
+                            <li>Guacamole: Món sốt truyền thống của Mexico.</li>
+                        </ul>
+
+                        <div class="product-note mt-4 p-3 bg-light rounded">
+                            <h6><i class="fas fa-leaf me-2 text-success"></i>Cam kết từ Nông Sản Xanh</h6>
+                            <p class="mb-0">Chúng tôi cam kết cung cấp bơ sáp Đắk Lắk chất lượng cao, được trồng theo tiêu chuẩn hữu cơ, không sử dụng thuốc trừ sâu và phân bón hóa học. Sản phẩm được thu hoạch, đóng gói và vận chuyển theo quy trình nghiêm ngặt để đảm
+                                bảo độ tươi ngon khi đến tay người tiêu dùng.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specifications Tab -->
+                <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                    <div class="product-specifications">
+                        <h4>Thông số chi tiết</h4>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td width="30%">Tên sản phẩm</td>
+                                    <td>Bơ sáp Đắk Lắk (Loại 1)</td>
+                                </tr>
+                                <tr>
+                                    <td>Xuất xứ</td>
+                                    <td>Đắk Lắk, Việt Nam</td>
+                                </tr>
+                                <tr>
+                                    <td>Loại</td>
+                                    <td>Bơ sáp (Persea americana)</td>
+                                </tr>
+                                <tr>
+                                    <td>Trọng lượng trung bình/quả</td>
+                                    <td>300-400g (Loại 1)</td>
+                                </tr>
+                                <tr>
+                                    <td>Đóng gói</td>
+                                    <td>Hộp 1kg (2-3 quả)</td>
+                                </tr>
+                                <tr>
+                                    <td>Tiêu chuẩn</td>
+                                    <td>Hữu cơ, VietGAP</td>
+                                </tr>
+                                <tr>
+                                    <td>Mùa vụ</td>
+                                    <td>Tháng 6 - Tháng 10</td>
+                                </tr>
+                                <tr>
+                                    <td>Cách bảo quản</td>
+                                    <td>Nhiệt độ phòng (khi chưa chín), tủ lạnh (khi đã chín)</td>
+                                </tr>
+                                <tr>
+                                    <td>Thời gian sử dụng</td>
+                                    <td>5-7 ngày sau khi chín</td>
+                                </tr>
+                                <tr>
+                                    <td>Hướng dẫn sử dụng</td>
+                                    <td>Ăn trực tiếp hoặc chế biến thành sinh tố, salad</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5 class="mt-4">Thông tin dinh dưỡng</h5>
+                        <p>Giá trị dinh dưỡng trong 100g bơ sáp:</p>
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td width="30%">Năng lượng</td>
+                                    <td>160 kcal</td>
+                                </tr>
+                                <tr>
+                                    <td>Chất béo</td>
+                                    <td>15g</td>
+                                </tr>
+                                <tr>
+                                    <td>Carbohydrate</td>
+                                    <td>9g</td>
+                                </tr>
+                                <tr>
+                                    <td>Chất xơ</td>
+                                    <td>7g</td>
+                                </tr>
+                                <tr>
+                                    <td>Protein</td>
+                                    <td>2g</td>
+                                </tr>
+                                <tr>
+                                    <td>Vitamin E</td>
+                                    <td>2.07mg (14% RDI)</td>
+                                </tr>
+                                <tr>
+                                    <td>Vitamin K</td>
+                                    <td>21μg (18% RDI)</td>
+                                </tr>
+                                <tr>
+                                    <td>Kali</td>
+                                    <td>485mg (10% RDI)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="product-note mt-4 p-3 bg-light rounded">
+                            <h6><i class="fas fa-certificate me-2 text-success"></i>Chứng nhận chất lượng</h6>
+                            <p class="mb-0">Sản phẩm được chứng nhận VietGAP, đảm bảo quy trình sản xuất an toàn, bền vững và thân thiện với môi trường. Mỗi lô hàng đều được kiểm tra chất lượng nghiêm ngặt trước khi đến tay người tiêu dùng.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <div class="product-reviews">
+                        <div class="reviews-summary mb-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-3 text-center">
+                                    <div class="overall-rating">
+                                        <div class="rating-score">4.9</div>
+                                        <div class="rating-stars">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div class="rating-count">128 đánh giá</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="rating-bars">
+                                        <div class="rating-bar-item">
+                                            <div class="rating-label">5 sao</div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: 92%"></div>
+                                            </div>
+                                            <div class="rating-percent">92%</div>
+                                        </div>
+                                        <div class="rating-bar-item">
+                                            <div class="rating-label">4 sao</div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: 6%"></div>
+                                            </div>
+                                            <div class="rating-percent">6%</div>
+                                        </div>
+                                        <div class="rating-bar-item">
+                                            <div class="rating-label">3 sao</div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: 2%"></div>
+                                            </div>
+                                            <div class="rating-percent">2%</div>
+                                        </div>
+                                        <div class="rating-bar-item">
+                                            <div class="rating-label">2 sao</div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: 0%"></div>
+                                            </div>
+                                            <div class="rating-percent">0%</div>
+                                        </div>
+                                        <div class="rating-bar-item">
+                                            <div class="rating-label">1 sao</div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" style="width: 0%"></div>
+                                            </div>
+                                            <div class="rating-percent">0%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reviews-filter mb-4">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <div class="me-3 mb-2">
+                                    <span class="filter-label">Lọc theo:</span>
+                                </div>
+                                <div class="filter-options mb-2">
+                                    <button class="filter-btn active">Tất cả</button>
+                                    <button class="filter-btn">5 Sao (118)</button>
+                                    <button class="filter-btn">4 Sao (8)</button>
+                                    <button class="filter-btn">3 Sao (2)</button>
+                                    <button class="filter-btn">Có Bình luận (45)</button>
+                                    <button class="filter-btn">Có Hình ảnh / Video (23)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reviews-list">
+                            <!-- Review Item 1 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <img src="https://via.placeholder.com/40x40?text=User" class="reviewer-avatar" alt="Reviewer">
+                                        <div>
+                                            <div class="reviewer-name">Nguyễn Văn A</div>
+                                            <div class="review-date">15/08/2023</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="review-variant">Phân loại: Loại 1 (300-400g/quả), Hộp 1kg</div>
+                                <div class="review-content">
+                                    <p>Bơ rất ngon, thịt dày, béo ngậy và thơm. Đóng gói cẩn thận, giao hàng nhanh. Sẽ ủng hộ shop dài dài.</p>
+                                </div>
+                                <div class="review-images">
+                                    <img src="https://via.placeholder.com/100x100?text=Review1" class="img-thumbnail" alt="Review image">
+                                    <img src="https://via.placeholder.com/100x100?text=Review2" class="img-thumbnail" alt="Review image">
+                                </div>
+                                <div class="review-actions">
+                                    <button class="btn-like"><i class="far fa-thumbs-up me-1"></i>Hữu ích (12)</button>
+                                    <button class="btn-reply"><i class="far fa-comment me-1"></i>Bình luận</button>
+                                </div>
+                                <div class="seller-reply">
+                                    <div class="seller-reply-header">
+                                        <span class="seller-tag">Người bán</span>
+                                        <span class="reply-date">15/08/2023</span>
+                                    </div>
+                                    <div class="seller-reply-content">
+                                        <p>Cảm ơn anh/chị đã tin tưởng và ủng hộ Nông Sản Xanh. Chúng tôi rất vui khi sản phẩm đã làm hài lòng anh/chị. Mong anh/chị sẽ tiếp tục ủng hộ shop trong những lần mua sắm tiếp theo!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Review Item 2 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <img src="https://via.placeholder.com/40x40?text=User" class="reviewer-avatar" alt="Reviewer">
+                                        <div>
+                                            <div class="reviewer-name">Trần Thị B</div>
+                                            <div class="review-date">10/08/2023</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="review-variant">Phân loại: Combo 5kg</div>
+                                <div class="review-content">
+                                    <p>Mình đã mua bơ ở nhiều nơi nhưng bơ ở đây là ngon nhất. Bơ chín đều, không bị thâm, thịt vàng đẹp mắt. Đặc biệt là vị béo ngậy rất đặc trưng của bơ sáp Đắk Lắk. Sẽ mua lại!</p>
+                                </div>
+                                <div class="review-actions">
+                                    <button class="btn-like"><i class="far fa-thumbs-up me-1"></i>Hữu ích (8)</button>
+                                    <button class="btn-reply"><i class="far fa-comment me-1"></i>Bình luận</button>
+                                </div>
+                            </div>
+
+                            <!-- Review Item 3 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <div class="reviewer-info">
+                                        <img src="https://via.placeholder.com/40x40?text=User" class="reviewer-avatar" alt="Reviewer">
+                                        <div>
+                                            <div class="reviewer-name">Lê Văn C</div>
+                                            <div class="review-date">05/08/2023</div>
+                                        </div>
+                                    </div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="review-variant">Phân loại: Loại 2 (200-300g/quả), Hộp 2kg</div>
+                                <div class="review-content">
+                                    <p>Bơ ngon, nhưng có 1-2 quả hơi xanh nên phải đợi vài ngày mới chín. Đóng gói cẩn thận, giao hàng đúng hẹn. Sẽ mua lại nếu có dịp.</p>
+                                </div>
+                                <div class="review-images">
+                                    <img src="https://via.placeholder.com/100x100?text=Review3" class="img-thumbnail" alt="Review image">
+                                </div>
+                                <div class="review-actions">
+                                    <button class="btn-like"><i class="far fa-thumbs-up me-1"></i>Hữu ích (5)</button>
+                                    <button class="btn-reply"><i class="far fa-comment me-1"></i>Bình luận</button>
+                                </div>
+                                <div class="seller-reply">
+                                    <div class="seller-reply-header">
+                                        <span class="seller-tag">Người bán</span>
+                                        <span class="reply-date">05/08/2023</span>
+                                    </div>
+                                    <div class="seller-reply-content">
+                                        <p>Cảm ơn anh/chị đã phản hồi. Chúng tôi xin ghi nhận góp ý về độ chín của bơ. Thông thường, chúng tôi sẽ gửi bơ ở độ chín vừa phải để đảm bảo bơ không bị dập nát trong quá trình vận chuyển và khách hàng có thể thưởng
+                                            thức bơ trong vài ngày. Mong anh/chị thông cảm và tiếp tục ủng hộ shop!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button class="btn btn-outline-success">Xem thêm đánh giá</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="related-products-section py-5 bg-light">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Sản phẩm tương tự</h2>
+                <p>Khám phá thêm các sản phẩm trái cây hữu cơ khác</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Related Product 1 -->
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="product-thumb">
+                            <img src="https://via.placeholder.com/300x300?text=Xoài+Cát" class="img-fluid" alt="Xoài cát">
+                            <div class="product-action">
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            </div>
+                        </div>
+                        <div class="product-info p-3">
+                            <span class="product-category">Trái cây</span>
+                            <h5><a href="#" class="product-title">Xoài cát Hòa Lộc</a></h5>
+                            <div class="product-price">
+                                <span class="new-price">85.000đ/kg</span>
+                            </div>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(5.0)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Product 2 -->
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="product-badge bg-danger">Hot</div>
+                        <div class="product-thumb">
+                            <img src="https://via.placeholder.com/300x300?text=Sầu+Riêng" class="img-fluid" alt="Sầu riêng">
+                            <div class="product-action">
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            </div>
+                        </div>
+                        <div class="product-info p-3">
+                            <span class="product-category">Trái cây</span>
+                            <h5><a href="#" class="product-title">Sầu riêng Ri6 Đắk Lắk</a></h5>
+                            <div class="product-price">
+                                <span class="new-price">120.000đ/kg</span>
+                            </div>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(4.5)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Product 3 -->
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="product-thumb">
+                            <img src="https://via.placeholder.com/300x300?text=Măng+Cụt" class="img-fluid" alt="Măng cụt">
+                            <div class="product-action">
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            </div>
+                        </div>
+                        <div class="product-info p-3">
+                            <span class="product-category">Trái cây</span>
+                            <h5><a href="#" class="product-title">Măng cụt Cái Mơn</a></h5>
+                            <div class="product-price">
+                                <span class="new-price">95.000đ/kg</span>
+                            </div>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(4.0)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Product 4 -->
+                <div class="col-md-3">
+                    <div class="product-card">
+                        <div class="product-badge bg-success">-10%</div>
+                        <div class="product-thumb">
+                            <img src="https://via.placeholder.com/300x300?text=Chôm+Chôm" class="img-fluid" alt="Chôm chôm">
+                            <div class="product-action">
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            </div>
+                        </div>
+                        <div class="product-info p-3">
+                            <span class="product-category">Trái cây</span>
+                            <h5><a href="#" class="product-title">Chôm chôm nhãn Thái</a></h5>
+                            <div class="product-price">
+                                <span class="old-price">60.000đ</span>
+                                <span class="new-price">54.000đ/kg</span>
+                            </div>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(4.5)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter py-5 bg-success text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h3>Đăng ký nhận tin</h3>
+                    <p class="mb-0">Nhận thông tin về sản phẩm mới và khuyến mãi hấp dẫn</p>
+                </div>
+                <div class="col-lg-6">
+                    <form class="newsletter-form">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Nhập email của bạn">
+                            <button class="btn btn-light" type="submit">Đăng ký</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer pt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-widget">
+                        <img src="https://via.placeholder.com/200x70?text=Nông+Sản+Xanh" class="mb-4" alt="Nông Sản Xanh Logo">
+                        <p>Chúng tôi cung cấp các sản phẩm nông nghiệp sạch, an toàn và chất lượng cao, được trồng và thu hoạch theo tiêu chuẩn hữu cơ quốc tế.</p>
+                        <div class="social-links mt-3">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-widget">
+                        <h5 class="widget-title">Liên kết nhanh</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Trang chủ</a></li>
+                            <li><a href="#">Sản phẩm</a></li>
+                            <li><a href="#">Về chúng tôi</a></li>
+                            <li><a href="#">Chứng nhận</a></li>
+                            <li><a href="#">Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h5 class="widget-title">Danh mục sản phẩm</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Rau củ hữu cơ</a></li>
+                            <li><a href="#">Trái cây theo mùa</a></li>
+                            <li><a href="#">Gạo & Ngũ cốc</a></li>
+                            <li><a href="#">Thực phẩm chế biến</a></li>
+                            <li><a href="#">Đồ uống</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h5 class="widget-title">Thông tin liên hệ</h5>
+                        <div class="contact-info">
+                            <p><i class="fas fa-map-marker-alt"></i> 123 Đường Nông Nghiệp, Quận 2, TP. Hồ Chí Minh</p>
+                            <p><i class="fas fa-phone-alt"></i> 0123 456 789</p>
+                            <p><i class="fas fa-envelope"></i> info@nongsanxanh.com</p>
+                            <p><i class="fas fa-clock"></i> Thứ 2 - Chủ nhật: 8:00 - 20:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom py-3 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0">© 2023 Nông Sản Xanh. Tất cả quyền được bảo lưu.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0">Thiết kế bởi <a href="#" class="text-success">Nông Sản Xanh</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    <!-- Product Detail JS -->
+    <script src="product-detail.js"></script>
+</body>
+
+</html>
