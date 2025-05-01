@@ -1,13 +1,12 @@
 <?php
-// Bắt đầu session
+
 session_start();
 
-// Gán giá
 if(!isset($_SESSION["role"]) || $_SESSION["role"] != 2){
     echo"<script>alert('Bạn không có quyền truy cập')</script>";
     header("refresh:0;url='../../index.php'");
   }   
-  $idTaiKhoan=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
+$id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,28 +30,28 @@ if(!isset($_SESSION["role"]) || $_SESSION["role"] != 2){
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element"> 
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <a class="dropdown-toggle <?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'dashboard') ? 'active' : ''; ?>" href="?action=dashbroad">
                                 <span class="block m-t-xs"> 
-                                    <strong class="font-bold">David Williams</strong>
+                                    <strong class="font-bold">Logo 1</strong>
                                 </span>
                             </a>
                         </div>
-                        <!-- <div class="logo-element">
-                            IN+
-                        </div> -->
+                        <div class="logo-element">
+                            <a href="?action=dashbroad" class="<?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'dashboard') ? 'active' : ''; ?>">Logo 2</a>
+                        </div>
                     </li>
                     <li class="active">
-                        <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">Dashboards</span> <span class="fa arrow"></span></a>
+                        <a href=""><i class="fa fa-th-large"></i><span class="">Quản lý hồ sơ</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                            <li class="active"><a href="index.html">Dashboard v.1</a></li>
-                            <li><a href="dashboard_2.html">Dashboard v.2</a></li>
-                            <li><a href="dashboard_3.html">Dashboard v.3</a></li>
-                            <li><a href="dashboard_4_1.html">Dashboard v.4</a></li>
-                            <li><a href="dashboard_5.html">Dashboard v.5 </a></li>
+                            <li><a href="?action=quan-ly-nguoi-ban" class="<?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'quan-ly-nguoi-ban') ? 'active' : ''; ?>">Quản lý người bán</a></li>
+                            <li><a href="?action=quan-ly-nguoi-dung" class="<?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'quan-ly-nguoi-dung') ? 'active' : ''; ?>">Quản lý người dùng</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="layouts.html"><i class="fa fa-diamond"></i> <span class="nav-label">Layouts</span></a>
+                        <a href="?action=quan-ly-san-pham"><i class="fa fa-diamond <?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'quan-ly-san-pham') ? 'active' : ''; ?>"></i> <span class="nav-label">Quản lý sản phẩm</span></a>
+                    </li>
+                    <li>
+                        <a href="?action=quan-ly-don-hang"><i class="fa fa-diamond <?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'quan-ly-don-hang') ? 'active' : ''; ?>"></i> <span class="nav-label">Quản lý đơn hàng</span></a>
                     </li>
                 </ul>
             </div>
@@ -74,179 +73,34 @@ if(!isset($_SESSION["role"]) || $_SESSION["role"] != 2){
                 </nav>
             </div>
             <div class="row  border-bottom white-bg dashboard-header">
-                    <div class="col-md-3">
-                        <h2>Welcome Amelia</h2>
-                        <small>You have 42 messages and 6 notifications.</small>
-                        <ul class="list-group clear-list m-t">
-                            <li class="list-group-item fist-item">
-                                <span class="pull-right">
-                                    09:00 pm
-                                </span>
-                                <span class="label label-success">1</span> Please contact me
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    10:16 am
-                                </span>
-                                <span class="label label-info">2</span> Sign a contract
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    08:22 pm
-                                </span>
-                                <span class="label label-primary">3</span> Open new shop
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    11:06 pm
-                                </span>
-                                <span class="label label-default">4</span> Call back to Sylvia
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    12:00 am
-                                </span>
-                                <span class="label label-primary">5</span> Write a letter to Sandra
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="flot-chart dashboard-chart">
-                            <div class="flot-chart-content" id="flot-dashboard-chart"></div>
-                        </div>
-                        <div class="row text-left">
-                            <div class="col-xs-4">
-                                <div class=" m-l-md">
-                                <span class="h4 font-bold m-t block">$ 406,100</span>
-                                <small class="text-muted m-b block">Sales marketing report</small>
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <span class="h4 font-bold m-t block">$ 150,401</span>
-                                <small class="text-muted m-b block">Annual sales revenue</small>
-                            </div>
-                            <div class="col-xs-4">
-                                <span class="h4 font-bold m-t block">$ 16,822</span>
-                                <small class="text-muted m-b block">Half-year revenue margin</small>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="statistic-box">
-                        <h4>
-                            Project Beta progress
-                        </h4>
-                        <p>
-                            You have two project with not compleated task.
-                        </p>
-                            <div class="row text-center">
-                                <div class="col-lg-6">
-                                    <canvas id="doughnutChart2" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                                    <h5 >Kolter</h5>
-                                </div>
-                                <div class="col-lg-6">
-                                    <canvas id="doughnutChart" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                                    <h5 >Maxtor</h5>
-                                </div>
-                            </div>
-                            <div class="m-t">
-                                <small>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
-                            </div>
-
-                        </div>
-                    </div>
-
-        </div>
-        </div>
-
-
-
-                    <div class="col-md-3">
-                        <h2>Welcome Amelia</h2>
-                        <small>You have 42 messages and 6 notifications.</small>
-                        <ul class="list-group clear-list m-t">
-                            <li class="list-group-item fist-item">
-                                <span class="pull-right">
-                                    09:00 pm
-                                </span>
-                                <span class="label label-success">1</span> Please contact me
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    10:16 am
-                                </span>
-                                <span class="label label-info">2</span> Sign a contract
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    08:22 pm
-                                </span>
-                                <span class="label label-primary">3</span> Open new shop
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    11:06 pm
-                                </span>
-                                <span class="label label-default">4</span> Call back to Sylvia
-                            </li>
-                            <li class="list-group-item">
-                                <span class="pull-right">
-                                    12:00 am
-                                </span>
-                                <span class="label label-primary">5</span> Write a letter to Sandra
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="flot-chart dashboard-chart">
-                            <div class="flot-chart-content" id="flot-dashboard-chart"></div>
-                        </div>
-                        <div class="row text-left">
-                            <div class="col-xs-4">
-                                <div class=" m-l-md">
-                                <span class="h4 font-bold m-t block">$ 406,100</span>
-                                <small class="text-muted m-b block">Sales marketing report</small>
-                                </div>
-                            </div>
-                            <div class="col-xs-4">
-                                <span class="h4 font-bold m-t block">$ 150,401</span>
-                                <small class="text-muted m-b block">Annual sales revenue</small>
-                            </div>
-                            <div class="col-xs-4">
-                                <span class="h4 font-bold m-t block">$ 16,822</span>
-                                <small class="text-muted m-b block">Half-year revenue margin</small>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="statistic-box">
-                        <h4>
-                            Project Beta progress
-                        </h4>
-                        <p>
-                            You have two project with not compleated task.
-                        </p>
-                            <div class="row text-center">
-                                <div class="col-lg-6">
-                                    <canvas id="doughnutChart2" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                                    <h5 >Kolter</h5>
-                                </div>
-                                <div class="col-lg-6">
-                                    <canvas id="doughnutChart" width="80" height="80" style="margin: 18px auto 0"></canvas>
-                                    <h5 >Maxtor</h5>
-                                </div>
-                            </div>
-                            <div class="m-t">
-                                <small>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</small>
-                            </div>
-
-                        </div>
-                    </div>
-
+                <?php
+                    if (isset($_REQUEST["action"])) {
+                        $val = $_REQUEST["action"];
+                        switch ($val) {
+                            case 'quan-ly-nguoi-ban':
+                                include_once("quan-ly-nguoi-ban.php");
+                                break;
+                            case 'quan-ly-nguoi-dung':
+                                include_once("quan-ly-nguoi-dung.php");
+                                break;
+                            case 'quan-ly-san-pham':
+                                include_once("quan-ly-san-pham.php");
+                                break;
+                            case 'quan-ly-don-hang':
+                                include_once("quan-ly-don-hang.php");
+                                break;
+                            case 'dashboard':
+                            default:
+                                include_once("dashboard.php");
+                        }
+                    } else {
+                        include_once("dashboard.php"); 
+                    }
+                ?>  
             </div>
+        </div>
     </div>
+
 
     <!-- Mainly scripts -->
     <script src="../../asset/js/jquery-3.1.1.min.js"></script>

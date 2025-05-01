@@ -6,6 +6,6 @@ session_unset();
 session_destroy();
 
 // Chuyển hướng về trang đăng nhập (hoặc trang chủ)
-header("Location: login.php"); // thay 'login.php' bằng trang bạn muốn chuyển tới
+header("Location: ../../index.php"); // thay 'login.php' bằng trang bạn muốn chuyển tới
 exit;
 ?>
