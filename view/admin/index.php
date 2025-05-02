@@ -30,10 +30,8 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element"> 
-                            <a class="dropdown-toggle <?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'dashboard') ? 'active' : ''; ?>" href="?action=dashbroad">
-                                <span class="block m-t-xs"> 
-                                    <strong class="font-bold">Logo 1</strong>
-                                </span>
+                            <a class="<?php echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'dashboard') ? 'active' : ''; ?>" href="?action=dashbroad">
+                                <img src="../../image/logo.png" style="width: 20px;" alt="">
                             </a>
                         </div>
                         <div class="logo-element">
