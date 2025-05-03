@@ -12,7 +12,7 @@
                     return $_SESSION["role"]; 
                 }
             } else {
-                echo"<script>alert('Đăng nhập thất bại!!!')</script>";
+                
                 return 0; 
             }
         }

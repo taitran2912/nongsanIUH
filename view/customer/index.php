@@ -12,109 +12,100 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
     <link rel="stylesheet" href="../../asset/css/styles.css">
+    <link rel="stylesheet" href="../../asset/css/products.css">
+    <link rel="stylesheet" href="../../asset/css/about-us.css">
 </head>
 
 <body>
     <!-- Header -->
-    <header class="sticky-top">
-        <!-- Top Bar -->
-        <div class="top-bar bg-success text-white py-2">
-            <div class="container d-flex justify-content-between align-items-center">
-                <div>
-                    <span><i class="fas fa-phone-alt me-2"></i> 0123 456 789</span>
-                    <span class="ms-3"><i class="fas fa-envelope me-2"></i> info@nongsanxanh.com</span>
-                </div>
-                <div>
-                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
-                    
+<header class="sticky-top">
+    <!-- Top Bar -->
+    <div class="top-bar bg-success text-white py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <span><i class="fas fa-phone-alt me-2"></i> 0123 456 789</span>
+                <span class="ms-3"><i class="fas fa-envelope me-2"></i> info@nongsanxanh.com</span>
+            </div>
+            <div>
+                <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+
+<!--index--><a class="navbar-brand" href="">
+                <!--  -->
+                <img src="../../image/logo.png" alt="Nông Sản Xanh Logo">
+                <!-- https://via.placeholder.com/150x50?text=Nông+Sản+Xanh -->
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active<?php  echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'dashboard') ? 'active' : '';  ?>" href="?action=dashboard">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+<!-- san pham -->       <a class="nav-link <?php  echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'product') ? 'active' : '';  ?>" href="?action=product">
+                            Sản phẩm
+                        </a>
+                        <!-- <ul class="dropdown-menu">
+Danh muc
+                            <li><a class="dropdown-item" href="#">Rau củ</a></li>
+                            <li><a class="dropdown-item" href="#">Trái cây</a></li>
+                            <li><a class="dropdown-item" href="#">Gạo & Ngũ cốc</a></li>
+                            <li><a class="dropdown-item" href="#">Thực phẩm chế biến</a></li>
+
+                        </ul> -->
+                    </li>
+                    <li class="nav-item">
+<!-- about -->
+                        <a class="nav-link <?php  echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'about') ? 'active' : '';  ?>" href="?action=about">Về chúng tôi</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                <!-- <i class="fa-solid fa-right-to-bracket"></i> -->
+                    <?php
+                    if ($id ==0) {
+                        echo'
+                            <a href="?action=login" class="btn btn-outline-success me-2">
+                                Đăng nhập
+                            </a>
+                        ';
+                    } else {
+                        echo '
+                            <a href="?action=profile" class="btn btn-outline-success me-2 ';
+                        echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'profile') ? 'active' : '';
+                        echo'">
+                                <i class="fas fa-user"></i>
+                            </a>';
+                        echo'
+                            <a href="../login/logout.php" class="btn btn-outline-success me-2">
+                                Đăng xuất
+                            </a>
+                    ';
+                    }
+                    ?>
+                    <a href="?action=shopping-cart" class="btn btn-success position-relative <?php  echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'shopping-cart') ? 'active' : '';  ?>">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </a>
+
                 </div>
             </div>
         </div>
-
-        <!-- Main Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-            <div class="container">
-
- <!-- index -->      <a class="navbar-brand" href="">
-                    <!--  -->
-                    <img src="../../image/logo.png" alt="Nông Sản Xanh Logo">
-                    <!-- https://via.placeholder.com/150x50?text=Nông+Sản+Xanh -->
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Trang chủ</a>
-                        </li>
-                        <li class="nav-item dropdown">
-<!-- san pham -->                   <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown">
-                                Sản phẩm
-                            </a>
-                            <ul class="dropdown-menu">
-<!-- Danh muc -->
-                                <li><a class="dropdown-item" href="#">Rau củ</a></li>
-                                <li><a class="dropdown-item" href="#">Trái cây</a></li>
-                                <li><a class="dropdown-item" href="#">Gạo & Ngũ cốc</a></li>
-                                <li><a class="dropdown-item" href="#">Thực phẩm chế biến</a></li>
-
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-<!-- about -->
-                            <a class="nav-link" href="#">Về chúng tôi</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Chứng nhận</a>
-                        </li>
-                        <li class="nav-item">
-
-                            <a class="nav-link" href="#">Liên hệ</a>
-                        </li>
-                    </ul>
-
-                    <div class="d-flex align-items-center">
-                    <!-- <i class="fa-solid fa-right-to-bracket"></i> -->
-
-<?php
-    if ($id) {
-        echo'
-            <a href="?action=login" class="btn btn-outline-success me-2">
-                Đăng nhập
-            </a>
-        ';
-    } else {
-        echo '
-            <a href="?action=profile" class="btn btn-outline-success me-2">
-                <i class="fas fa-user"></i>
-            </a>
-            <a href="../login/logout.php" class="btn btn-outline-success me-2">
-                Đăng xuất
-            </a>
-';
-    }
-?>
-                        <a href="#" class="btn btn-outline-success me-2">
-                            <i class="fas fa-search"></i>
-                        </a>
-
-                        <a href="#" class="btn btn-success position-relative">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                3
-                            </span>
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+    </nav>
+</header>
 
    <nav>
     <?php
@@ -128,18 +119,17 @@
                         </script>
                     ";
                     break;
-                case 'logout':
-                    echo"
-                        <script>
-                            window.location.href = '';
-                        </script>
-                    ";
+                case 'profile':
+                    include_once("profile.php");
                     break;
-                case 'quan-ly-san-pham':
-                    include_once("quan-ly-san-pham.php");
+                case 'product':
+                    include_once("product.php");
                     break;
-                case 'quan-ly-don-hang':
-                    include_once("quan-ly-don-hang.php");
+                case 'shopping-cart':
+                    include_once("shopping-cart.php");
+                    break;
+                case 'about':
+                    include_once("about.php");
                     break;
                 case 'dashboard':
                 default:
@@ -172,11 +162,10 @@
                     <div class="footer-widget">
                         <h5 class="widget-title">Liên kết nhanh</h5>
                         <ul class="footer-links">
-                            <li><a href="#">Trang chủ</a></li>
-                            <li><a href="#">Sản phẩm</a></li>
-                            <li><a href="#">Về chúng tôi</a></li>
-                            <li><a href="#">Chứng nhận</a></li>
-                            <li><a href="#">Liên hệ</a></li>
+                            <li><a href="?action=dashboard">Trang chủ</a></li>
+                            <li><a href="?action=product">Sản phẩm</a></li>
+                            <li><a href="?action=about">Về chúng tôi</a></li>
+
                         </ul>
                     </div>
                 </div>
