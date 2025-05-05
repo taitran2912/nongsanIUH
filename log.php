@@ -42,9 +42,9 @@
 
             <?php
                 if (isset($_GET["dangky"])) {
-                    include_once("view/login/registerView.php");
-                } else if (isset($_GET["quenmk"])) {
-                    include_once("view/login/quenmk.php");
+                    include_once("view/login/dangky.php");
+                } else if (isset($_GET["quen"])) {
+                    include_once("view/login/quen.php");
                 } else if (isset($_GET["login"])) {
                     include_once("view/login/login.php");
                     echo '
