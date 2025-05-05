@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 include_once("controller/CUser.php");
 
@@ -137,3 +138,6 @@ if (isset($_POST["btnRegister"])) {
     </div>
 </body>
 </html>
+=======
+<h1>dangky</h1>
+>>>>>>> 0aca81776e084bb2fb422a4b3086d55f3f88c37c
