@@ -79,6 +79,9 @@ Danh muc
                             <a href="?action=login" class="btn btn-outline-success me-2">
                                 Đăng nhập
                             </a>
+                            <a href="?action=dangky" class="btn btn-outline-success me-2">
+                                Đăng ký
+                            </a>
                         ';
                     } else {
                         echo '
