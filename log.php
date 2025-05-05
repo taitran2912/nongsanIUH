@@ -18,10 +18,9 @@
         <div>
             <?php
                 if (isset($_POST["btnDN"])) {
-                    include_once("controller/ctrlLogin.php");
-                    $p = new ctrlLogin();
-                    $kq = $p->getUser($_POST["txtEmail"], $_POST["txtPass"]);
-
+                    include_once("controller/CUser.php");
+                    $p = new CUser();
+                    $kq = $p->login($_POST["txtEmail"], $_POST["txtPass"]);
                     if ($kq == 1) {
                         echo "<script>
                             alert('Đăng nhập thành công!');

@@ -411,7 +411,7 @@
                     <form class="newsletter-form">
                         <div class="input-group">
                             <input type="email" class="form-control" placeholder="Nhập email của bạn">
-                            <button class="btn btn-light" type="submit">Đăng ký</button>
+                            <a class="btn btn-light" href="../../log.php?dangky">Đăng ký</a>
                         </div>
                     </form>
                 </div>

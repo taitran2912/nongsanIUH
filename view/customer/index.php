@@ -122,6 +122,13 @@ Danh muc
                         </script>
                     ";
                     break;
+                case 'dangky':
+                    echo"
+                        <script>
+                            window.location.href = '../../log.php?dangky';
+                        </script>
+                    ";
+                    break;
                 case 'profile':
                     include_once("profile.php");
                     break;
