@@ -2,7 +2,7 @@
 class clsketnoi{
     public function moKetNoi(){
 
-        $con = mysqli_connect("localhost", "cnm", "123456", "nongsan");
+        $con = mysqli_connect("localhost", "root", "", "nongsan");
         mysqli_set_charset($con,'utf8');
         return $con;
     }
