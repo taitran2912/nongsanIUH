@@ -41,7 +41,7 @@
         ?>
         <tr>
             <td><?php echo $row['id']; ?></td>
-            <td><?php echo $row['img']; ?></td>
+            <td><img src="../../image/<?php echo $row['img']; ?>" alt="" style="height: 40px;"></td>
             <td><?php echo $row['name']; ?></td>
             <td class="product-truncate"><?php echo $row['description']; ?></td>
             <td><?php echo number_format($row['price'], 0, ',', '.') . ' VNĐ'; ?></td>
@@ -58,5 +58,4 @@
         ?>
     </tbody>
 </table>
-
 
