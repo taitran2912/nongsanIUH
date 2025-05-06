@@ -2,7 +2,7 @@
 class ketnoi {
     private $host = "localhost";
     private $user = "root";
-    private $pass = "123456";
+    private $pass = "";
     private $db = "nongsan";
     private $conn;
 

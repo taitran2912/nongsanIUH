@@ -21,6 +21,12 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
     <link href="../../asset/css/plugins/toastr/toastr.min.css" rel="stylesheet">
     <link href="../../asset/css/animate.css" rel="stylesheet">
     <link href="../../asset/css/style.css" rel="stylesheet">
+
+    <?php
+    if (isset($_GET['action']) && $_GET['action'] === 'quan-ly-san-pham') {
+        echo '<link rel="stylesheet" href="../../asset/css/quan-ly-san-pham.css">';
+    }
+  ?>
 </head>
 
 <body>
@@ -87,6 +93,9 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
                             case 'quan-ly-don-hang':
                                 include_once("quan-ly-don-hang.php");
                                 break;
+                            case 'xem-san-pham':
+                                include_once("xem-san-pham.php");
+                                break;
                             case 'dashboard':
                             default:
                                 include_once("dashboard.php");
@@ -113,7 +122,7 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
     <!-- Toastr -->
     <script src="../../asset/js/plugins/toastr/toastr.min.js"></script>
 
-    <script>
+    <!-- <script>
         $(document).ready(function() {
             setTimeout(function() {
                 toastr.options = {
@@ -125,6 +134,6 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
                 toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
             }, 1300);
         });
-    </script>
+    </script> -->
 </body>
 </html>
