@@ -1,6 +1,7 @@
 <?php
     session_start();
     $id = isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
+    $role = $_SESSION["role"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
