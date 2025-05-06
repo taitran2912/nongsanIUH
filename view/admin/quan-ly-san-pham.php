@@ -1,4 +1,5 @@
-<?php    
+<?php  
+
     // Thêm kết nối đến cơ sở dữ liệu và truy vấn dữ liệu
     try {
         // Kết nối đến cơ sở dữ liệu
@@ -218,7 +219,7 @@
         gap: 5px;
     }
 </style>
-      
+<h1>Quản lý sản phẩm</h1>
 <table class="product-table">
     <thead>
         <tr>
