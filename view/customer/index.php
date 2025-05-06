@@ -157,7 +157,7 @@ Danh muc
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-widget">
-                        <img src="" class="mb-4" alt="Nông Sản Xanh Logo">
+                        <img src="../../image/logo.png" width="50px" high="50px" class="mb-4" alt="Nông Sản Xanh Logo">
                         <!-- https://via.placeholder.com/200x70?text=Nông+Sản+Xanh -->
                         <p>Chúng tôi cung cấp các sản phẩm nông nghiệp sạch, an toàn và chất lượng cao, được trồng và thu hoạch theo tiêu chuẩn hữu cơ quốc tế.</p>
                         <div class="social-links mt-3">
@@ -187,7 +187,6 @@ Danh muc
                             <li><a href="#">Trái cây theo mùa</a></li>
                             <li><a href="#">Gạo & Ngũ cốc</a></li>
                             <li><a href="#">Thực phẩm chế biến</a></li>
-                            <li><a href="#">Đồ uống</a></li>
                         </ul>
                     </div>
                 </div>
