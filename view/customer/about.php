@@ -373,75 +373,6 @@
     </div>
 </section>
 
-<!-- Farms Section -->
-<section class="about-farms">
-    <div class="container">
-        <div class="section-header text-center">
-            <h2 class="section-title">Nông Trại Của Chúng Tôi</h2>
-            <div class="section-divider">
-                <span><i class="fas fa-tractor"></i></span>
-            </div>
-            <p class="section-subtitle">Khám phá những nông trại sạch và bền vững</p>
-        </div>
-
-        <div class="farms-slider">
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="farm-item">
-                        <div class="farm-image">
-                            <img src="https://via.placeholder.com/400x300?text=Nông+Trại+1" alt="Nông trại 1" class="img-fluid">
-                            <div class="farm-location">
-                                <i class="fas fa-map-marker-alt"></i> Đà Lạt, Lâm Đồng
-                            </div>
-                        </div>
-                        <div class="farm-content">
-                            <h4>Nông trại rau hữu cơ Đà Lạt</h4>
-                            <p>Nông trại rau hữu cơ với diện tích 10 hecta, chuyên canh tác các loại rau ôn đới trong nhà kính hiện đại.</p>
-                            <a href="#" class="btn-farm-details">Xem chi tiết <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="farm-item">
-                        <div class="farm-image">
-                            <img src="https://via.placeholder.com/400x300?text=Nông+Trại+2" alt="Nông trại 2" class="img-fluid">
-                            <div class="farm-location">
-                                <i class="fas fa-map-marker-alt"></i> Mộc Châu, Sơn La
-                            </div>
-                        </div>
-                        <div class="farm-content">
-                            <h4>Vườn trái cây Mộc Châu</h4>
-                            <p>Vườn trái cây ôn đới rộng 15 hecta, chuyên canh tác các loại trái cây như táo, lê, mận theo phương pháp hữu cơ.</p>
-                            <a href="#" class="btn-farm-details">Xem chi tiết <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="farm-item">
-                        <div class="farm-image">
-                            <img src="https://via.placeholder.com/400x300?text=Nông+Trại+3" alt="Nông trại 3" class="img-fluid">
-                            <div class="farm-location">
-                                <i class="fas fa-map-marker-alt"></i> Bến Tre
-                            </div>
-                        </div>
-                        <div class="farm-content">
-                            <h4>Vườn dừa hữu cơ Bến Tre</h4>
-                            <p>Vườn dừa hữu cơ với diện tích 20 hecta, chuyên canh tác dừa và các sản phẩm từ dừa theo tiêu chuẩn hữu cơ quốc tế.</p>
-                            <a href="#" class="btn-farm-details">Xem chi tiết <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center mt-4">
-                <a href="#" class="btn btn-outline-success">Xem tất cả nông trại <i class="fas fa-arrow-right ms-2"></i></a>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Testimonials Section -->
 <section class="about-testimonials">
     <div class="container">
@@ -621,32 +552,6 @@
         <div class="text-center mt-5">
             <p class="mb-4">Không tìm thấy câu trả lời cho câu hỏi của bạn?</p>
             <a href="#" class="btn btn-success">Liên hệ với chúng tôi <i class="fas fa-arrow-right ms-2"></i></a>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="about-cta">
-    <div class="container">
-        <div class="cta-wrapper">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <div class="cta-content">
-                        <h2>Trải Nghiệm Sản Phẩm Nông Nghiệp Sạch Ngay Hôm Nay</h2>
-                        <p>Đăng ký nhận bản tin của chúng tôi để cập nhật những sản phẩm mới nhất và ưu đãi đặc biệt.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cta-form">
-                        <form>
-                            <div class="input-group">
-                                <input type="email" class="form-control" placeholder="Nhập email của bạn">
-                                <button class="btn btn-success" type="submit">Đăng ký</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
