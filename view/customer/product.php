@@ -1,296 +1,59 @@
-<!-- Products Section -->
 <section class="products-page py-5">
-    <div class="container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-lg-3">
-                <div class="sidebar-widget mb-4">
-                    <h4 class="widget-title">Tìm kiếm sản phẩm</h4>
-                    <div class="widget-content">
-                        <div class="search-box">
-                            <form action="#" method="get">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Nhập tên sản phẩm...">
-                                    <button class="btn btn-success" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Categories -->
-                <div class="sidebar-widget mb-4">
-                    <h4 class="widget-title">Danh mục sản phẩm</h4>
-                    <div class="widget-content">
-                        <ul class="category-list">
-                            <li>
-                                <a href="#" class="active">
-                                    <span>Tất cả sản phẩm</span>
-                                    <span class="count">120</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span>Rau củ</span>
-                                    <span class="count">45</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span>Trái cây</span>
-                                    <span class="count">38</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span>Gạo & Ngũ cốc</span>
-                                    <span class="count">22</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span>Thực phẩm chế biến</span>
-                                    <span class="count">15</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Filter by Price -->
-                <div class="sidebar-widget mb-4">
-                    <h4 class="widget-title">Lọc theo giá</h4>
-                    <div class="widget-content">
-                        <div class="price-range-slider">
-                            <div class="price-input d-flex align-items-center mb-3">
-                                <input type="number" class="form-control me-2" value="0" min="0" max="500000">
-                                <span class="mx-2">-</span>
-                                <input type="number" class="form-control ms-2" value="500000" min="0" max="500000">
-                            </div>
-                            <input type="range" class="form-range" min="0" max="500000" step="10000">
-                            <button class="btn btn-success btn-sm mt-3 w-100">Áp dụng</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Filter by Rating -->
-                <div class="sidebar-widget mb-4">
-                    <h4 class="widget-title">Đánh giá</h4>
-                    <div class="widget-content">
-                        <div class="rating-filter">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="rating5">
-                                <label class="form-check-label" for="rating5">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <span class="ms-2">(5)</span>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="rating4">
-                                <label class="form-check-label" for="rating4">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <span class="ms-2">(4)</span>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="rating3">
-                                <label class="form-check-label" for="rating3">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <span class="ms-2">(3)</span>
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="rating2">
-                                <label class="form-check-label" for="rating2">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <span class="ms-2">(2)</span>
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="rating1">
-                                <label class="form-check-label" for="rating1">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                    <span class="ms-2">(1)</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Filter by Origin -->
-                <div class="sidebar-widget mb-4">
-                    <h4 class="widget-title">Xuất xứ</h4>
-                    <div class="widget-content">
-                        <div class="origin-filter">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="originVietnam">
-                                <label class="form-check-label" for="originVietnam">
-                                    Việt Nam
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="originDalat">
-                                <label class="form-check-label" for="originDalat">
-                                    Đà Lạt
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="originMekong">
-                                <label class="form-check-label" for="originMekong">
-                                    Đồng bằng sông Cửu Long
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="originImported">
-                                <label class="form-check-label" for="originImported">
-                                    Nhập khẩu
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Featured Products -->
-                <div class="sidebar-widget">
-                    <h4 class="widget-title">Sản phẩm nổi bật</h4>
-                    <div class="widget-content">
-                        <div class="featured-product d-flex mb-3">
-                            <div class="featured-product-img me-3">
-                                <img src="https://via.placeholder.com/80x80?text=Bơ+Sáp" class="img-fluid rounded" alt="Bơ sáp">
-                            </div>
-                            <div class="featured-product-info">
-                                <h6><a href="#">Bơ sáp Đắk Lắk</a></h6>
-                                <div class="product-rating mb-1">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                </div>
-                                <div class="product-price">
-                                    <span class="new-price">65.000đ/kg</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product d-flex mb-3">
-                            <div class="featured-product-img me-3">
-                                <img src="https://via.placeholder.com/80x80?text=Gạo+Lứt" class="img-fluid rounded" alt="Gạo lứt">
-                            </div>
-                            <div class="featured-product-info">
-                                <h6><a href="#">Gạo lứt hữu cơ</a></h6>
-                                <div class="product-rating mb-1">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="far fa-star text-warning"></i>
-                                </div>
-                                <div class="product-price">
-                                    <span class="new-price">75.000đ/kg</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="featured-product d-flex">
-                            <div class="featured-product-img me-3">
-                                <img src="https://via.placeholder.com/80x80?text=Cà+Chua" class="img-fluid rounded" alt="Cà chua">
-                            </div>
-                            <div class="featured-product-info">
-                                <h6><a href="#">Cà chua hữu cơ</a></h6>
-                                <div class="product-rating mb-1">
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star text-warning"></i>
-                                    <i class="fas fa-star-half-alt text-warning"></i>
-                                </div>
-                                <div class="product-price">
-                                    <span class="old-price">35.000đ</span>
-                                    <span class="new-price">29.000đ/kg</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                    <!-- Featured Products -->
-                    <div class="sidebar-widget">
-                        <h4 class="widget-title">Sản phẩm nổi bật</h4>
+        <div class="container">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3">
+                    <!-- Categories -->
+                    <div class="sidebar-widget mb-4">
+                        <h4 class="widget-title">Danh mục sản phẩm</h4>
                         <div class="widget-content">
-                            <div class="featured-product d-flex mb-3">
-                                <div class="featured-product-img me-3">
-                                    <img src="../../image/bapcaitraitim.jpg" class="img-fluid rounded" alt="Bắp cải trái tim">
+                            <ul class="category-list">
+                                <li>
+                                    <a href="#" class="active">
+                                        <span>Tất cả sản phẩm</span>
+                                        <span class="count">120</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>Rau củ</span>
+                                        <span class="count">45</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>Trái cây</span>
+                                        <span class="count">38</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>Gạo & Ngũ cốc</span>
+                                        <span class="count">22</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>Thực phẩm chế biến</span>
+                                        <span class="count">15</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Price -->
+                    <div class="sidebar-widget mb-4">
+                        <h4 class="widget-title">Lọc theo giá</h4>
+                        <div class="widget-content">
+                            <div class="price-range-slider">
+                                <div class="price-input d-flex align-items-center mb-3">
+                                    <input type="number" class="form-control me-2" value="0" min="0" max="500000">
+                                    <span class="mx-2">-</span>
+                                    <input type="number" class="form-control ms-2" value="500000" min="0" max="500000">
                                 </div>
-                                <div class="featured-product-info">
-                                    <h6><a href="#">Bắp cải trái tim</a></h6>
-                                    <div class="product-rating mb-1">
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                    </div>
-                                    <div class="product-price">
-                                        <span class="new-price">20.000đ/kg</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="featured-product d-flex mb-3">
-                                <div class="featured-product-img me-3">
-                                    <img src="../../image/bidonon.jpg" class="img-fluid rounded" alt="Bí đỏ non">
-                                </div>
-                                <div class="featured-product-info">
-                                    <h6><a href="#">Bí đỏ non</a></h6>
-                                    <div class="product-rating mb-1">
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="far fa-star text-warning"></i>
-                                    </div>
-                                    <div class="product-price">
-                                        <span class="new-price">25.000đ/kg</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="featured-product d-flex">
-                                <div class="featured-product-img me-3">
-                                    <img src="../../image/boxoi.jpg" class="img-fluid rounded" alt="Bó Xôi">
-                                </div>
-                                <div class="featured-product-info">
-                                    <h6><a href="#">Bó xôi</a></h6>
-                                    <div class="product-rating mb-1">
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <i class="fas fa-star-half-alt text-warning"></i>
-                                    </div>
-                                    <div class="product-price">
-                                        <span class="old-price">35.000đ</span>
-                                        <span class="new-price">29.000đ/kg</span>
-                                    </div>
-                                </div>
+                                <input type="range" class="form-range" min="0" max="500000" step="10000">
+                                <button class="btn btn-success btn-sm mt-3 w-100">Áp dụng</button>
                             </div>
                         </div>
                     </div>
@@ -321,8 +84,6 @@
                                         <option>Giá: Cao đến thấp</option>
                                         <option>Tên: A-Z</option>
                                         <option>Tên: Z-A</option>
-                                        <option>Mới nhất</option>
-                                        <option>Bán chạy nhất</option>
                                     </select>
                                 </div>
                             </div>
@@ -333,564 +94,299 @@
                     <div class="products-grid">
                         <div class="row g-4">
                             <!-- Product 1 -->
-    <div class="col-md-4">
-        <div class="product-card">
-            <div class="product-badge bg-success">-15%</div>
-                <div class="product-thumb">
-                    <img src="../../image/bapcaitraitim.jpg" class="img-fluid" alt="Bắp cải trái tim">
-                    <div class="product-action">
-                    <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                    <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                    <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-                </div>
-            </div>
-    <div class="product-info p-3">
-    <span class="product-category">Rau củ</span>
-    <h5><a href="#" class="product-title">Bắp cải trái tim</a></h5>
-    <div class="product-price">
-        <span class="old-price">35.000đ</span>
-        <span class="new-price">20.000đ/kg</span>
-    </div>
-    <div class="product-rating">
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star"></i>
-        <i class="fas fa-star-half-alt"></i>
-        <span>(4.5)</span>
-    </div>
-</div>
-</div>
-</div>
-
-<!-- Product 2 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-thumb">
-            <img src="../../image/bidonon.jpg" class="img-fluid" alt="Bí đỏ non">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Rau củ</span>
-            <h5><a href="#" class="product-title">Bí đỏ non</a></h5>
-            <div class="product-price">
-                <span class="new-price">20.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <span>(5.0)</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Product 3 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-badge bg-danger">Hot</div>
-        <div class="product-thumb">
-            <img src="../../image/gaonepcamDSTB.webp" class="img-fluid" alt="Gạo nếp cẩm ĐSTB">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Gạo & Ngũ cốc</span>
-            <h5><a href="#" class="product-title">Gạo nếp cẩm ĐS Tây Bắc</a></h5>
-            <div class="product-price">
-                <span class="new-price">45.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <span>(4.0)</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Product 4 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-thumb">
-            <img src="../../image/bungao.jpg" class="img-fluid" alt="Bún gạo">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Ngũ cốc</span>
-            <h5><a href="#" class="product-title">Bún gạo</a></h5>
-            <div class="product-price">
-                <span class="new-price">22.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <i class="far fa-star"></i>
-                <span>(3.5)</span>
-            </div>
-        </div>
-    </div>
-</div>
-            <!-- Products -->
-            <div class="col-lg-9">
-                <!-- Products Grid -->
-                <div class="products-grid">
-                    <div class="row g-4">
-                        <!-- Product 1 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-badge bg-success">-15%</div>
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Cà+Chua" class="img-fluid" alt="Cà chua">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-badge bg-success">-15%</div>
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Cà+Chua" class="img-fluid" alt="Cà chua">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Rau củ</span>
-                                    <h5><a href="#" class="product-title">Cà chua hữu cơ</a></h5>
-                                    <div class="product-price">
-                                        <span class="old-price">35.000đ</span>
-                                        <span class="new-price">29.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
-                                        <span>(4.5)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Rau củ</span>
+                                        <h5><a href="#" class="product-title">Cà chua hữu cơ</a></h5>
+                                        <div class="product-price">
+                                            <span class="old-price">35.000đ</span>
+                                            <span class="new-price">29.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <span>(4.5)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Product 2 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Bơ+Sáp" class="img-fluid" alt="Bơ sáp">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            
+                            <!-- Product 2 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Bơ+Sáp" class="img-fluid" alt="Bơ sáp">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Trái cây</span>
-                                    <h5><a href="#" class="product-title">Bơ sáp Đắk Lắk</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">65.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span>(5.0)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Product 3 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-badge bg-danger">Hot</div>
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Gạo+Lứt" class="img-fluid" alt="Gạo lứt">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Gạo & Ngũ cốc</span>
-                                    <h5><a href="#" class="product-title">Gạo lứt hữu cơ</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">75.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <span>(4.0)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Trái cây</span>
+                                        <h5><a href="#" class="product-title">Bơ sáp Đắk Lắk</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">65.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <span>(5.0)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Product 4 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Rau+Cải" class="img-fluid" alt="Rau cải">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            
+                            <!-- Product 3 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-badge bg-danger">Hot</div>
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Gạo+Lứt" class="img-fluid" alt="Gạo lứt">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Rau củ</span>
-                                    <h5><a href="#" class="product-title">Rau cải ngọt</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">22.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
-                                        <i class="far fa-star"></i>
-                                        <span>(3.5)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Gạo & Ngũ cốc</span>
+                                        <h5><a href="#" class="product-title">Gạo lứt hữu cơ</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">75.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <span>(4.0)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            
+                            <!-- Product 4 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Rau+Cải" class="img-fluid" alt="Rau cải">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Rau củ</span>
+                                        <h5><a href="#" class="product-title">Rau cải ngọt</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">22.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="far fa-star"></i>
+                                            <span>(3.5)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- Product 5 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Xoài+Cát" class="img-fluid" alt="Xoài cát">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            <!-- Product 5 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Xoài+Cát" class="img-fluid" alt="Xoài cát">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Trái cây</span>
-                                    <h5><a href="#" class="product-title">Xoài cát Hòa Lộc</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">85.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span>(5.0)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-<!-- Product 5 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-thumb">
-            <img src="../../image/buoihoanglaunam.webp" class="img-fluid" alt="Bưởi hoàng lâu năm">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Trái cây</span>
-            <h5><a href="#" class="product-title">Bưởi hoàng lâu năm</a></h5>
-            <div class="product-price">
-                <span class="new-price">72.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <span>(5.0)</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-                        <!-- Product 6 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-badge bg-success">-10%</div>
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Khoai+Lang" class="img-fluid" alt="Khoai lang">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-                                    </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Rau củ</span>
-                                    <h5><a href="#" class="product-title">Khoai lang tím</a></h5>
-                                    <div class="product-price">
-                                        <span class="old-price">30.000đ</span>
-                                        <span class="new-price">27.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <span>(4.0)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Trái cây</span>
+                                        <h5><a href="#" class="product-title">Xoài cát Hòa Lộc</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">85.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <span>(5.0)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-<!-- Product 6 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-badge bg-success">-10%</div>
-        <div class="product-thumb">
-            <img src="../../image/cachuabeef.jpg" class="img-fluid" alt="Cà chua beef">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Rau củ</span>
-            <h5><a href="#" class="product-title">Cà chua beef</a></h5>
-            <div class="product-price">
-                <span class="old-price">30.000đ</span>
-                <span class="new-price">27.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <span>(4.0)</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-                        <!-- Product 7 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Dưa+Hấu" class="img-fluid" alt="Dưa hấu">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            <!-- Product 6 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-badge bg-success">-10%</div>
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Khoai+Lang" class="img-fluid" alt="Khoai lang">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Trái cây</span>
-                                    <h5><a href="#" class="product-title">Dưa hấu không hạt</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">18.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
-                                        <span>(4.5)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Rau củ</span>
+                                        <h5><a href="#" class="product-title">Khoai lang tím</a></h5>
+                                        <div class="product-price">
+                                            <span class="old-price">30.000đ</span>
+                                            <span class="new-price">27.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <span>(4.0)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-<!-- Product 7 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-thumb">
-            <img src="../../image/cachuacherry.jpeg" class="img-fluid" alt="Cà chua cherry">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Rau củ</span>
-            <h5><a href="#" class="product-title">Cà chua cherry</a></h5>
-            <div class="product-price">
-                <span class="new-price">18.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span>(4.5)</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-                        <!-- Product 8 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-badge bg-info">Mới</div>
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Nấm+Hương" class="img-fluid" alt="Nấm hương">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            <!-- Product 7 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Dưa+Hấu" class="img-fluid" alt="Dưa hấu">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Rau củ</span>
-                                    <h5><a href="#" class="product-title">Nấm hương tươi</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">120.000đ/kg</span>
-                                    </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="far fa-star"></i>
-                                        <span>(4.0)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Trái cây</span>
+                                        <h5><a href="#" class="product-title">Dưa hấu không hạt</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">18.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <span>(4.5)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-<!-- Product 8 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-badge bg-info">Mới</div>
-        <div class="product-thumb">
-            <img src="../../image/caicauvong.jpg" class="img-fluid" alt="Cải cầu vồng">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Rau củ</span>
-            <h5><a href="#" class="product-title">Cải cầu vồng</a></h5>
-            <div class="product-price">
-                <span class="new-price">30.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
-                <span>(4.0)</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Product 9 -->
-<div class="col-md-4">
-    <div class="product-card">
-        <div class="product-thumb">
-            <img src="../../image/caikale.jpeg" class="img-fluid" alt="Cải Kale">
-            <div class="product-action">
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
-            </div>
-        </div>
-        <div class="product-info p-3">
-            <span class="product-category">Rau củ</span>
-            <h5><a href="#" class="product-title">Cải Kale</a></h5>
-            <div class="product-price">
-                <span class="new-price">30.000đ/kg</span>
-            </div>
-            <div class="product-rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span>(4.5)</span>
-            </div>
-</div>
-</div>
-
-                        <!-- Product 9 -->
-                        <div class="col-md-4">
-                            <div class="product-card">
-                                <div class="product-thumb">
-                                    <img src="https://via.placeholder.com/300x300?text=Táo+Fuji" class="img-fluid" alt="Táo Fuji">
-                                    <div class="product-action">
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                        <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                        <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                            <!-- Product 8 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-badge bg-info">Mới</div>
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Nấm+Hương" class="img-fluid" alt="Nấm hương">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Rau củ</span>
+                                        <h5><a href="#" class="product-title">Nấm hương tươi</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">120.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <span>(4.0)</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="product-info p-3">
-                                    <span class="product-category">Trái cây</span>
-                                    <h5><a href="#" class="product-title">Táo Fuji nhập khẩu</a></h5>
-                                    <div class="product-price">
-                                        <span class="new-price">95.000đ/kg</span>
+                            </div>
+
+                            <!-- Product 9 -->
+                            <div class="col-md-4">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <img src="https://via.placeholder.com/300x300?text=Táo+Fuji" class="img-fluid" alt="Táo Fuji">
+                                        <div class="product-action">
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
+                                            <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                        </div>
                                     </div>
-                                    <div class="product-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
-                                        <span>(4.5)</span>
+                                    <div class="product-info p-3">
+                                        <span class="product-category">Trái cây</span>
+                                        <h5><a href="#" class="product-title">Táo Fuji nhập khẩu</a></h5>
+                                        <div class="product-price">
+                                            <span class="new-price">95.000đ/kg</span>
+                                        </div>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <span>(4.5)</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container mt-5">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="pagination-container mt-5">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                    <i class="fas fa-angle-left"></i>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    <i class="fas fa-angle-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 <!-- Back to Top -->
 <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
