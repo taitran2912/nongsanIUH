@@ -11,7 +11,8 @@
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         // Truy vấn dữ liệu sản phẩm
-        $query = "SELECT * FROM products ORDER BY id ASC";
+        $query = "SELECT products.*, product_images.img FROM products LEFT JOIN product_images ON 
+        products.id = product_images.product_id ORDER BY products.id ASC;";
         $result = $conn->prepare($query);
         $result->execute();
         
@@ -25,11 +26,12 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>Hình ảnh</th>
             <th>Tên</th>
             <th>Mô tả</th>
             <th>Giá</th>
             <th>Số lượng</th>
-            <th>Thao tác</th>
+            <th>Tùy chọn</th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +41,7 @@
         ?>
         <tr>
             <td><?php echo $row['id']; ?></td>
+            <td><?php echo $row['img']; ?></td>
             <td><?php echo $row['name']; ?></td>
             <td class="product-truncate"><?php echo $row['description']; ?></td>
             <td><?php echo number_format($row['price'], 0, ',', '.') . ' VNĐ'; ?></td>
