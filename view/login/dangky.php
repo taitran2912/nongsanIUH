@@ -74,66 +74,53 @@ if (isset($_POST["btnRegister"])) {
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký tài khoản</title>
-    <link href="layout/css/register.css" rel="stylesheet">
-</head>
-<body>
-    <div class="form-container">
-        <?php if ($success): ?>
-            <div class="alert alert-success">
-                Đăng ký thành công! <a href="log.php?login" class="link">Đăng nhập ngay</a>
-            </div>
-        <?php else: ?>
-            <h2 class="text-center">Đăng ký tài khoản</h2>
-            
-            <?php if (!empty($errors)): ?>
-                <div class="alert alert-danger">
-                    <ul style="margin: 0; padding-left: 20px;">
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-            
-            <form method="POST">
-                <div class="form-group">
-                    <input type="text" name="name" class="form-control" placeholder="Họ và tên" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
-                </div>
-                
-                <div class="form-group">
-                    <input type="email" name="email" class="form-control" placeholder="Email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" name="password" class="form-control" placeholder="Mật khẩu">
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" name="confirm_password" class="form-control" placeholder="Xác nhận mật khẩu">
-                </div>
-                
-                <div class="form-group">
-                    <input type="tel" name="phone" class="form-control" placeholder="Số điện thoại" value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>">
-                </div>
-                
-                <div class="form-group">
-                    <textarea name="address" class="form-control" placeholder="Địa chỉ" rows="3"><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <button type="submit" name="btnRegister" class="btn">Đăng ký</button>
-                </div>
-                
-                <p class="text-center">Đã có tài khoản? <a href="login.php" class="link">Đăng nhập</a></p>
-            </form>
-        <?php endif; ?>
+<?php if ($success): ?>
+    <div class="alert alert-success">
+        Đăng ký thành công! <a href="log.php?login" class="link">Đăng nhập ngay</a>
     </div>
-</body>
-</html>
+<?php else: ?>
+    <h2 class="text-center">Đăng ký tài khoản</h2>
+    
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-danger">
+            <ul style="margin: 0; padding-left: 20px;">
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+    
+    <form method="POST">
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" placeholder="Họ và tên" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
+        </div>
+        
+        <div class="form-group">
+            <input type="email" name="email" class="form-control" placeholder="Email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+        </div>
+        
+        <div class="form-group">
+            <input type="password" name="password" class="form-control" placeholder="Mật khẩu">
+        </div>
+        
+        <div class="form-group">
+            <input type="password" name="confirm_password" class="form-control" placeholder="Xác nhận mật khẩu">
+        </div>
+        
+        <div class="form-group">
+            <input type="tel" name="phone" class="form-control" placeholder="Số điện thoại" value="<?php echo isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : ''; ?>">
+        </div>
+        
+        <div class="form-group">
+            <textarea name="address" class="form-control" placeholder="Địa chỉ" rows="3"><?php echo isset($_POST['address']) ? htmlspecialchars($_POST['address']) : ''; ?></textarea>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" name="btnRegister" class="btn">Đăng ký</button>
+        </div>
+        
+        <p class="text-center">Đã có tài khoản? <a href="login.php" class="link">Đăng nhập</a></p>
+    </form>
+<?php endif; ?>
+
