@@ -1,64 +1,71 @@
 <?php  
+// Kết nối đến cơ sở dữ liệu
+try {
+    $host = "localhost";
+    $dbname = "nongsan";
+    $username = "root";
+    $password = "";
+    
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Thêm kết nối đến cơ sở dữ liệu và truy vấn dữ liệu
-    try {
-        // Kết nối đến cơ sở dữ liệu
-        $host = "localhost";
-        $dbname = "nongsan"; // Thay đổi tên database nếu cần
-        $username = "root";
-        $password = "";
-        
-        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        // Xử lý xóa sản phẩm nếu có yêu cầu
-        if(isset($_POST['delete_product']) && isset($_POST['product_id'])) {
-            $product_id = $_POST['product_id'];
-            
-            // Bắt đầu transaction để đảm bảo tính toàn vẹn dữ liệu
-            $conn->beginTransaction();
-            
-            try {
-                // Xóa hình ảnh sản phẩm trước (để tránh lỗi khóa ngoại)
-                $delete_images = "DELETE FROM product_images WHERE product_id = :product_id";
-                $stmt_images = $conn->prepare($delete_images);
-                $stmt_images->bindParam(':product_id', $product_id);
-                $stmt_images->execute();
-                
-                // Xóa sản phẩm
-                $delete_product = "DELETE FROM products WHERE id = :product_id";
-                $stmt_product = $conn->prepare($delete_product);
-                $stmt_product->bindParam(':product_id', $product_id);
-                $stmt_product->execute();
-                
-                // Commit transaction
-                $conn->commit();
-                
-                // Thông báo thành công
-                echo "<div class='alert alert-success'>Xóa sản phẩm thành công!</div>";
-                
-            } catch(Exception $e) {
-                // Rollback transaction nếu có lỗi
-                $conn->rollBack();
-                echo "<div class='alert alert-danger'>Lỗi khi xóa sản phẩm: " . $e->getMessage() . "</div>";
-            }
+    // Xử lý xóa sản phẩm nếu có yêu cầu
+    if(isset($_POST['delete_product']) && isset($_POST['product_id'])) {
+        $product_id = $_POST['product_id'];
+        $conn->beginTransaction();
+
+        try {
+            $conn->prepare("DELETE FROM product_images WHERE product_id = :product_id")
+                ->execute([':product_id' => $product_id]);
+
+            $conn->prepare("DELETE FROM products WHERE id = :product_id")
+                ->execute([':product_id' => $product_id]);
+
+            $conn->commit();
+            echo "<div class='alert alert-success'>Xóa sản phẩm thành công!</div>";
+        } catch(Exception $e) {
+            $conn->rollBack();
+            echo "<div class='alert alert-danger'>Lỗi khi xóa sản phẩm: " . $e->getMessage() . "</div>";
         }
-        
-        // Truy vấn dữ liệu sản phẩm
-        $query = "SELECT products.*, product_images.img, farms.name AS farm_name, farms.address AS 
-        farm_address, farms.description AS farm_description FROM products 
-        LEFT JOIN product_images ON products.id = product_images.product_id 
-        LEFT JOIN farms ON products.farm_id = farms.id ORDER BY products.id ASC;";
-        $result = $conn->prepare($query);
-        $result->execute();
-        
-    } catch(PDOException $e) {
-        echo "Lỗi kết nối: " . $e->getMessage();
-        $result = null; // Đảm bảo $result được định nghĩa ngay cả khi có lỗi
     }
+
+    // Truy vấn dữ liệu sản phẩm
+    $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : "";
+    $sql = "SELECT products.*, product_images.img, farms.name AS farm_name, farms.address AS
+    farm_address, farms.description AS farm_description FROM products 
+    LEFT JOIN product_images ON products.id = product_images.product_id 
+    LEFT JOIN farms ON products.farm_id = farms.id";
+
+    if ($searchTerm !== "") {
+        $sql .= " WHERE products.name LIKE :search OR products.description LIKE :search OR farms.name LIKE :search";
+    }
+
+    $sql .= " ORDER BY products.id ASC";
+    $stmt = $conn->prepare($sql);
+
+    if ($searchTerm !== "") {
+        $stmt->execute([':search' => "%$searchTerm%"]);
+    } else {
+        $stmt->execute();
+    }
+
+} catch(PDOException $e) {
+    echo "Lỗi kết nối: " . $e->getMessage();
+    $stmt = null;
+}
 ?>
 
-<h1>Quản lý sản phẩm</h1>
+<!-- Giao diện HTML -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1 style="margin: 0;">Quản lý sản phẩm</h1>
+    <form method="GET" style="display: flex; gap: 10px;">
+        <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." 
+               value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" 
+               style="padding: 5px; width: 250px;">
+        <button type="submit" style="padding: 5px 10px;">Tìm kiếm</button>
+    </form>
+</div>
+
 <table class="product-table">
     <thead>
         <tr>
@@ -73,26 +80,26 @@
     </thead>
     <tbody>
         <?php 
-        if ($result && $result->rowCount() > 0) {
-            while($row = $result->fetch(PDO::FETCH_ASSOC)): 
+        if ($stmt && $stmt->rowCount() > 0):
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)):
         ?>
         <tr style="height: 80px">
-            <td><?php echo $row['id']; ?></td>
-            <td><img src="../../image/<?php echo $row['img']; ?>" alt="" style="width:50px;"></td>
-            <td><?php echo $row['name']; ?></td>
-            <td class="product-truncate"><?php echo $row['description']; ?></td>
-            <td><?php echo number_format($row['price'], 0, ',', '.') . ' VNĐ'; ?></td>
-            <td><?php echo $row['quantity']; ?></td>
+            <td><?= $row['id']; ?></td>
+            <td><img src="../../image/<?= $row['img']; ?>" style="width:50px;"></td>
+            <td><?= $row['name']; ?></td>
+            <td class="product-truncate"><?= $row['description']; ?></td>
+            <td><?= number_format($row['price'], 0, ',', '.') . ' VNĐ'; ?></td>
+            <td><?= $row['quantity']; ?></td>
             <td>
-                <button class="product-btn" onclick="openProductModal(<?php echo htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>)">Xem chi tiết</button>
-                <button class="product-btn delete-btn" onclick="confirmDelete(<?php echo $row['id']; ?>, '<?php echo addslashes($row['name']); ?>')">Xóa</button>
+                <button class="product-btn" onclick="openProductModal(<?= htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>)">Xem chi tiết</button>
+                <button class="product-btn delete-btn" onclick="confirmDelete(<?= $row['id']; ?>, '<?= addslashes($row['name']); ?>')">Xóa</button>
             </td>
         </tr>
         <?php 
-            endwhile; 
-        } else {
+            endwhile;
+        else:
             echo "<tr><td colspan='7' style='text-align:center'>Không có sản phẩm nào</td></tr>";
-        }
+        endif;
         ?>
     </tbody>
 </table> 
@@ -114,20 +121,16 @@
                     <h4>Mô tả:</h4>
                     <p id="modalDescription"></p>
                 </div>
-
-                <!-- >>> Thêm: Thông tin nông trại -->
                 <div class="farm-info" style="margin-top: 20px;">
                     <h4>Thông tin nông trại:</h4>
                     <p><strong>Tên nông trại:</strong> <span id="modalFarmName"></span></p>
                     <p><strong>Địa chỉ:</strong> <span id="modalFarmAddress"></span></p>
                     <p><strong>Mô tả:</strong> <span id="modalFarmDescription"></span></p>
                 </div>
-                <!-- <<< Kết thúc thêm -->
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Modal Xác nhận xóa sản phẩm -->
 <div id="deleteModal" class="modal">
@@ -146,57 +149,39 @@
     </div>
 </div>
 
+<!-- JavaScript -->
 <script>
-    // Lấy modal
     var productModal = document.getElementById("productModal");
     var deleteModal = document.getElementById("deleteModal");
-    
+
     function openProductModal(product) {
-    // Cập nhật thông tin sản phẩm trong modal
-    document.getElementById("modalName").textContent = product.name;
-    document.getElementById("modalPrice").textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
-    document.getElementById("modalQuantity").textContent = "Số lượng: " + product.quantity;
-    document.getElementById("modalDescription").textContent = product.description;
+        document.getElementById("modalName").textContent = product.name;
+        document.getElementById("modalPrice").textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
+        document.getElementById("modalQuantity").textContent = "Số lượng: " + product.quantity;
+        document.getElementById("modalDescription").textContent = product.description;
+        document.getElementById("modalFarmName").textContent = product.farm_name || "Chưa cập nhật";
+        document.getElementById("modalFarmAddress").textContent = product.farm_address || "Chưa cập nhật";
+        document.getElementById("modalFarmDescription").textContent = product.farm_description || "Chưa cập nhật";
+        document.getElementById("modalImage").src = "../../image/" + product.img;
+        productModal.style.display = "block";
+    }
 
-    // >>> Thêm: Cập nhật thông tin nông trại
-    document.getElementById("modalFarmName").textContent = product.farm_name || "Chưa cập nhật";
-    document.getElementById("modalFarmAddress").textContent = product.farm_address || "Chưa cập nhật";
-    document.getElementById("modalFarmDescription").textContent = product.farm_description || "Chưa cập nhật";
-    // <<< Kết thúc thêm
-
-    // Cập nhật hình ảnh
-    var imagePath = "../../image/" + product.img;
-    document.getElementById("modalImage").src = imagePath;
-
-    // Hiển thị modal
-    productModal.style.display = "block";
-}
-
-    
-    // Hàm đóng modal chi tiết sản phẩm
     function closeProductModal() {
         productModal.style.display = "none";
     }
-    
-    // Hàm xác nhận xóa sản phẩm
+
     function confirmDelete(productId, productName) {
         document.getElementById("deleteMessage").textContent = "Bạn có chắc chắn muốn xóa sản phẩm '" + productName + "' không?";
         document.getElementById("deleteProductId").value = productId;
         deleteModal.style.display = "block";
     }
-    
-    // Hàm đóng modal xác nhận xóa
+
     function closeDeleteModal() {
         deleteModal.style.display = "none";
     }
-    
-    // Đóng modal khi nhấp vào bên ngoài modal
+
     window.onclick = function(event) {
-        if (event.target == productModal) {
-            closeProductModal();
-        }
-        if (event.target == deleteModal) {
-            closeDeleteModal();
-        }
+        if (event.target == productModal) closeProductModal();
+        if (event.target == deleteModal) closeDeleteModal();
     }
 </script>

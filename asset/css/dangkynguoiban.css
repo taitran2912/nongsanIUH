@@ -1,0 +1,132 @@
+:root {
+    --primary-color:rgb(40, 135, 65);
+    --secondary-color:rgb(100, 246, 120);
+    --accent-color:rgb(59, 137, 60);
+    --light-bg:rgb(245, 255, 245);
+}
+
+body {
+    background-color: var(--light-bg);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.register-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.register-header h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.register-header p {
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+.register-form {
+    padding: 30px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.25rem rgba(59, 153, 103, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.form-section {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.form-section-title {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.benefits-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.benefits-list li {
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.benefits-list i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+.register-sidebar {
+    background-color:rgb(213, 246, 213);
+    padding: 30px;
+    height: 100%;
+}
+
+.required-field::after {
+    content: " *";
+    color: red;
+}
+
+.password-toggle {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #666;
+}
+
+.terms-checkbox {
+    margin-top: 20px;
+}

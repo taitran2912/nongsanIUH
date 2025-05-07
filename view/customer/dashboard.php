@@ -401,14 +401,13 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h3>Đăng ký nhận tin</h3>
-                    <p class="mb-0">Nhận thông tin về sản phẩm mới và khuyến mãi hấp dẫn</p>
+                    <h3>Đăng ký trở thành nhà cung cấp</h3>
+                    <p class="mb-0"></p>
                 </div>
                 <div class="col-lg-6">
                     <form class="newsletter-form">
                         <div class="input-group">
-                            <input type="email" class="form-control" placeholder="Nhập email của bạn">
-                            <a class="btn btn-light" href="../../log.php?dangky">Đăng ký</a>
+                            <a class="btn btn-light" href="../../view/buyer/dangkynguoiban.php">Đăng ký</a>
                         </div>
                     </form>
                 </div>
