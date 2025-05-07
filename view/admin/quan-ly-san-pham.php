@@ -45,8 +45,10 @@
         }
         
         // Truy vấn dữ liệu sản phẩm
-        $query = "SELECT products.*, product_images.img FROM products LEFT JOIN product_images ON 
-        products.id = product_images.product_id ORDER BY products.id ASC;";
+        $query = "SELECT products.*, product_images.img, farms.name AS farm_name, farms.address AS 
+        farm_address, farms.description AS farm_description FROM products 
+        LEFT JOIN product_images ON products.id = product_images.product_id 
+        LEFT JOIN farms ON products.farm_id = farms.id ORDER BY products.id ASC;";
         $result = $conn->prepare($query);
         $result->execute();
         
@@ -112,10 +114,20 @@
                     <h4>Mô tả:</h4>
                     <p id="modalDescription"></p>
                 </div>
+
+                <!-- >>> Thêm: Thông tin nông trại -->
+                <div class="farm-info" style="margin-top: 20px;">
+                    <h4>Thông tin nông trại:</h4>
+                    <p><strong>Tên nông trại:</strong> <span id="modalFarmName"></span></p>
+                    <p><strong>Địa chỉ:</strong> <span id="modalFarmAddress"></span></p>
+                    <p><strong>Mô tả:</strong> <span id="modalFarmDescription"></span></p>
+                </div>
+                <!-- <<< Kết thúc thêm -->
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Modal Xác nhận xóa sản phẩm -->
 <div id="deleteModal" class="modal">
@@ -139,21 +151,27 @@
     var productModal = document.getElementById("productModal");
     var deleteModal = document.getElementById("deleteModal");
     
-    // Hàm mở modal và hiển thị thông tin sản phẩm
     function openProductModal(product) {
-        // Cập nhật thông tin sản phẩm trong modal
-        document.getElementById("modalName").textContent = product.name;
-        document.getElementById("modalPrice").textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
-        document.getElementById("modalQuantity").textContent = "Số lượng: " + product.quantity;
-        document.getElementById("modalDescription").textContent = product.description;
-        
-        // Cập nhật hình ảnh
-        var imagePath = "../../image/" + product.img; // Điều chỉnh đường dẫn thư mục hình ảnh nếu cần
-        document.getElementById("modalImage").src = imagePath;
-        
-        // Hiển thị modal
-        productModal.style.display = "block";
-    }
+    // Cập nhật thông tin sản phẩm trong modal
+    document.getElementById("modalName").textContent = product.name;
+    document.getElementById("modalPrice").textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
+    document.getElementById("modalQuantity").textContent = "Số lượng: " + product.quantity;
+    document.getElementById("modalDescription").textContent = product.description;
+
+    // >>> Thêm: Cập nhật thông tin nông trại
+    document.getElementById("modalFarmName").textContent = product.farm_name || "Chưa cập nhật";
+    document.getElementById("modalFarmAddress").textContent = product.farm_address || "Chưa cập nhật";
+    document.getElementById("modalFarmDescription").textContent = product.farm_description || "Chưa cập nhật";
+    // <<< Kết thúc thêm
+
+    // Cập nhật hình ảnh
+    var imagePath = "../../image/" + product.img;
+    document.getElementById("modalImage").src = imagePath;
+
+    // Hiển thị modal
+    productModal.style.display = "block";
+}
+
     
     // Hàm đóng modal chi tiết sản phẩm
     function closeProductModal() {
