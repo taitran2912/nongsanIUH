@@ -31,7 +31,7 @@ try {
 
     // Truy vấn dữ liệu sản phẩm
     $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : "";
-    $sql = "SELECT products.*, product_images.img, farms.name AS farm_name, farms.address AS
+    $sql = "SELECT products.*, product_images.img, farms.shopname AS farm_name, farms.address AS
     farm_address, farms.description AS farm_description FROM products 
     LEFT JOIN product_images ON products.id = product_images.product_id 
     LEFT JOIN farms ON products.farm_id = farms.id";

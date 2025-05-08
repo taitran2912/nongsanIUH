@@ -25,6 +25,8 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
     <?php
     if (isset($_GET['action']) && $_GET['action'] === 'quan-ly-san-pham') {
         echo '<link rel="stylesheet" href="../../asset/css/quan-ly-san-pham.css">';
+    }else if (isset($_GET['action']) && $_GET['action'] === 'quan-ly-don-hang'){
+        echo '<link rel="stylesheet" href="../../asset/css/quan-ly-don-hang.css">';
     }
     ?>
 </head>
