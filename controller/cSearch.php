@@ -41,6 +41,62 @@ class cSearch{
             return false;  // Kết nối thất bại hoặc lỗi truy vấn
         }
     }
+    public function count() {
+        $p = new mSearch();
+        $tbl = $p->mCount();
+        if ($tbl) {
+            if ($tbl->num_rows > 0) {
+                return $tbl;
+            } else {
+                return -1;  // Không có dữ liệu
+            }
+        } else {
+            return false;  // Kết nối thất bại hoặc lỗi truy vấn
+        }
+    }
+
+
+    public function searchDK($kw){
+        $p = new mSearch();
+        $tbl = $p->msearchDK($kw);
+        if ($tbl) {
+            if ($tbl->num_rows > 0) {
+                return $tbl;
+            } else {
+                return -1;  // Không có dữ liệu
+            }
+        } else {
+            return false;  // Kết nối thất bại hoặc lỗi truy vấn
+        }
+    }
+
+    public function listDK() {
+        $p = new mSearch();
+        $tbl = $p->mListDK();
+        if ($tbl) {
+            if ($tbl->num_rows > 0) {
+                return $tbl;
+            } else {
+                return -1;  // Không có dữ liệu
+            }
+        } else {
+            return false;  // Kết nối thất bại hoặc lỗi truy vấn
+        }
+    }
+
+    public function deleteDK($id) {
+        $p = new mSearch();
+        $tbl = $p->mDeleteDK($id);
+        if ($tbl) {
+            if ($tbl->num_rows > 0) {
+                return $tbl;
+            } else {
+                return -1;  // Không có dữ liệu
+            }
+        } else {
+            return false;  // Kết nối thất bại hoặc lỗi truy vấn
+        }
+    }
 }
 
 ?>

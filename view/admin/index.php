@@ -96,8 +96,8 @@ $id=isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
                             case 'xem-san-pham':
                                 include_once("xem-san-pham.php");
                                 break;
-                            case 'dang-ky-nguoi-ban':
-                                include_once("dang-ky-nguoi-ban.php");
+                            case 'duyet-nguoi-ban':
+                                include_once("duyet-nguoi-ban.php");
                                 break;
                             case 'dashboard':
                             default:

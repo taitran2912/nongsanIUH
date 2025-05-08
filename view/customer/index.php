@@ -43,7 +43,6 @@
 <!--index--><a class="navbar-brand" href="">
                 <!--  -->
                 <img src="../../image/logo.png" alt="Nông Sản Xanh Logo">
-                <!-- https://via.placeholder.com/150x50?text=Nông+Sản+Xanh -->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>

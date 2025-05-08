@@ -1,6 +1,6 @@
 <?php
-include_once("../../controller/cSearch.php");
-$p = new cSearch();
+    include_once("../../controller/cSearch.php");
+    $p = new cSearch();
 ?>
 <div class="container-fluid">
   <div class="row">
@@ -15,29 +15,16 @@ $p = new cSearch();
             </span>
           </div>
         </div>
-
-        <!-- Nút Duyệt người bán -->
-        <div class="form-group" style="margin-left: 10px;">
-          <a href="?action=duyet-nguoi-ban" class="btn btn-primary">Duyệt người bán
-              <span class="position-absolute top-0 start-100 translate-middle badge">
-                    <?php
-                    $count = $p->count();
-                    echo $count->fetch_assoc()['count'];
-                    ?>
-              </span>
-          </a>
-        </div>
       </form>
     </div>
   </div>
-</div>
 
-<?php
+  <?php
     if (isset($_POST["btnSearch"])) {
         $kw = $_POST["txtSearch"];
-        $kq = $p->search($kw); // dùng chung biến $kq cho dễ quản lý
+        $kq = $p->searchDK($kw); // dùng chung biến $kq cho dễ quản lý
     } else {
-        $kq = $p->list(); // mặc định hiển thị tất cả
+        $kq = $p->listDK(); // mặc định hiển thị tất cả
     }
 
     if ($kq) {
@@ -78,7 +65,7 @@ $p = new cSearch();
 
     if (isset($_POST['delete'])) {     
         $id = $_POST['idShop'];
-        if ($p->delete($id)) {         
+        if ($p->deleteDK($id)) {         
             echo '<script language="javascript">             
                     alert("Xóa thành công!");             
                     window.location.href = "index.php?action=quan-ly-nguoi-ban";             
@@ -88,5 +75,6 @@ $p = new cSearch();
         } 
     }
 ?>
+
 
 </div>
