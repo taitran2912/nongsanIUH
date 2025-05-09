@@ -13,25 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Bootstrap tooltip initialization failed:", error);
     }
     
-    // Avatar upload
-    const avatarUpload = document.getElementById('avatarUpload');
-    const userAvatar = document.querySelector('.user-avatar img');
-    
-    if (avatarUpload && userAvatar) {
-        avatarUpload.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    userAvatar.src = e.target.result;
-                }
-                
-                reader.readAsDataURL(file);
-            }
-        });
-    }
     
     // Profile form submission
     const profileForm = document.getElementById('profileForm');

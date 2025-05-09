@@ -28,7 +28,21 @@ class mProfile{
         } else {
             return false;
         }
-    }   
+    }  
+    public function mUProfile($id, $name, $email, $phone, $address){
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+            $kw = $conn->real_escape_string($id); // tránh SQL injection
+            $str = "UPDATE users SET name='$name', email='$email', phone='$phone', address='$address' WHERE id = '$id'";
+            $tbl = $conn->query($str);
+            $p->dongKetNoi($conn);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>

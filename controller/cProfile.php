@@ -27,5 +27,14 @@
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
         }
+        public function updateProfile($id, $name, $email, $phone, $address){
+            $p = new mProfile();
+            $tbl = $p->mUProfile($id, $name, $email, $phone, $address);
+            if ($tbl) {
+                return true;
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+        }
     }
 ?>
