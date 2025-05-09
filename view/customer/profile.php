@@ -39,7 +39,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#personal-info" data-bs-toggle="tab">
+                                    <a class="nav-link" href="profile?page=personal-info" >
                                         <i class="fas fa-user"></i> Thông tin cá nhân
                                     </a>
                                 </li>
@@ -131,8 +131,7 @@
                         } else {
                             echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
                         }
-                    ?>
-                                            
+                    ?>  
                                             </tbody>
                                         </table>
                                     </div>
@@ -140,68 +139,7 @@
                                         <a href="#orders" class="btn btn-link text-success" data-bs-toggle="tab">Xem tất cả đơn hàng</a>
                                     </div>
                                 </div>
-                                
-                                <!-- <div class="dashboard-recommendations">
-                                    <div class="section-title">
-                                        <h4>Gợi ý cho bạn</h4>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 mb-3">
-                                            <div class="product-card">
-                                                <div class="product-image">
-                                                    <img src="https://via.placeholder.com/200x200?text=Rau+Cải" alt="Product">
-                                                    <div class="product-tag">-15%</div>
-                                                    <div class="product-actions">
-                                                        <a href="#" class="action-btn"><i class="fas fa-heart"></i></a>
-                                                        <a href="#" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h5 class="product-title">Rau cải ngọt hữu cơ</h5>
-                                                    <div class="product-price">
-                                                        <span class="new-price">25.000₫</span>
-                                                        <span class="old-price">30.000₫</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <div class="product-card">
-                                                <div class="product-image">
-                                                    <img src="https://via.placeholder.com/200x200?text=Cà+Chua" alt="Product">
-                                                    <div class="product-actions">
-                                                        <a href="#" class="action-btn"><i class="fas fa-heart"></i></a>
-                                                        <a href="#" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h5 class="product-title">Cà chua beef hữu cơ</h5>
-                                                    <div class="product-price">
-                                                        <span class="new-price">45.000₫</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <div class="product-card">
-                                                <div class="product-image">
-                                                    <img src="https://via.placeholder.com/200x200?text=Táo" alt="Product">
-                                                    <div class="product-tag bg-success">Mới</div>
-                                                    <div class="product-actions">
-                                                        <a href="#" class="action-btn"><i class="fas fa-heart"></i></a>
-                                                        <a href="#" class="action-btn"><i class="fas fa-shopping-cart"></i></a>
-                                                    </div>
-                                                </div>
-                                                <div class="product-info">
-                                                    <h5 class="product-title">Táo Fuji hữu cơ</h5>
-                                                    <div class="product-price">
-                                                        <span class="new-price">85.000₫</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
+
                             </div>
                             
                             <!-- Personal Info Tab -->
@@ -274,15 +212,44 @@
                                                 </button>
                                             </div>
                                         </div>
+
+                                        
                                         <div class="col-md-6 d-flex justify-content-md-end">
-                                            <select class="form-select w-auto">
-                                                <option selected>Tất cả đơn hàng</option>
-                                                <option>Đang xử lý</option>
-                                                <option>Đang giao</option>
-                                                <option>Đã giao</option>
-                                                <option>Đã hủy</option>
-                                            </select>
+                                            <form method="POST" action="">
+                                                <select name="trang_thai_don" class="form-select w-auto">
+                                                    <option value="tat_ca" selected>Tất cả đơn hàng</option>
+                                                    <option value="dang_xu_ly">Đang xử lý</option>x
+                                                    <option value="dang_giao">Đang giao</option>
+                                                    <option value="da_giao">Đã giao</option>
+                                                    <option value="da_huy">Đã hủy</option>
+                                                </select>
+                                                
+                                            </form>
+                                            <?php
+                                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                        $trang_thai = $_POST['trang_thai_don'] ?? 'tat_ca';
+                                        switch ($trang_thai) {
+                                            case 'tat_ca':
+                                                $s = 4;
+                                                break;
+                                            case 'dang_xu_ly':
+                                                $s = 0;
+                                                break;
+                                            case 'dang_giao':
+                                                $s = 1;
+                                                break;
+                                            case 'da_giao':
+                                                $s = 2;
+                                                break;
+                                            case 'da_huy':
+                                                $s = 3;
+                                                break;
+                                        }
+                                        
+                                        }
+                                        ?>
                                         </div>
+                                        
                                     </div>
                                 </div>
                                 
@@ -306,26 +273,6 @@
                                         </div>
                                         <div class="order-body">
                                             <div class="order-products">
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Rau+Cải" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Rau cải ngọt hữu cơ</h5>
-                                                            <p class="product-variant">Loại: 500g</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">25.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x2</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">50.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                                 <div class="order-product-item">
                                                     <div class="row align-items-center">
                                                         <div class="col-md-2 col-3">
@@ -359,230 +306,6 @@
                                                 <div class="col-md-6 text-md-end">
                                                     <a href="#" class="btn btn-sm btn-outline-success me-2">Chi tiết</a>
                                                     <a href="#" class="btn btn-sm btn-success">Mua lại</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-3">
-                                                    <span class="order-id">#NSX12346</span>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <span class="order-date">05/05/2023</span>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <span class="order-total">420.000₫</span>
-                                                </div>
-                                                <div class="col-md-3 text-md-end">
-                                                    <span class="order-status shipping">Đang giao</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-body">
-                                            <div class="order-products">
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Táo" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Táo Fuji hữu cơ</h5>
-                                                            <p class="product-variant">Loại: 1kg</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">85.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x3</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">255.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Cà+Rốt" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Cà rốt hữu cơ</h5>
-                                                            <p class="product-variant">Loại: 500g</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">35.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x3</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">105.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Bơ" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Bơ sáp Đắk Lắk</h5>
-                                                            <p class="product-variant">Loại: 500g</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">60.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x1</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">60.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="order-tracking mt-3">
-                                                <h5 class="tracking-title">Theo dõi đơn hàng</h5>
-                                                <div class="tracking-steps">
-                                                    <div class="step completed">
-                                                        <div class="step-icon">
-                                                            <i class="fas fa-check"></i>
-                                                        </div>
-                                                        <div class="step-content">
-                                                            <h6>Đặt hàng</h6>
-                                                            <p>05/05/2023 08:30</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="step completed">
-                                                        <div class="step-icon">
-                                                            <i class="fas fa-check"></i>
-                                                        </div>
-                                                        <div class="step-content">
-                                                            <h6>Xác nhận</h6>
-                                                            <p>05/05/2023 09:15</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="step completed">
-                                                        <div class="step-icon">
-                                                            <i class="fas fa-check"></i>
-                                                        </div>
-                                                        <div class="step-content">
-                                                            <h6>Đóng gói</h6>
-                                                            <p>05/05/2023 14:20</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="step active">
-                                                        <div class="step-icon">
-                                                            <i class="fas fa-truck"></i>
-                                                        </div>
-                                                        <div class="step-content">
-                                                            <h6>Đang giao</h6>
-                                                            <p>06/05/2023 08:45</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="step">
-                                                        <div class="step-icon">
-                                                            <i class="fas fa-home"></i>
-                                                        </div>
-                                                        <div class="step-content">
-                                                            <h6>Đã giao</h6>
-                                                            <p>Dự kiến: 07/05/2023</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-footer">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-6 mb-3 mb-md-0">
-                                                    <div class="delivery-info">
-                                                        <p><strong>Địa chỉ giao hàng:</strong> 456 Đường XYZ, Quận 2, TP. Hồ Chí Minh</p>
-                                                        <p><strong>Phương thức thanh toán:</strong> Chuyển khoản ngân hàng</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 text-md-end">
-                                                    <a href="#" class="btn btn-sm btn-outline-success me-2">Chi tiết</a>
-                                                    <a href="#" class="btn btn-sm btn-outline-danger">Hủy đơn</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-3">
-                                                    <span class="order-id">#NSX12347</span>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <span class="order-date">18/05/2023</span>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <span class="order-total">780.000₫</span>
-                                                </div>
-                                                <div class="col-md-3 text-md-end">
-                                                    <span class="order-status processing">Đang xử lý</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-body">
-                                            <div class="order-products">
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Bưởi" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Bưởi da xanh</h5>
-                                                            <p class="product-variant">Loại: 1.5kg</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">75.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x2</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">150.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Mật+Ong" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Mật ong rừng nguyên chất</h5>
-                                                            <p class="product-variant">Loại: 500ml</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">210.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x3</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">630.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-footer">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-6 mb-3 mb-md-0">
-                                                    <div class="delivery-info">
-                                                        <p><strong>Địa chỉ giao hàng:</strong> 789 Đường MNO, Quận 3, TP. Hồ Chí Minh</p>
-                                                        <p><strong>Phương thức thanh toán:</strong> Ví điện tử MoMo</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 text-md-end">
-                                                    <a href="#" class="btn btn-sm btn-outline-success me-2">Chi tiết</a>
-                                                    <a href="#" class="btn btn-sm btn-outline-danger">Hủy đơn</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -746,32 +469,6 @@
             </div>
         </div>
     </section>
-
-
-
-    <!-- Delete Account Modal -->
-    <!-- <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Xác nhận xóa tài khoản</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn.</p>
-                    <div class="mb-3">
-                        <label for="deleteConfirm" class="form-label">Nhập "XÓA TÀI KHOẢN" để xác nhận</label>
-                        <input type="text" class="form-control" id="deleteConfirm">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-danger" disabled>Xóa tài khoản</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
