@@ -28,7 +28,6 @@
                 </div>
                 <div class="carousel-item">
                     <img src="../../image/rauhuuco.jpg" class="d-block w-100" alt="Rau hữu cơ">
-                    <!-- https://via.placeholder.com/1920x600?text=Rau+Hữu+Cơ -->
                     <div class="carousel-caption">
                         <h1>Rau Hữu Cơ</h1>
                         <p>Trồng theo tiêu chuẩn hữu cơ quốc tế</p>

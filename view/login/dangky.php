@@ -120,7 +120,7 @@ if (isset($_POST["btnRegister"])) {
             <button type="submit" name="btnRegister" class="btn">Đăng ký</button>
         </div>
         
-        <p class="text-center">Đã có tài khoản? <a href="login.php" class="link">Đăng nhập</a></p>
+        <p class="text-center">Đã có tài khoản? <a href="?login" class="link">Đăng nhập</a></p>
     </form>
 <?php endif; ?>
 

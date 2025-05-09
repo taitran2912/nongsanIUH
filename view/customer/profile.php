@@ -1,4 +1,25 @@
-<!-- Profile Section -->
+<?php
+    include_once '../../controller/cProfile.php';
+    $p = new cProfile();
+    $result = $p->getProfile($id);
+    $name = $email = $phone = $address = "";
+    // Lấy dữ liệu từ bảng users
+    if($result) {
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $name = $row['name'];
+            $email = $row['email'];
+            $phone = $row['phone'];
+            $address = $row['address'];
+        } else {
+            echo "<script>alert('Không có dữ liệu');</script>";
+        }
+    } else {
+        echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
+    }
+    // Lấy dữ liệu orders
+    
+?>
 <section class="profile-section py-5">
     <div class="container">
         <div class="row">
@@ -6,8 +27,8 @@
             <div class="col-lg-3 mb-4">
                 <div class="profile-sidebar">
                     <div class="user-info text-center mb-4">
-                        <h4 class="user-name mt-3">Nguyễn Văn A</h4>
-                        <p class="user-email">nguyenvana@example.com</p>
+                        <h4 class="user-name mt-3"><?php echo $name;?></h4>
+                        <p class="user-email"><?php echo $email;?></p>
                     </div>
                     
                     <div class="profile-nav">
@@ -61,27 +82,48 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>#NSX12345</td>
-                                                <td>20/04/2023</td>
-                                                <td>650.000₫</td>
-                                                <td><span class="badge bg-success">Đã giao</span></td>
-                                                <td><a href="#" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#NSX12346</td>
-                                                <td>05/05/2023</td>
-                                                <td>420.000₫</td>
-                                                <td><span class="badge bg-info">Đang giao</span></td>
-                                                <td><a href="#" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
-                                            </tr>
-                                            <tr>
-                                                <td>#NSX12347</td>
-                                                <td>18/05/2023</td>
-                                                <td>780.000₫</td>
-                                                <td><span class="badge bg-warning text-dark">Đang xử lý</span></td>
-                                                <td><a href="#" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
-                                            </tr>
+                <?php
+                $rOrder = $p->getOrder($id);
+                    if($rOrder) {
+                        if ($rOrder->num_rows > 0) {
+                            while($rowOders = $rOrder->fetch_assoc()){
+                                $orderId = $rowOders['id'];
+                                $orderDate = $rowOders['order_date'];
+                                $totalPrice = $rowOders['total_amount'];
+                                $status = $rowOders['status'];
+                                // $notes = $rowOders['notes'];
+                                    if($status == 0) {
+                                        $color = "bg-warning";
+                                        $statusText = "Đang xử lý";
+                                    }elseif($status == 1) {
+                                        $color = "bg-primary";
+                                        $statusText = "Đang giao";
+                                    }elseif($status == 2) {
+                                        $color = "bg-success";
+                                        $statusText = "Đã giao";
+                                    }elseif($status == 3) {
+                                        $color = "bg-danger";
+                                        $statusText = "Đã hủy";
+                                    }
+                                
+                                echo'   <tr>
+                                            <td>#'.$orderId.'</td>
+                                            <td>'.$orderDate.'</td>
+                                            <td>'.$totalPrice.'</td>
+                                            <td><span class="badge '.$color.'">'.$statusText.'</span></td>
+                                            <td><a href="?" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
+                                        </tr>';
+                            
+                                };
+                            
+                        } else {
+                            echo "<tr><td>Bạn chưa đặt đơn hàng nào!</td></tr>";
+                        }
+                    } else {
+                        echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
+                    }
+                ?>
+                                        
                                         </tbody>
                                     </table>
                                 </div>
