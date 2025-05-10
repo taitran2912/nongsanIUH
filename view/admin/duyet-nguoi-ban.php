@@ -15,6 +15,11 @@
             </span>
           </div>
         </div>
+        <div class="form-group" style="margin-left: 10px;">
+          <a href="?action=quan-ly-nguoi-ban" class="btn btn-primary"> Back
+              
+          </a>
+        </div>
       </form>
     </div>
   </div>

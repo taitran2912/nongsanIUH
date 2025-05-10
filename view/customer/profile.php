@@ -1,73 +1,97 @@
-    <?php
-        include_once '../../controller/cProfile.php';
-        $p = new cProfile();
-        $result = $p->getProfile($id);
-        $name = $email = $phone = $address = "";
-        // Lấy dữ liệu từ bảng users
-        if($result) {
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $name = $row['name'];
-                $email = $row['email'];
-                $phone = $row['phone'];
-                $address = $row['address'];
-            } else {
-                echo "<script>alert('Không có dữ liệu');</script>";
-            }
+<?php
+    include_once '../../controller/cProfile.php';
+    $p = new cProfile();
+    $result = $p->getProfile($id);
+    $name = $email = $phone = $address = "";
+    // Lấy dữ liệu từ bảng users
+    if($result) {
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $name = $row['name'];
+            $email = $row['email'];
+            $phone = $row['phone'];
+            $address = $row['address'];
         } else {
-            echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
+            echo "<script>alert('Không có dữ liệu');</script>";
         }
-        // Lấy dữ liệu orders
-        
-    ?>
-    <section class="profile-section py-5">
-        <div class="container">
-            <div class="row">
-                <!-- Sidebar -->
-                <div class="col-lg-3 mb-4">
-                    <div class="profile-sidebar">
+    } else {
+        echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
+    }
+    // Lấy dữ liệu orders
+?>
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="profile-sidebar card shadow-sm">
+                    <div class="card-body">
                         <div class="user-info text-center mb-4">
+                            
                             <h4 class="user-name mt-3"><?php echo $name;?></h4>
-                            <p class="user-email"><?php echo $email;?></p>
+                            <p class="user-email text-muted"><?php echo $email;?></p>
                         </div>
                         
                         <div class="profile-nav">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
-                                        <i class="fas fa-tachometer-alt"></i> Tổng quan
+                            <ul class="nav nav-pills flex-column" id="profileTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active w-100 text-start" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="true">
+                                        <i class="fas fa-tachometer-alt me-2"></i> Tổng quan
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link w-100 text-start" id="personal-info-tab" data-bs-toggle="tab" data-bs-target="#personal-info" type="button" role="tab" aria-controls="personal-info" aria-selected="false">
+                                        <i class="fas fa-user me-2"></i> Thông tin cá nhân
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link w-100 text-start" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="false">
+                                        <i class="fas fa-shopping-bag me-2"></i> Đơn hàng của tôi
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link w-100 text-start" id="addresses-tab" data-bs-toggle="tab" data-bs-target="#addresses" type="button" role="tab" aria-controls="addresses" aria-selected="false">
+                                        <i class="fas fa-map-marker-alt me-2"></i> Sổ địa chỉ
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link w-100 text-start" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist" type="button" role="tab" aria-controls="wishlist" aria-selected="false">
+                                        <i class="fas fa-heart me-2"></i> Sản phẩm yêu thích
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link w-100 text-start" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">
+                                        <i class="fas fa-star me-2"></i> Đánh giá của tôi
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link w-100 text-start" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">
+                                        <i class="fas fa-cog me-2"></i> Cài đặt tài khoản
+                                    </button>
+                                </li>
+                                <li class="nav-item mt-2">
+                                    <a class="nav-link text-danger w-100 text-start" href="../login/logout.php">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="profile?page=personal-info" >
-                                        <i class="fas fa-user"></i> Thông tin cá nhân
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#orders" data-bs-toggle="tab">
-                                        <i class="fas fa-shopping-bag"></i> Đơn hàng của tôi
-                                    </a>
-                                </li>
-                                
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#settings" data-bs-toggle="tab">
-                                        <i class="fas fa-cog"></i> Cài đặt tài khoản
-                                    </a>
-                                </li>
-                                
                             </ul>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Main Content -->
-                <div class="col-lg-9">
-                    <div class="profile-content">
-                        <div class="tab-content">
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div class="profile-content card shadow-sm">
+                    <div class="card-body">
+                        <div class="tab-content" id="profileTabContent">
                             <!-- Dashboard Tab -->
-                            <div class="tab-pane fade show active" id="dashboard">
+                            <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                <div class="content-header mb-4">
+                                    <h3>Tổng quan tài khoản</h3>
+                                </div>
                                 <div class="dashboard-recent mb-4">
-                                    <div class="section-title">
+                                    <div class="section-title mb-3">
                                         <h4>Đơn hàng gần đây</h4>
                                     </div>
                                     <div class="table-responsive">
@@ -82,74 +106,69 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                    <?php
-                    $rOrder = $p->getOrder($id);
-                        if($rOrder) {
-                            if ($rOrder->num_rows > 0) {
-                                while($rowOders = $rOrder->fetch_assoc()){
-                                    $orderId = $rowOders['id'];
-                                    $orderDate = $rowOders['order_date'];
-                                    $totalPrice = $rowOders['total_amount'];
-                                    $status = $rowOders['status'];
-                                    // $notes = $rowOders['notes'];
-                                        switch ($status) {
-                                            case 0:
-                                                $color = "bg-warning";
-                                                $statusText = "Đang xử lý";
-                                                break;
-                                            case 1:
-                                                $color = "bg-primary";
-                                                $statusText = "Đang giao";
-                                                break;
-                                            case 2:
-                                                $color = "bg-success";
-                                                $statusText = "Đã giao";
-                                                break;
-                                            case 3:
-                                                $color = "bg-danger";
-                                                $statusText = "Đã hủy";
-                                                break;
-                                            default:
-                                                $color = "bg-secondary";
-                                                $statusText = "Không xác định";
-                                        }
-
-                                    
-                                    echo'   <tr>
-                                                <td>#'.$orderId.'</td>
-                                                <td>'.$orderDate.'</td>
-                                                <td>'.$totalPrice.'</td>
-                                                <td><span class="badge '.$color.'">'.$statusText.'</span></td>
-                                                <td><a href="#" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
-                                            </tr>';
-                                
-                                    };
-                                
-                            } else {
-                                echo "<tr><td>Bạn chưa đặt đơn hàng nào!</td></tr>";
-                            }
-                        } else {
-                            echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
-                        }
-                    ?>  
+                                            <?php
+                                            $rOrder = $p->getOrder($id);
+                                            if($rOrder) {
+                                                if ($rOrder->num_rows > 0) {
+                                                    while($rowOders = $rOrder->fetch_assoc()){
+                                                        $orderId = $rowOders['id'];
+                                                        $orderDate = $rowOders['order_date'];
+                                                        $totalPrice = number_format($rowOders['total_amount'], 0, ',', '.') . 'đ';
+                                                        $status = $rowOders['status'];
+                                                        // $notes = $rowOders['notes'];
+                                                            switch ($status) {
+                                                                case 0:
+                                                                    $color = "bg-warning";
+                                                                    $statusText = "Đang xử lý";
+                                                                    break;
+                                                                case 1:
+                                                                    $color = "bg-primary";
+                                                                    $statusText = "Đang giao";
+                                                                    break;
+                                                                case 2:
+                                                                    $color = "bg-success";
+                                                                    $statusText = "Đã giao";
+                                                                    break;
+                                                                case 3:
+                                                                    $color = "bg-danger";
+                                                                    $statusText = "Đã hủy";
+                                                                    break;
+                                                                default:
+                                                                    $color = "bg-secondary";
+                                                                    $statusText = "Không xác định";
+                                                            }
+                                                        echo'   <tr>
+                                                                    <td>#'.$orderId.'</td>
+                                                                    <td>'.$orderDate.'</td>
+                                                                    <td>'.$totalPrice.'</td>
+                                                                    <td><span class="badge '.$color.'">'.$statusText.'</span></td>
+                                                                    <td><a href="?action=orderdetail&id='.$orderId.'" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
+                                                                </tr>';
+                                                        };
+                                                } else {
+                                                    echo "<tr><td colspan='5' class='text-center'>Bạn chưa đặt đơn hàng nào!</td></tr>";
+                                                }
+                                            } else {
+                                                echo "<script>alert('Kết nối thất bại hoặc lỗi truy vấn');</script>";
+                                            }
+                                            ?>  
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="text-end">
-                                        <a href="#orders" class="btn btn-link text-success" data-bs-toggle="tab">Xem tất cả đơn hàng</a>
+                                        <button class="btn btn-link text-success" id="viewAllOrders">Xem tất cả đơn hàng</button>
                                     </div>
                                 </div>
-
                             </div>
-                            
+
                             <!-- Personal Info Tab -->
-                            <div class="tab-pane fade" id="personal-info">
-                                <div class="content-header">
+                            <div class="tab-pane fade" id="personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
+                                <div class="content-header mb-4">
                                     <h3>Thông tin cá nhân</h3>
                                 </div>
                                 
                                 <div class="personal-info-form">
-                                    <form id="" action="" method="POST">
+                                    <form action="" method="POST">
                                         <div class="mb-3">
                                             <label for="fullname" class="form-label">Họ và tên</label>
                                             <input type="text" class="form-control" id="fullname" name="fullname" value="<?php echo $name?>">
@@ -164,16 +183,15 @@
                                         <div class="mb-3">
                                             <label for="phone" class="form-label">Số điện thoại</label>
                                             <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo $phone?>">
-                                            
                                         </div>
                                         
                                         <div class="mb-3">
                                             <label for="address" class="form-label">Địa chỉ</label>
-                                            <input type="text" class="form-control" id="address"  name="address" value="<?php echo $address?>">
+                                            <input type="text" class="form-control" id="address" name="address" value="<?php echo $address?>">
                                         </div>
                                         
                                         <div class="d-flex justify-content-end">
-                                            <button type="button" class="btn btn-outline-secondary me-2">Hủy</button>
+                                            <button type="button" class="btn btn-outline-secondary me-2" id="cancelPersonalInfo">Hủy</button>
                                             <button type="submit" name="btnSave" class="btn btn-success">Lưu thay đổi</button>
                                         </div>
                                     </form>
@@ -186,7 +204,6 @@
                                         $address = $_POST['address'];
                                         
                                         if($p->updateProfile($id, $name, $email, $phone, $address)){
-                                            
                                             echo "<script>alert('Cập nhật thông tin thành công!');</script>";
                                             echo "<script>window.location.href='index.php?action=profile';</script>";
                                         } else {
@@ -195,259 +212,182 @@
                                     }
                                 ?>
                             </div>
-                            
+
                             <!-- Orders Tab -->
-                            <div class="tab-pane fade" id="orders">
-                                <div class="content-header">
+                            <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                <div class="content-header mb-4">
                                     <h3>Đơn hàng của tôi</h3>
                                 </div>
-                                
-                                <div class="orders-filter mb-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-6 mb-3 mb-md-0">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" placeholder="Tìm kiếm đơn hàng...">
-                                                <button class="btn btn-success" type="button">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        
-                                        <div class="col-md-6 d-flex justify-content-md-end">
-                                            <form method="POST" action="">
-                                                <select name="trang_thai_don" class="form-select w-auto">
-                                                    <option value="tat_ca" selected>Tất cả đơn hàng</option>
-                                                    <option value="dang_xu_ly">Đang xử lý</option>x
-                                                    <option value="dang_giao">Đang giao</option>
-                                                    <option value="da_giao">Đã giao</option>
-                                                    <option value="da_huy">Đã hủy</option>
-                                                </select>
-                                                
-                                            </form>
-                                            <?php
-                                        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                                        $trang_thai = $_POST['trang_thai_don'] ?? 'tat_ca';
-                                        switch ($trang_thai) {
-                                            case 'tat_ca':
-                                                $s = 4;
-                                                break;
-                                            case 'dang_xu_ly':
-                                                $s = 0;
-                                                break;
-                                            case 'dang_giao':
-                                                $s = 1;
-                                                break;
-                                            case 'da_giao':
-                                                $s = 2;
-                                                break;
-                                            case 'da_huy':
-                                                $s = 3;
-                                                break;
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã đơn hàng</th>
+                                                <th>Ngày đặt</th>
+                                                <th>Tổng tiền</th>
+                                                <th>Trạng thái</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $rOrder = $p->getOrders($id);
+                                        if($rOrder) {
+                                            if ($rOrder->num_rows > 0) {
+                                                // Reset pointer to beginning
+                                                $rOrder->data_seek(0);
+                                                while($rowOders = $rOrder->fetch_assoc()){
+                                                    $orderId = $rowOders['id'];
+                                                    $orderDate = $rowOders['order_date'];
+                                                    $totalPrice = number_format($rowOders['total_amount'], 0, ',', '.') . 'đ';
+                                                    $status = $rowOders['status'];
+                                                    
+                                                    switch ($status) {
+                                                        case 0:
+                                                            $color = "bg-warning";
+                                                            $statusText = "Đang xử lý";
+                                                            $cancelBtn = '<a href="?action=cancelorder&id='.$orderId.'" class="btn btn-sm btn-outline-danger ms-2" onclick="return confirm(\'Bạn có chắc chắn muốn hủy đơn hàng này?\')">Hủy đơn</a>';
+                                                            break;
+                                                        case 1:
+                                                            $color = "bg-primary";
+                                                            $statusText = "Đang giao";
+                                                            $cancelBtn = '';
+                                                            break;
+                                                        case 2:
+                                                            $color = "bg-success";
+                                                            $statusText = "Đã giao";
+                                                            $cancelBtn = '';
+                                                            break;
+                                                        case 3:
+                                                            $color = "bg-danger";
+                                                            $statusText = "Đã hủy";
+                                                            $cancelBtn = '';
+                                                            break;
+                                                        default:
+                                                            $color = "bg-secondary";
+                                                            $statusText = "Không xác định";
+                                                            $cancelBtn = '';
+                                                    }
+                                                    echo '<tr>
+                                                            <td>#'.$orderId.'</td>
+                                                            <td>'.$orderDate.'</td>
+                                                            <td>'.$totalPrice.'</td>
+                                                            <td><span class="badge '.$color.'">'.$statusText.'</span></td>
+                                                            <td>
+                                                                <a href="?action=orderdetail&id='.$orderId.'" class="btn btn-sm btn-outline-success">Chi tiết</a>
+                                                                '.$cancelBtn.'
+                                                            </td>
+                                                        </tr>';
+                                                };
+                                            } else {
+                                                echo "<tr><td colspan='5' class='text-center'>Bạn chưa đặt đơn hàng nào!</td></tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='5' class='text-center'>Lỗi kết nối hoặc truy vấn!</td></tr>";
                                         }
-                                        
-                                        }
-                                        ?>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                                
-                                <div class="orders-list">
-                                    <div class="order-item">
-                                        <div class="order-header">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-3">
-                                                    <span class="order-id">#NSX12345</span>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <span class="order-date">20/04/2023</span>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <span class="order-total">650.000₫</span>
-                                                </div>
-                                                <div class="col-md-3 text-md-end">
-                                                    <span class="order-status completed">Đã giao</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-body">
-                                            <div class="order-products">
-                                                <div class="order-product-item">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-2 col-3">
-                                                            <img src="https://via.placeholder.com/80x80?text=Gạo" alt="Product" class="product-image">
-                                                        </div>
-                                                        <div class="col-md-5 col-9">
-                                                            <h5 class="product-name">Gạo lứt hữu cơ</h5>
-                                                            <p class="product-variant">Loại: 2kg</p>
-                                                        </div>
-                                                        <div class="col-md-2 col-4">
-                                                            <span class="product-price">120.000₫</span>
-                                                        </div>
-                                                        <div class="col-md-1 col-3">
-                                                            <span class="product-quantity">x5</span>
-                                                        </div>
-                                                        <div class="col-md-2 col-5">
-                                                            <span class="product-total">600.000₫</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="order-footer">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-6 mb-3 mb-md-0">
-                                                    <div class="delivery-info">
-                                                        <p><strong>Địa chỉ giao hàng:</strong> 123 Đường ABC, Quận 1, TP. Hồ Chí Minh</p>
-                                                        <p><strong>Phương thức thanh toán:</strong> Thanh toán khi nhận hàng (COD)</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 text-md-end">
-                                                    <a href="#" class="btn btn-sm btn-outline-success me-2">Chi tiết</a>
-                                                    <a href="#" class="btn btn-sm btn-success">Mua lại</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="pagination-wrapper mt-4">
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination justify-content-center">
-                                            <li class="page-item disabled">
-                                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                                    <i class="fas fa-chevron-left"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">
-                                                    <i class="fas fa-chevron-right"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </nav>
+                                        ?>  
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            
+
+                            <!-- Addresses Tab -->
+                            <div class="tab-pane fade" id="addresses" role="tabpanel" aria-labelledby="addresses-tab">
+                                <div class="content-header mb-4">
+                                    <h3>Sổ địa chỉ</h3>
+                                </div>
+                                <div class="alert alert-info">
+                                    Tính năng đang được phát triển. Vui lòng quay lại sau.
+                                </div>
+                            </div>
+
+                            <!-- Wishlist Tab -->
+                            <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+                                <div class="content-header mb-4">
+                                    <h3>Sản phẩm yêu thích</h3>
+                                </div>
+                                <div class="alert alert-info">
+                                    Tính năng đang được phát triển. Vui lòng quay lại sau.
+                                </div>
+                            </div>
+
                             <!-- Reviews Tab -->
-                            <div class="tab-pane fade" id="reviews">
-                                <div class="content-header">
+                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                <div class="content-header mb-4">
                                     <h3>Đánh giá của tôi</h3>
                                 </div>
-                                
-                                <div class="reviews-list">
-                                    <div class="review-item">
-                                        <div class="review-header">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-8">
-                                                    <div class="product-info d-flex align-items-center">
-                                                        <img src="https://via.placeholder.com/80x80?text=Rau+Cải" alt="Product" class="product-image me-3">
-                                                        <div>
-                                                            <h5 class="product-name">Rau cải ngọt hữu cơ</h5>
-                                                            <p class="review-date">Đánh giá vào: 22/04/2023</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 text-md-end">
-                                                    <div class="review-rating">
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="review-body">
-                                            <p class="review-text">Rau tươi, xanh và ngọt. Giao hàng nhanh và đóng gói cẩn thận. Sẽ tiếp tục ủng hộ shop!</p>
-                                            <div class="review-images">
-                                                <img src="https://via.placeholder.com/100x100?text=Review1" alt="Review Image">
-                                                <img src="https://via.placeholder.com/100x100?text=Review2" alt="Review Image">
-                                            </div>
-                                        </div>
-                                        <div class="review-footer">
-                                            <div class="d-flex justify-content-end">
-                                                <button class="btn btn-sm btn-outline-success me-2">Chỉnh sửa</button>
-                                                <button class="btn btn-sm btn-outline-danger">Xóa</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                
-                                <div class="reviews-to-write mt-5">
-                                    <div class="section-title">
-                                        <h4>Sản phẩm chờ đánh giá</h4>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4">
-                                            <div class="review-pending-item">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://via.placeholder.com/80x80?text=Táo" alt="Product" class="product-image me-3">
-                                                    <div>
-                                                        <h5 class="product-title">Táo Fuji hữu cơ</h5>
-                                                        <p class="order-info">Đơn hàng: #NSX12346 - Ngày mua: 05/05/2023</p>
-                                                    </div>
-                                                </div>
-                                                <div class="mt-3">
-                                                    <button class="btn btn-sm btn-success">Viết đánh giá</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
+                                <div class="alert alert-info">
+                                    Tính năng đang được phát triển. Vui lòng quay lại sau.
                                 </div>
                             </div>
-                            
+
                             <!-- Settings Tab -->
-                            <div class="tab-pane fade" id="settings">
-                                <div class="content-header">
+                            <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                                <div class="content-header mb-4">
                                     <h3>Cài đặt tài khoản</h3>
                                 </div>
                                 
                                 <div class="settings-section">
-                                    <div class="section-title">
+                                    <div class="section-title mb-3">
                                         <h4>Đổi mật khẩu</h4>
                                     </div>
-                                    <form id="passwordForm" class="mb-5">
+                                    <form id="passwordForm" method="POST" class="mb-5">
                                         <div class="mb-3">
                                             <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
-                                            <div class="password-input">
-                                                <input type="password" class="form-control" id="currentPassword" required>
-                                                <span class="password-toggle" onclick="togglePassword('currentPassword')">
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="currentPassword">
                                                     <i class="fas fa-eye"></i>
-                                                </span>
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="newPassword" class="form-label">Mật khẩu mới</label>
-                                            <div class="password-input">
-                                                <input type="password" class="form-control" id="newPassword" required>
-                                                <span class="password-toggle" onclick="togglePassword('newPassword')">
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="newPassword" name="newPassword" required minlength="6">
+                                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="newPassword">
                                                     <i class="fas fa-eye"></i>
-                                                </span>
+                                                </button>
                                             </div>
+                                            <small class="form-text text-muted">Mật khẩu phải có ít nhất 6 ký tự</small>
                                         </div>
                                         <div class="mb-4">
                                             <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
-                                            <div class="password-input">
-                                                <input type="password" class="form-control" id="confirmNewPassword" required>
-                                                <span class="password-toggle" onclick="togglePassword('confirmNewPassword')">
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword" required minlength="6">
+                                                <button class="btn btn-outline-secondary toggle-password" type="button" data-target="confirmNewPassword">
                                                     <i class="fas fa-eye"></i>
-                                                </span>
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-success">Cập nhật mật khẩu</button>
+                                            <button type="submit" name="btnChangePassword" class="btn btn-success">Cập nhật mật khẩu</button>
                                         </div>
                                     </form>
                                     
-                                    <div class="section-title">
+                                    <?php
+                                        if (isset($_POST['btnChangePassword'])) {
+                                            $currentPassword = $_POST['currentPassword'];
+                                            $newPassword = $_POST['newPassword'];
+                                            $confirmNewPassword = $_POST['confirmNewPassword'];
+                                            
+                                            if ($newPassword != $confirmNewPassword) {
+                                                
+                                                echo "<div class='alert alert-danger'>Mật khẩu mới và xác nhận mật khẩu không khớp!</div>";
+                                            } else {
+                                                // Gọi hàm đổi mật khẩu từ controller
+                                                if($p->changePassword($id, $currentPassword, $newPassword)){
+                                                    echo "<div class='alert alert-success'>Đổi mật khẩu thành công!</div>";
+                                                    echo "<script>alert('Đổi mật khẩu thành công!');</script>";
+                                                } else {
+                                                    echo "<div class='alert alert-danger'>Đổi mật khẩu thất bại! Mật khẩu hiện tại không đúng.</div>";
+                                                    echo "<script>alert('Đổi mật khẩu thất bại! Mật khẩu hiện tại không đúng.');</script>";
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                    
+                                    <div class="section-title mb-3 mt-4">
                                         <h4>Xóa tài khoản</h4>
                                     </div>
                                     <div class="delete-account-section">
@@ -456,7 +396,7 @@
                                             <p>Việc xóa tài khoản sẽ xóa vĩnh viễn tất cả dữ liệu của bạn, bao gồm lịch sử đơn hàng, địa chỉ và thông tin cá nhân. Hành động này không thể hoàn tác.</p>
                                         </div>
                                         <div class="d-flex justify-content-end">
-                                                <button type="button" class="btn btn-danger"> <!-- data-bs-toggle="modal" data-bs-target="#deleteAccountModal" > -->
+                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
                                                 Xóa tài khoản
                                             </button>
                                         </div>
@@ -468,10 +408,91 @@
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="../../asset/js/script.js"></script>
-    <!-- Profile JS -->
-    <script src="../../asset/js/profile.js"></script>
+    </div>
+</section>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Xác nhận xóa tài khoản</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác.</p>
+                <form id="deleteAccountForm" method="POST">
+                    <div class="mb-3">
+                        <label for="passwordConfirm" class="form-label">Nhập mật khẩu để xác nhận</label>
+                        <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" form="deleteAccountForm" name="btnDeleteAccount" class="btn btn-danger">Xóa tài khoản</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm JavaScript để xử lý các tương tác -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý nút "Xem tất cả đơn hàng"
+    const viewAllOrdersBtn = document.getElementById('viewAllOrders');
+    if (viewAllOrdersBtn) {
+        viewAllOrdersBtn.addEventListener('click', function() {
+            const ordersTab = document.getElementById('orders-tab');
+            if (ordersTab) {
+                ordersTab.click();
+            }
+        });
+    }
+
+    // Xử lý nút "Hủy" trong form thông tin cá nhân
+    const cancelPersonalInfoBtn = document.getElementById('cancelPersonalInfo');
+    if (cancelPersonalInfoBtn) {
+        cancelPersonalInfoBtn.addEventListener('click', function() {
+            const dashboardTab = document.getElementById('dashboard-tab');
+            if (dashboardTab) {
+                dashboardTab.click();
+            }
+        });
+    }
+
+    // Xử lý hiển thị/ẩn mật khẩu
+    const togglePasswordBtns = document.querySelectorAll('.toggle-password');
+    togglePasswordBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+
+    // Xác thực form đổi mật khẩu
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', function(e) {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword !== confirmNewPassword) {
+                e.preventDefault();
+                alert('Mật khẩu mới và xác nhận mật khẩu không khớp!');
+            }
+        });
+    }
+});
+</script>

@@ -141,6 +141,9 @@ Danh muc
                 case 'about':
                     include_once("about.php");
                     break;
+
+                
+            
                 case 'dashboard':
                 default:
                     include_once("dashboard.php");
