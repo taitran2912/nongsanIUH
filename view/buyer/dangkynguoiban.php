@@ -130,7 +130,6 @@
                                             <option value="vegetables">Rau củ quả</option>
                                             <option value="fruits">Trái cây</option>
                                             <option value="rice">Gạo & ngũ cốc</option>
-                                            <option value="meat">Thịt & thủy hải sản</option>
                                             <option value="processed">Thực phẩm chế biến</option>
                                             <option value="other">Khác</option>
                                         </select>

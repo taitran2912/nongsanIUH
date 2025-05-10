@@ -36,7 +36,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="about-hero-image">
-                    <img src="https://via.placeholder.com/600x500?text=Nông+Sản+Xanh" alt="Nông Sản Xanh" class="img-fluid rounded">
+                    <img src="../../image/nongtraihuuco.webp" alt="Nông Sản Xanh" class="img-fluid rounded">
                     <div class="experience-badge">
                         <span class="years">10</span>
                         <span class="text">Năm kinh nghiệm</span>
@@ -214,7 +214,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-member">
                     <div class="member-image">
-                        <img src="https://via.placeholder.com/300x300?text=CEO" alt="CEO" class="img-fluid">
+                        <img src="../../image/nguyenvana.jpg" alt="CEO" class="img-fluid">
                         <div class="member-social">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -232,7 +232,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-member">
                     <div class="member-image">
-                        <img src="https://via.placeholder.com/300x300?text=COO" alt="COO" class="img-fluid">
+                        <img src="../../image/tranthib.jpg" alt="COO" class="img-fluid">
                         <div class="member-social">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -250,7 +250,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-member">
                     <div class="member-image">
-                        <img src="https://via.placeholder.com/300x300?text=CTO" alt="CTO" class="img-fluid">
+                        <img src="../../image/levanc.webp" alt="CTO" class="img-fluid">
                         <div class="member-social">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -268,7 +268,7 @@
             <div class="col-lg-3 col-md-6">
                 <div class="team-member">
                     <div class="member-image">
-                        <img src="https://via.placeholder.com/300x300?text=CMO" alt="CMO" class="img-fluid">
+                        <img src="../../image/phamthid.jpg" alt="CMO" class="img-fluid">
                         <div class="member-social">
                             <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -301,11 +301,11 @@
             <div class="col-lg-4 col-md-6">
                 <div class="certification-item">
                     <div class="certification-icon">
-                        <img src="https://via.placeholder.com/100x100?text=VietGAP" alt="VietGAP" class="img-fluid">
+                        <img src="../../image/vietgap.jpg" alt="VietGAP" class="img-fluid">
                     </div>
                     <div class="certification-content">
                         <h4>Chứng nhận VietGAP</h4>
-                        <p>Thực hành sản xuất nông nghiệp tốt tại Việt Nam, đảm bảo sản phẩm an toàn và chất lượng.</p>
+                        <p>Thực hành sản xuất nông nghiệp tốt tại nước Việt Nam, đảm bảo sản phẩm an toàn và chất lượng cao.</p>
                     </div>
                 </div>
             </div>
@@ -313,7 +313,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="certification-item">
                     <div class="certification-icon">
-                        <img src="https://via.placeholder.com/100x100?text=Organic" alt="Organic" class="img-fluid">
+                        <img src="../../image/chungnhanhuuco.webp" alt="Organic" class="img-fluid">
                     </div>
                     <div class="certification-content">
                         <h4>Chứng nhận Hữu cơ</h4>
@@ -325,7 +325,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="certification-item">
                     <div class="certification-icon">
-                        <img src="https://via.placeholder.com/100x100?text=ISO" alt="ISO" class="img-fluid">
+                        <img src="../../image/iso22000.png" alt="ISO" class="img-fluid">
                     </div>
                     <div class="certification-content">
                         <h4>ISO 22000</h4>
@@ -337,7 +337,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="certification-item">
                     <div class="certification-icon">
-                        <img src="https://via.placeholder.com/100x100?text=HACCP" alt="HACCP" class="img-fluid">
+                        <img src="../../image/haccp.jpg" alt="HACCP" class="img-fluid">
                     </div>
                     <div class="certification-content">
                         <h4>HACCP</h4>
@@ -349,7 +349,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="certification-item">
                     <div class="certification-icon">
-                        <img src="https://via.placeholder.com/100x100?text=GlobalGAP" alt="GlobalGAP" class="img-fluid">
+                        <img src="../../image/globalgap.webp" alt="GlobalGAP" class="img-fluid">
                     </div>
                     <div class="certification-content">
                         <h4>GlobalGAP</h4>
@@ -361,11 +361,11 @@
             <div class="col-lg-4 col-md-6">
                 <div class="certification-item">
                     <div class="certification-icon">
-                        <img src="https://via.placeholder.com/100x100?text=USDA" alt="USDA" class="img-fluid">
+                        <img src="../../image/usda.jpg" alt="USDA" class="img-fluid">
                     </div>
                     <div class="certification-content">
                         <h4>USDA Organic</h4>
-                        <p>Chứng nhận hữu cơ của Bộ Nông nghiệp Hoa Kỳ, đảm bảo sản phẩm đạt chuẩn hữu cơ quốc tế.</p>
+                        <p>Chứng nhận hữu cơ Bộ Nông nghiệp Hoa Kỳ, đảm bảo sản phẩm đạt chuẩn hữu cơ quốc tế.</p>
                     </div>
                 </div>
             </div>
@@ -399,7 +399,7 @@
                             <p class="testimonial-text">"Tôi đã sử dụng sản phẩm của Nông Sản Xanh được hơn 2 năm và rất hài lòng với chất lượng. Rau củ luôn tươi ngon, giao hàng đúng hẹn và dịch vụ khách hàng tuyệt vời."</p>
                             <div class="testimonial-author">
                                 <div class="author-image">
-                                    <img src="https://via.placeholder.com/60x60?text=KH1" alt="Khách hàng 1" class="img-fluid rounded-circle">
+                                    <img src="../../image/nguyenthihuong.jpg" alt="Khách hàng 1" class="img-fluid rounded-circle">
                                 </div>
                                 <div class="author-info">
                                     <h5>Nguyễn Thị Hương</h5>
@@ -423,7 +423,7 @@
                             <p class="testimonial-text">"Là chủ nhà hàng, tôi rất quan tâm đến nguồn gốc và chất lượng thực phẩm. Nông Sản Xanh đã cung cấp cho nhà hàng của tôi những sản phẩm tươi ngon nhất, giúp món ăn của chúng tôi thêm phần đặc sắc."</p>
                             <div class="testimonial-author">
                                 <div class="author-image">
-                                    <img src="https://via.placeholder.com/60x60?text=KH2" alt="Khách hàng 2" class="img-fluid rounded-circle">
+                                    <img src="../../image/tranvanminh.jpg" alt="Khách hàng 2" class="img-fluid rounded-circle">
                                 </div>
                                 <div class="author-info">
                                     <h5>Trần Văn Minh</h5>
@@ -447,7 +447,7 @@
                             <p class="testimonial-text">"Tôi rất yên tâm khi mua sản phẩm từ Nông Sản Xanh cho gia đình, đặc biệt là các con nhỏ. Sản phẩm luôn tươi ngon, an toàn và có đầy đủ thông tin về nguồn gốc, quy trình sản xuất."</p>
                             <div class="testimonial-author">
                                 <div class="author-image">
-                                    <img src="https://via.placeholder.com/60x60?text=KH3" alt="Khách hàng 3" class="img-fluid rounded-circle">
+                                    <img src="../../image/lethimai.jpg" alt="Khách hàng 3" class="img-fluid rounded-circle">
                                 </div>
                                 <div class="author-info">
                                     <h5>Lê Thị Mai</h5>
