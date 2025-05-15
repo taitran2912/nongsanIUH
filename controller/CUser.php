@@ -5,7 +5,7 @@
             $pass =md5($pass);
             $p = new mUser();
             $ketqua = $p->login($email, $pass);
-            echo mysqli_num_rows($ketqua);
+            // echo mysqli_num_rows($ketqua);
             if (mysqli_num_rows($ketqua) > 0) {
                 while ($r = mysqli_fetch_assoc($ketqua)) {
                     $_SESSION["role"] = $r["role"];
