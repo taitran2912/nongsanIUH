@@ -119,7 +119,21 @@ class mProfile{
             } else {
                 return false;
             }
-
+    }
+    
+    public function mBuyer($id){
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+             // tránh SQL injection
+            $str = "SELECT * FROM farms WHERE owner_id = $id;";
+            $tbl = $conn->query($str);
+            $p->dongKetNoi($conn);
+            return $tbl;
+        } else {
+            return false;
+        }
     }
 }
 

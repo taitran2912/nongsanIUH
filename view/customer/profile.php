@@ -74,6 +74,31 @@
                                         <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
                                     </a>
                                 </li>
+                                <?php
+                                    $r = $p -> getBuyer($id);
+                                    if($r && $r->num_rows > 0){
+                                        $row = $r->fetch_assoc();
+                                        $storeId = $row['id'];
+                                        if($storeId != null){
+                                            echo '
+                                                <li class="nav-item mt-2">
+                                                    <a class="nav-link w-100 text-start" href="../buyer/index.php">
+                                                        <i class="fas fa-store me-2"></i> Cửa hàng của tôi
+                                                    </a>
+                                                </li>
+                                            ';
+                                        }
+                                    }else{
+                                            echo '
+                                                <li class="nav-item mt-2">
+                                                    <a class="nav-link w-100 text-start" href="../buyer/dangkynguoiban.php">
+                                                    <i class="fas fa-store me-2"></i>Đăng ký bán hàng
+                                                    </a>
+                                                </li>
+                                            ';
+                                        }
+                                ?>
+                                
                             </ul>
                         </div>
                     </div>
