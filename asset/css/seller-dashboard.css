@@ -341,3 +341,92 @@ body {
     color: white;
     display: none;
 }
+
+/* Navbar Styles */
+.navbar {
+    padding: 0.5rem 1rem;
+    z-index: 1020;
+}
+
+.navbar .btn {
+    padding: 0.375rem;
+    color: #6c757d;
+}
+
+.navbar .btn:hover {
+    color: #212529;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+}
+
+/* Notification & Message Icons */
+.dropdown .badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.4rem;
+}
+
+/* Background colors for notification icons */
+.bg-success-light {
+    background-color: rgba(40, 167, 69, 0.15);
+}
+
+.bg-warning-light {
+    background-color: rgba(255, 193, 7, 0.15);
+}
+
+.bg-danger-light {
+    background-color: rgba(220, 53, 69, 0.15);
+}
+
+.bg-info-light {
+    background-color: rgba(23, 162, 184, 0.15);
+}
+
+.bg-primary-light {
+    background-color: rgba(13, 110, 253, 0.15);
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+    padding: 0.5rem 0;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-header {
+    font-weight: 600;
+    color: #212529;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+}
+
+.dropdown-item:active, 
+.dropdown-item:focus {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #212529;
+}
+
+.dropdown-item-text {
+    padding: 0.5rem 1rem;
+}
+
+/* Search Bar */
+.input-group-text {
+    padding: 0.375rem 0.75rem;
+}
+
+/* User Profile */
+.dropdown-menu .dropdown-item i {
+    width: 1rem;
+    text-align: center;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 767.98px) {
+    .navbar .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
