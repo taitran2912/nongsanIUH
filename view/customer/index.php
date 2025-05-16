@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="../../asset/css/styles.css">
     <link rel="stylesheet" href="../../asset/css/products.css">
     <link rel="stylesheet" href="../../asset/css/about-us.css">
+    <?php
+    if (isset($_GET['action']) && $_GET['action'] === 'detail') {
+        echo '<link rel="stylesheet" href="../../asset/css/detail.css">';
+    }
+    ?>
 </head>
 
 <body>

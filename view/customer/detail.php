@@ -12,8 +12,9 @@ $conn = mysqli_connect("localhost", "root", "", "nongsan");
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Truy vấn thông tin sản phẩm
-$sql = "SELECT p.*, c.name as category_name, f.shopname as farm_name, f.id as farm_id 
+$sql = "SELECT p.*, c.name as category_name, f.shopname as farm_name, f.id as farm_id, pi.img as img
         FROM products p 
+        JOIN product_images pi ON p.id = pi.product_id
         JOIN categories c ON p.id_categories = c.id 
         JOIN farms f ON p.farm_id = f.id 
         WHERE p.id = $product_id";
@@ -29,18 +30,18 @@ while ($row = mysqli_fetch_assoc($result_images)) {
 }
 
 // Truy vấn sản phẩm liên quan
-$category_id = $product['id_categories'];
-$sql_related = "SELECT p.*, pi.img 
-                FROM products p 
-                LEFT JOIN product_images pi ON p.id = pi.product_id 
-                WHERE p.id_categories = $category_id AND p.id != $product_id 
-                GROUP BY p.id 
-                LIMIT 6";
-$result_related = mysqli_query($conn, $sql_related);
-$related_products = [];
-while ($row = mysqli_fetch_assoc($result_related)) {
-    $related_products[] = $row;
-}
+// $category_id = $product['id_categories'];
+// $sql_related = "SELECT p.*, pi.img 
+//                 FROM products p 
+//                 LEFT JOIN product_images pi ON p.id = pi.product_id 
+//                 WHERE p.id_categories = $category_id AND p.id != $product_id 
+//                 GROUP BY p.id 
+//                 LIMIT 6";
+// $result_related = mysqli_query($conn, $sql_related);
+// $related_products = [];
+// while ($row = mysqli_fetch_assoc($result_related)) {
+//     $related_products[] = $row;
+// }
 //đánh giá
 $sql_reviews = "SELECT r.*, u.name as user_name 
                 FROM reviews r 
@@ -56,172 +57,30 @@ while ($row = $reviews_result->fetch_assoc()) {
     $reviews[] = $row;
 }
 //
-$category_id = $product['id_categories'];
-$sql_related = "SELECT p.*, pi.img 
-                FROM products p 
-                LEFT JOIN product_images pi ON p.id = pi.product_id 
-                WHERE p.id_categories = ? AND p.id != ? 
-                GROUP BY p.id 
-                LIMIT 6";
-$stmt = $conn->prepare($sql_related);
-$stmt->bind_param("ii", $category_id, $product_id);
-$stmt->execute();
-$related_result = $stmt->get_result();
-$related_products = [];
-while ($row = $related_result->fetch_assoc()) {
-    $related_products[] = $row;
-}
+// $category_id = $product['id_categories'];
+// $sql_related = "SELECT p.*, pi.img 
+//                 FROM products p 
+//                 LEFT JOIN product_images pi ON p.id = pi.product_id 
+//                 WHERE p.id_categories = ? AND p.id != ? 
+//                 GROUP BY p.id 
+//                 LIMIT 6";
+// $stmt = $conn->prepare($sql_related);
+// $stmt->bind_param("ii", $category_id, $product_id);
+// $stmt->execute();
+// $related_result = $stmt->get_result();
+// $related_products = [];
+// while ($row = $related_result->fetch_assoc()) {
+//     $related_products[] = $row;
+// }
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $product['name']; ?> - Nông Sản Xanh</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #28a745;
-            --header-color:rgb(224, 255, 204);
-            --nav-color: #28a745;
-        }
-        
-        .header-top {
-            background-color: var(--nav-color);
-            color: white;
-            padding: 10px 0;
-        }
-        
-        .header-main {
-            background-color: var(--header-color);
-            padding: 15px 0;
-        }
-        
-        .nav-main {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .product-price {
-            color: #ee4d2d;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        
-        .product-original-price {
-            text-decoration: line-through;
-            color: #767676;
-            margin-left: 10px;
-        }
-        
-        .product-discount {
-            background-color: #ee4d2d;
-            color: white;
-            padding: 0 4px;
-            margin-left: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .product-rating .fa-star {
-            color: #ee4d2d;
-        }
-        
-        .product-rating .fa-star.gray {
-            color: #d5d5d5;
-        }
-        
-        .quantity-input {
-            width: 50px;
-            text-align: center;
-        }
-        
-        .btn-quantity {
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-add-cart {
-            background-color: #ffeee8;
-            color: #ee4d2d;
-            border: 1px solid #ee4d2d;
-        }
-        
-        .btn-buy-now {
-            background-color: #ee4d2d;
-            color: white;
-        }
-        
-        .product-thumbnails img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            cursor: pointer;
-            border: 1px solid #ddd;
-        }
-        
-        .product-thumbnails img.active {
-            border: 2px solid #ee4d2d;
-        }
-        
-        .section-title {
-            position: relative;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-color);
-        }
-        
-        .related-product {
-            transition: transform 0.3s;
-        }
-        
-        .related-product:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .review-item {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .review-rating {
-            margin-bottom: 5px;
-        }
-        
-        .breadcrumb-item a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
     <!-- Product Detail -->
     <div class="container my-4">
         <div class="row">
             <!-- Product Images -->
             <div class="col-md-5">
                 <div class="product-image mb-3">
-                    <img src="<?php echo $main_image; ?>" id="main-image" class="img-fluid border" alt="<?php echo $product['name']; ?>">
+                    <img src="../../image/<?php echo $product['img']; ?>" id="main-image" class="img-fluid border" alt="<?php echo $product['name']; ?>">
                 </div>
                 
                 <?php if (!empty($images)): ?>
@@ -287,21 +146,9 @@ while ($row = $related_result->fetch_assoc()) {
                     <button class="btn btn-add-cart btn-lg me-3" onclick="addToCart(<?php echo $product_id; ?>)">
                         <i class="fas fa-cart-plus me-2"></i> Thêm vào giỏ hàng
                     </button>
-                    <button class="btn btn-buy-now btn-lg" onclick="buyNow(<?php echo $product_id; ?>)">
-                        Mua ngay
-                    </button>
                 </div>
                 
-                <div class="mt-4 d-flex align-items-center">
-                    <span class="me-3">Chia sẻ:</span>
-                    <a href="#" class="me-2 text-primary"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="me-2 text-info"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="me-2 text-danger"><i class="fab fa-pinterest"></i></a>
-                    <span class="mx-3">|</span>
-                    <a href="#" class="text-danger" onclick="addToWishlist(<?php echo $product_id; ?>)">
-                        <i class="far fa-heart me-1"></i> Thêm vào yêu thích
-                    </a>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -319,11 +166,11 @@ while ($row = $related_result->fetch_assoc()) {
                     Đánh giá (<?php echo $reviews_result->num_rows; ?>)
                 </button>
             </li>
-            <li class="nav-item" role="presentation">
+            <!-- <li class="nav-item" role="presentation">
                 <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab">
                     Vận chuyển & Thanh toán
                 </button>
-            </li>
+            </li> -->
         </ul>
         
         <div class="tab-content p-4 border border-top-0" id="productTabsContent">
@@ -340,7 +187,7 @@ while ($row = $related_result->fetch_assoc()) {
                                 </tr>
                                 <tr>
                                     <td>Loại</td>
-                                    <td><?php echo $product['category_name'] ?? ''; ?></td>
+                                    <td><?php echo ucwords($product['category_name']) ?? ''; ?></td>
                                 </tr>
                                 <tr>
                                     <td>Đơn vị</td>
@@ -424,7 +271,7 @@ while ($row = $related_result->fetch_assoc()) {
             </div>
             
             <!-- Shipping Tab -->
-            <div class="tab-pane fade" id="shipping" role="tabpanel">
+            <!-- <div class="tab-pane fade" id="shipping" role="tabpanel">
                 <h4 class="section-title">Thông tin vận chuyển</h4>
                 <p>Chúng tôi giao hàng đến tất cả các tỉnh thành trên toàn quốc với các hình thức vận chuyển sau:</p>
                 
@@ -468,7 +315,7 @@ while ($row = $related_result->fetch_assoc()) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     
@@ -477,12 +324,12 @@ while ($row = $related_result->fetch_assoc()) {
         <h3 class="section-title">Sản phẩm liên quan</h3>
         
         <div class="row">
-            <?php if ($related_result->num_rows > 0): ?>
-                <?php while ($related = $related_result->fetch_assoc()): ?>
+            <?php if ($related_product->num_rows > 0): ?>
+                <?php while ($related = $related_product->fetch_assoc()): ?>
                 <div class="col-6 col-md-4 col-lg-2 mb-4">
                     <div class="card h-100 related-product">
                         <a href="product-detail.php?id=<?php echo $related['id']; ?>">
-                            <img src="<?php echo $related['image_url']; ?>" class="card-img-top" alt="<?php echo $related['name']; ?>">
+                            <img src="<?php echo $related['img']; ?>" class="card-img-top" alt="<?php echo $related['name']; ?>">
                         </a>
                         <div class="card-body">
                             <h6 class="card-title">
@@ -511,68 +358,12 @@ while ($row = $related_result->fetch_assoc()) {
                 <?php endwhile; ?>
             <?php else: ?>
                 <div class="col-12">
-                    <p>Không có sản phẩm liên quan.</p>
+                    <p>Đang cập nhật.</p>
                 </div>
             <?php endif; ?>
         </div>
     </div>
     
-    <!-- Footer -->
-    <footer class="bg-dark text-white pt-5 pb-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Nông Sản Xanh</h5>
-                    <p>Chuyên cung cấp các loại rau củ, trái cây, thực phẩm hữu cơ đảm bảo an toàn và chất lượng.</p>
-                    <div class="mt-3">
-                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Liên kết nhanh</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="index.php" class="text-white text-decoration-none">Trang chủ</a></li>
-                        <li class="mb-2"><a href="index.php?action=product" class="text-white text-decoration-none">Sản phẩm</a></li>
-                        <li class="mb-2"><a href="index.php?action=about" class="text-white text-decoration-none">Về chúng tôi</a></li>
-                        <li class="mb-2"><a href="index.php?action=contact" class="text-white text-decoration-none">Liên hệ</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Chính sách</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Chính sách bảo mật</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Điều khoản sử dụng</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Chính sách đổi trả</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Chính sách vận chuyển</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <h5 class="mb-4">Liên hệ</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Đường ABC, Quận XYZ, TP. HCM</li>
-                        <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> 0123 456 789</li>
-                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@nongsanxanh.com</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <hr class="my-4">
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2023 Nông Sản Xanh. Tất cả quyền được bảo lưu.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <img src="assets/images/payment-methods.png" alt="Phương thức thanh toán" height="30">
-                </div>
-            </div>
-        </div>
-    </footer>
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -741,8 +532,7 @@ while ($row = $related_result->fetch_assoc()) {
             });
         });
     </script>
-</body>
-</html>
+
 <?php
 // Close database connection
 $conn->close();
