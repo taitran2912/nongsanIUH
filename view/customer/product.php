@@ -148,7 +148,7 @@ $offset = ($current_page - 1) * $items_per_page;
                                             </div>
                                             <div class="product-info p-3">
                                                 <span class="product-category">Rau củ</span>
-                                                <h5><a href="#" class="product-title">'.$row['name'].'</a></h5>
+                                                <h5><a href="?action=detail&id='.$row['id'].'" class="product-title">'.$row['name'].'</a></h5>
                                                 <div class="product-price">
                                                     <span class="new-price">'.$row['price'].'đ/kg</span>
                                                 </div>
