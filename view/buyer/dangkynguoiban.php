@@ -22,35 +22,6 @@
                 <div class="col-md-8">
                     <div class="register-form">
                         <form id="sellerRegistrationForm" action="process_registration.php" method="POST">
-                            <!-- Thông tin tài khoản -->
-                            <div class="form-section">
-                                <h4 class="form-section-title">Thông Tin Tài Khoản</h4>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="fullName" class="form-label required-field">Họ và tên</label>
-                                        <input type="text" class="form-control" id="fullName" name="fullName" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email" class="form-label required-field">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3 position-relative">
-                                        <label for="password" class="form-label required-field">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
-                                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
-                                        <div class="form-text">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số</div>
-                                    </div>
-                                    <div class="col-md-6 mb-3 position-relative">
-                                        <label for="confirmPassword" class="form-label required-field">Xác nhận mật khẩu</label>
-                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                                        <i class="fas fa-eye password-toggle" id="toggleConfirmPassword"></i>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Thông tin liên hệ -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông Tin Liên Hệ</h4>
