@@ -1,20 +1,11 @@
-<?php
-// Lấy thông tin người dùng từ session
-$seller_name = isset($_SESSION['seller_name']) ? $_SESSION['seller_name'] : 'Người bán';
-$seller_email = isset($_SESSION['seller_email']) ? $_SESSION['seller_email'] : 'seller@example.com';
-$seller_avatar = isset($_SESSION['seller_avatar']) ? $_SESSION['seller_avatar'] : 'https://via.placeholder.com/40';
-
-// Đếm số thông báo mới (giả lập)
-$notification_count = 3;
-$message_count = 2;
-?>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
     <div class="container-fluid">
         <!-- Left side content or brand can be added here if needed -->
         <div class="navbar-brand">
-            <img src="../../image/logo.png" alt="Nông Sản Xanh Logo" height="30" class="d-inline-block align-text-top">
-            <span class="ms-2 d-none d-md-inline">Nông Sản Xanh</span>
+            <a href="?action=dashboard" class="nav-link <?php echo (!isset($_GET['action']) || $_GET['action'] == 'dashboard') ? 'active' : ''; ?>">
+                <img src="../../image/logo.png" alt="Nông Sản Xanh Logo" height="30" class="d-inline-block align-text-top">
+                <span class="ms-2 d-none d-md-inline">Nông Sản Xanh</span>
+            </a>
         </div>
         
         <!-- Spacer to push content to the right -->
@@ -23,7 +14,7 @@ $message_count = 2;
         <!-- Right-aligned Nav Items -->
         <div class="d-flex align-items-center">
             <!-- Notifications -->
-            <div class="dropdown me-3">
+            <!-- <div class="dropdown me-3">
                 <button class="btn position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-bell"></i>
                     <?php if ($notification_count > 0): ?>
@@ -77,7 +68,7 @@ $message_count = 2;
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-center" href="#">Xem tất cả thông báo</a></li>
                 </ul>
-            </div>
+            </div> -->
 
             <!-- Messages -->
             <div class="dropdown me-3">
@@ -95,7 +86,7 @@ $message_count = 2;
                     <li>
                         <a class="dropdown-item d-flex align-items-center py-2" href="#">
                             <div class="flex-shrink-0">
-                                <img src="https://via.placeholder.com/40" class="rounded-circle" alt="Avatar">
+                                <img src="" class="rounded-circle" alt="Avatar">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <p class="mb-0 fw-semibold">Nguyễn Văn A</p>
@@ -107,7 +98,7 @@ $message_count = 2;
                     <li>
                         <a class="dropdown-item d-flex align-items-center py-2" href="#">
                             <div class="flex-shrink-0">
-                                <img src="https://via.placeholder.com/40" class="rounded-circle" alt="Avatar">
+                                <img src="" class="rounded-circle" alt="Avatar">
                             </div>
                             <div class="flex-grow-1 ms-3">
                                 <p class="mb-0 fw-semibold">Trần Thị B</p>

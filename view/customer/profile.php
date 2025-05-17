@@ -69,11 +69,11 @@
                                         <i class="fas fa-cog me-2"></i> Cài đặt tài khoản
                                     </button>
                                 </li>
-                                <li class="nav-item mt-2">
+                                <!-- <li class="nav-item mt-2">
                                     <a class="nav-link text-danger w-100 text-start" href="../login/logout.php">
                                         <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
                                     </a>
-                                </li>
+                                </li> -->
                                 <?php
                                     $r = $p -> getBuyer($id);
                                     if($r && $r->num_rows > 0){
@@ -82,7 +82,7 @@
                                         if($storeId != null){
                                             echo '
                                                 <li class="nav-item mt-2">
-                                                    <a class="nav-link w-100 text-start" href="../buyer/index.php">
+                                                    <a class="nav-link w-100 text-start" href="../buyer/">
                                                         <i class="fas fa-store me-2"></i> Cửa hàng của tôi
                                                     </a>
                                                 </li>

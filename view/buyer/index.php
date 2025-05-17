@@ -1,4 +1,38 @@
 <?php
+session_start();
+include_once '../../controller/cBuyer.php';
+
+$id = isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
+
+$p = new cBuyer();
+
+$r = $p->checkShop($id);
+if($r && $r->num_rows > 0){
+$row = $r->fetch_assoc();
+$countShop = $row['count'];
+if($countShop == 0){
+    echo "<script>
+            alert('Bạn không có quyền truy cập');
+            window.location.href = '../customer/index.php';
+          </script>";
+    exit();
+}
+}
+$storeId = 0;
+$r = $p->getFarm($id);
+if($r && $r->num_rows > 0){
+    $row = $r->fetch_assoc();
+    $storeId = $row['id'];
+    $storeName = $row['shopname'];
+}else {
+    echo "<script>
+            alert('Bạn không có quyền truy cập');
+            window.location.href = '../customer/index.php';
+          </script>";
+    exit();
+}
+
+
 
 ?>
 <!DOCTYPE html>
@@ -7,13 +41,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang người bán</title>
-    <!-- Bootstrap CSS -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
+   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
-    <!-- Custom CSS -->
+    
     <link rel="stylesheet" href="../../asset/css/seller-dashboard.css">
 </head>
 
@@ -22,8 +56,12 @@
         <!-- Sidebar -->
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                <img src="../../image/logo.png" alt="Nông Sản Xanh Logo" class="logo">
-                <h3>Người Bán</h3>
+                <!-- <img src="../../image/logo.png" alt="Nông Sản Xanh Logo" class="logo"> -->
+                <h3>
+                    <?php 
+                        echo $storeName
+                    ?>
+                </h3>
                 <button id="sidebarCollapseBtn" class="d-md-none">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -45,11 +83,11 @@
                         <i class="fas fa-shopping-cart"></i> Đơn hàng
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="?action=customer" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'customer') ? 'active' : ''; ?>">
                         <i class="fas fa-users"></i> Khách hàng
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="?action=statis" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'statis') ? 'active' : ''; ?>">
                         <i class="fas fa-chart-line"></i> Thống kê
@@ -65,9 +103,9 @@
                         <i class="fas fa-cog"></i> Cài đặt
                     </a>
                 </li>
-                <li class="nav-item mt-5">
-                    <a href="../logout.php" class="nav-link text-danger">
-                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                <li class="nav-item">
+                    <a href="../customer/index.php" class="nav-link text-secondary">
+                        <i class="fas fa-sign-out-alt"></i> Trở lại mua hàng
                     </a>
                 </li>
             </ul>
