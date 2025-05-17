@@ -83,11 +83,11 @@ if($r && $r->num_rows > 0){
                         <i class="fas fa-shopping-cart"></i> Đơn hàng
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="?action=customer" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'customer') ? 'active' : ''; ?>">
                         <i class="fas fa-users"></i> Khách hàng
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="?action=statis" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'statis') ? 'active' : ''; ?>">
                         <i class="fas fa-chart-line"></i> Thống kê

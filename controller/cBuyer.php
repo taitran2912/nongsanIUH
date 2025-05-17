@@ -14,7 +14,6 @@ class cBuyer{
             } else {
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
-        
     }
 
     public function getFarm($id){
@@ -29,7 +28,6 @@ class cBuyer{
             } else {
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
-        
     }
 
     public function tinhTongDoanhThu($id){
@@ -52,7 +50,6 @@ class cBuyer{
             } else {
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
-        
     }
 
     public function tinhTongDonHang($id){
@@ -75,7 +72,6 @@ class cBuyer{
             } else {
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
-        
     }
     
     public function tinhTongSanPham($id){
@@ -97,7 +93,6 @@ class cBuyer{
             } else {
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
-        
     }
 
     public function dsDonHang($id){
@@ -122,7 +117,41 @@ class cBuyer{
             } else {
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
-        
     }
+    // dsSPGanHet
+
+    public function dsSPGanHet($id){
+        $p = new mBuyer();
+            $str = "SELECT p.*, c.name as c_name
+                    FROM categories c 
+                    JOIN products p ON c.id = p.id_categories 
+                    JOIN farms f ON p.farm_id = f.id 
+                    WHERE f.id = $id && p.quantity <= 50 
+                    ORDER BY p.quantity 
+                    ASC LIMIT 6;
+                    ";
+            $tbl = $p->sumDT($str);
+            if ($tbl) {
+                if ($tbl->num_rows > 0) {
+                    return $tbl;
+                } else {
+                    return -1;  // Không có dữ liệu
+                }
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+    }
+    // updateProductQuantity
+    public function updateProductQuantity($id, $quantity){
+        $p = new mBuyer();
+            $str = "UPDATE products SET quantity = quantity + $quantity WHERE id = $id";
+            $tbl = $p->sumDT($str);
+            if ($tbl) {
+                return true;
+            } else {
+                return false;  
+            }
+    }
+
 }
 ?>

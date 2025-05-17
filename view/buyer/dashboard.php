@@ -18,6 +18,19 @@
         $tongSP = $row['SanPham'] ?? 0;
     }
 
+    $localtion = 'dashboard';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'], $_POST['restock_quantity'])) {
+    $productId = intval($_POST['product_id']);
+    $restockQuantity = intval($_POST['restock_quantity']);
+    }
+    if (isset($productId) && isset($restockQuantity)) {
+        if($p->updateProductQuantity($productId, $restockQuantity)){
+            echo '<script>alert("Cập nhật thành công!");</script>';
+        } else {
+            echo '<script>alert("Cập nhật thất bại!");</script>';
+        }
+    }
 ?>
 <div class="tab-pane fade show active">
                         <!-- Stats Cards -->
@@ -110,7 +123,7 @@
                         <div class="card mb-4">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0">Đơn hàng gần đây</h5>
-                                <a href="#orders" class="btn btn-sm btn-outline-success" data-bs-toggle="tab">Xem tất cả</a>
+                                <a href="?action=order" class="btn btn-sm btn-outline-success" data-bs-toggle="tab">Xem tất cả</a>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
@@ -163,7 +176,7 @@ if ($dsDH && $dsDH->num_rows > 0) {
                                             <tr>
                                                 <td>#'.$row['id'].'</td>
                                                 <td>'.$row['order_date'].'</td>
-                                                <td>'.$row['total_amount'].'</td>
+                                                <td>'.number_format($row['total_amount'], 0, ',', '.').'đ</td>
                                                 <td><span class="badge '.$color.'">'.$statusText.'</span></td>
                                                 <td>
                                                     <div class="dropdown">
@@ -176,14 +189,11 @@ if ($dsDH && $dsDH->num_rows > 0) {
                                                     </div>
                                                 </td>
                                             </tr>
-                                    
             ';   
             $count++; 
     }
 }                   
 ?>            
-
-                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -194,8 +204,9 @@ if ($dsDH && $dsDH->num_rows > 0) {
                         <div class="card">
                             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0">Sản phẩm sắp hết hàng</h5>
-                                <a href="#products" class="btn btn-sm btn-outline-success" data-bs-toggle="tab">Quản lý kho</a>
+                                <a href="?action=product" class="btn btn-sm btn-outline-success" data-bs-toggle="tab">Quản lý kho</a>
                             </div>
+
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
@@ -210,31 +221,79 @@ if ($dsDH && $dsDH->num_rows > 0) {
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            
+<?php
+$lSPGanHet = $p->dsSPGanHet($storeId);
+if ($lSPGanHet && $lSPGanHet->num_rows > 0) {
+    while ($row = $lSPGanHet->fetch_assoc()) {
+        $quantity = $row['quantity'];
+        if ($quantity == 0) {
+            $color = "bg-secondary";
+            $statusText = "Đã hết hàng";
+            $width = 0;
+        } elseif ($quantity > 0 && $quantity <= 20) {
+            $color = "bg-danger";
+            $statusText = "Sắp hết";
+            $width = 10;
+        } elseif ($quantity > 20 && $quantity <= 40) {
+            $color = "bg-warning";
+            $statusText = "Còn ít";
+            $width = 25;
+        } elseif ($quantity > 40 && $quantity <= 50) {
+            $color = "bg-success";
+            $statusText = "Nên nhập hàng";
+            $width = 35;
+        }
+
+        // $notes = $rowOders['notes'];
+
+            echo '
                                             <tr>
-                                                <a href="">
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <div>Rau cải ngọt hữu cơ</div>
+                                                        <div>'.$row['name'].'</div>
                                                     </div>
                                                 </td>
-                                                <td>Rau củ</td>
-                                                <td>25,000 đ</td>
+                                                <td>'.$row['c_name'].'</td>
+                                                <td>'.number_format($row['price'], 0, ',', '.').'đ</td>
                                                 <td>
                                                     <div class="progress" style="height: 6px;">
-                                                        <div class="progress-bar bg-danger" style="width: 10%"></div>
+                                                        <div class="progress-bar '.$color.'" style="width: '.$width.'%"></div>
                                                     </div>
-                                                    <small class="text-muted">5 kg</small>
+                                                    <small class="text-muted">'.$row['quantity'].' '.$row['unit'].'</small>
                                                 </td>
-                                                <td><span class="badge bg-danger">Sắp hết</span></td>
+                                                <td><span class="badge '.$color.'">'.$statusText.'</span></td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-outline-primary">Nhập thêm</button>
+                                                    <button class="btn btn-sm btn-outline-primary restock-btn" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#restockModal"
+                                                            data-product-id="'.$row['id'].'"
+                                                            data-product-name="'.$row['name'].'"
+                                                            data-unit="'.$row['unit'].'">
+                                                        Nhập thêm
+                                                    </button>
                                                 </td>
-                                                </a>
                                             </tr>
-                                            
+            ';
+    }
+}
+?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                        <?php include_once 'modals/dashboard_modal.php'; ?>
                     </div>
+ <?php
+    // echo '<h1>'.$productId.'</h1>
+    // <h1>'.$restockQuantity.'</h1>';
+    // if (isset($productId) && isset($restockQuantity)) {
+    //     if($p->updateProductQuantity($productId, $restockQuantity)){
+    //         echo '<script>alert("Cập nhật thành công!");</script>';
+    //     } else {
+    //         echo '<script>alert("Cập nhật thất bại!");</script>';
+    //     }
+    // }
+?> 
+
