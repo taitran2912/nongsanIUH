@@ -5,8 +5,12 @@ $username = "root";
 $password = "";
 $dbname = "nongsan";
 
+include_once("../../model/connect.php");
 // Kết nối CSDL
-$conn = mysqli_connect("localhost", "root", "", "nongsan");
+// $conn = mysqli_connect("localhost", "root", "", "nongsan");
+$kn = new clsketnoi();
+$conn = $kn->moKetNoi();
+$conn->set_charset('utf8');
 
 // Lấy ID sản phẩm từ URL
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -30,18 +34,18 @@ while ($row = mysqli_fetch_assoc($result_images)) {
 }
 
 // Truy vấn sản phẩm liên quan
-// $category_id = $product['id_categories'];
-// $sql_related = "SELECT p.*, pi.img 
-//                 FROM products p 
-//                 LEFT JOIN product_images pi ON p.id = pi.product_id 
-//                 WHERE p.id_categories = $category_id AND p.id != $product_id 
-//                 GROUP BY p.id 
-//                 LIMIT 6";
-// $result_related = mysqli_query($conn, $sql_related);
-// $related_products = [];
-// while ($row = mysqli_fetch_assoc($result_related)) {
-//     $related_products[] = $row;
-// }
+$category_id = $product['id_categories'];
+$sql_related = "SELECT p.*, pi.img 
+                FROM products p 
+                LEFT JOIN product_images pi ON p.id = pi.product_id 
+                WHERE p.id_categories = $category_id AND p.id != $product_id 
+                GROUP BY p.id 
+                LIMIT 6";
+$result_related = mysqli_query($conn, $sql_related);
+$related_products = [];
+while ($row = mysqli_fetch_assoc($result_related)) {
+    $related_products[] = $row;
+}
 //đánh giá
 $sql_reviews = "SELECT r.*, u.name as user_name 
                 FROM reviews r 
@@ -56,22 +60,22 @@ $reviews = [];
 while ($row = $reviews_result->fetch_assoc()) {
     $reviews[] = $row;
 }
-//
-// $category_id = $product['id_categories'];
-// $sql_related = "SELECT p.*, pi.img 
-//                 FROM products p 
-//                 LEFT JOIN product_images pi ON p.id = pi.product_id 
-//                 WHERE p.id_categories = ? AND p.id != ? 
-//                 GROUP BY p.id 
-//                 LIMIT 6";
-// $stmt = $conn->prepare($sql_related);
-// $stmt->bind_param("ii", $category_id, $product_id);
-// $stmt->execute();
-// $related_result = $stmt->get_result();
-// $related_products = [];
-// while ($row = $related_result->fetch_assoc()) {
-//     $related_products[] = $row;
-// }
+
+$category_id = $product['id_categories'];
+$sql_related = "SELECT p.*, pi.img 
+                FROM products p 
+                LEFT JOIN product_images pi ON p.id = pi.product_id 
+                WHERE p.id_categories = ? AND p.id != ? 
+                GROUP BY p.id 
+                LIMIT 6";
+$stmt = $conn->prepare($sql_related);
+$stmt->bind_param("ii", $category_id, $product_id);
+$stmt->execute();
+$related_result = $stmt->get_result();
+$related_products = [];
+while ($row = $related_result->fetch_assoc()) {
+    $related_products[] = $row;
+}
 ?>
 
     <!-- Product Detail -->
@@ -320,50 +324,48 @@ while ($row = $reviews_result->fetch_assoc()) {
     </div>
     
     <!-- Related Products -->
-    <div class="container my-5">
-        <h3 class="section-title">Sản phẩm liên quan</h3>
-        
-        <div class="row">
-            <?php if ($related_product->num_rows > 0): ?>
-                <?php while ($related = $related_product->fetch_assoc()): ?>
-                <div class="col-6 col-md-4 col-lg-2 mb-4">
-                    <div class="card h-100 related-product">
-                        <a href="product-detail.php?id=<?php echo $related['id']; ?>">
-                            <img src="<?php echo $related['img']; ?>" class="card-img-top" alt="<?php echo $related['name']; ?>">
-                        </a>
-                        <div class="card-body">
-                            <h6 class="card-title">
-                                <a href="product-detail.php?id=<?php echo $related['id']; ?>" class="text-decoration-none text-dark">
-                                    <?php echo $related['name']; ?>
-                                </a>
-                            </h6>
-                            <div class="product-rating small">
-                                <?php
-                                $rating = $related['rating'] ?? 0;
-                                for ($i = 1; $i <= 5; $i++) {
-                                    if ($i <= $rating) {
-                                        echo '<i class="fas fa-star"></i>';
-                                    } else {
-                                        echo '<i class="fas fa-star gray"></i>';
-                                    }
-                                }
-                                ?>
-                            </div>
-                            <p class="card-text mt-2 text-danger fw-bold">
-                                <?php echo number_format($related['price'], 0, ',', '.'); ?>đ/<?php echo $related['unit']; ?>
-                            </p>
+ <div class="container my-5">
+    <h3 class="section-title">Sản phẩm liên quan</h3>
+    
+    <div class="row">
+        <?php if (!empty($related_products)): ?>
+            <?php foreach ($related_products as $related): ?>
+            <div class="col-6 col-md-4 col-lg-2 mb-4">
+                <div class="card h-100 related-product">
+                    <a href="product-detail.php?id=<?php echo $related['id']; ?>">
+                        <img src="../../image/<?php echo htmlspecialchars($related['img']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($related['name']); ?>">
+                    </a>
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <a href="product-detail.php?id=<?php echo $related['id']; ?>" class="text-decoration-none text-dark">
+                                <?php echo htmlspecialchars($related['name']); ?>
+                            </a>
+                        </h6>
+                        <div class="product-rating small">
+                            <?php
+                            $rating = $related['rating'] ?? 0;
+                            for ($i = 1; $i <= 5; $i++) {
+                                echo $i <= $rating
+                                    ? '<i class="fas fa-star"></i>'
+                                    : '<i class="fas fa-star gray"></i>';
+                            }
+                            ?>
                         </div>
+                        <p class="card-text mt-2 text-danger fw-bold">
+                            <?php echo number_format($related['price'], 0, ',', '.'); ?>đ/<?php echo $related['unit']; ?>
+                        </p>
                     </div>
                 </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <div class="col-12">
-                    <p>Đang cập nhật.</p>
-                </div>
-            <?php endif; ?>
-        </div>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="col-12">
+                <p>Đang cập nhật.</p>
+            </div>
+        <?php endif; ?>
     </div>
-    
+</div>
+
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

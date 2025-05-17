@@ -1,3 +1,8 @@
+<?php
+include_once 'xlydknguoiban.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -21,7 +26,7 @@
             <div class="row g-0">
                 <div class="col-md-8">
                     <div class="register-form">
-                        <form id="sellerRegistrationForm" action="process_registration.php" method="POST">
+                        <form id="sellerRegistrationForm" method="POST">
                             <!-- Thông tin liên hệ -->
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông Tin Liên Hệ</h4>
@@ -56,7 +61,7 @@
 
                             <!-- Nút submit -->
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg">Đăng Ký</button>
+                                <button type="submit" class="btn btn-primary btn-lg" name="createFarm">Đăng Ký</button>
                             </div>
 
                             <div class="login-link">

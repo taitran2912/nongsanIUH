@@ -22,9 +22,10 @@
                     include_once("controller/CUser.php");
                     $p = new CUser();
                     $kq = $p->login($_POST["txtEmail"], $_POST["txtPass"]);
+                    // $id = $_SESSION["id"];
                     if ($kq == 1) {
                         echo "<script>
-                            alert('Đăng nhập thành công!');
+                            alert('Đăng nhập thành công $id!');
                             window.location.href = 'view/customer/index.php';
                         </script>";
                         exit;
