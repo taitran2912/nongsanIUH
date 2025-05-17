@@ -1,40 +1,3 @@
-<?php
-session_start();
-include_once '../../controller/cBuyer.php';
-
-$id = isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
-
-$p = new cBuyer();
-
-$r = $p->checkShop($id);
-if($r && $r->num_rows > 0){
-$row = $r->fetch_assoc();
-$countShop = $row['count'];
-if($countShop == 0){
-    echo "<script>
-            alert('Bạn không có quyền truy cập');
-            window.location.href = '../customer/index.php';
-          </script>";
-    exit();
-}
-}
-$storeId = 0;
-$r = $p->getFarm($id);
-if($r && $r->num_rows > 0){
-    $row = $r->fetch_assoc();
-    $storeId = $row['id'];
-    $storeName = $row['shopname'];
-}else {
-    echo "<script>
-            alert('Bạn không có quyền truy cập');
-            window.location.href = '../customer/index.php';
-          </script>";
-    exit();
-}
-
-
-
-?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -56,12 +19,8 @@ if($r && $r->num_rows > 0){
         <!-- Sidebar -->
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                <!-- <img src="../../image/logo.png" alt="Nông Sản Xanh Logo" class="logo"> -->
-                <h3>
-                    <?php 
-                        echo $storeName
-                    ?>
-                </h3>
+                <img src="../../image/logo.png" alt="Nông Sản Xanh Logo" class="logo">
+                <h3>Người Bán</h3>
                 <button id="sidebarCollapseBtn" class="d-md-none">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -103,9 +62,9 @@ if($r && $r->num_rows > 0){
                         <i class="fas fa-cog"></i> Cài đặt
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="../customer/index.php" class="nav-link text-secondary">
-                        <i class="fas fa-sign-out-alt"></i> Trở lại mua hàng
+                <li class="nav-item mt-5">
+                    <a href="../logout.php" class="nav-link text-danger">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
                     </a>
                 </li>
             </ul>
@@ -125,7 +84,7 @@ if($r && $r->num_rows > 0){
                 // Kiểm tra và tải trang tương ứng
                 switch ($action) {
                     case 'dashboard':
-                        include_once 'dashboard.php';
+                        // include_once 'dashboard.php';
                         break;
                     case 'product':
                         include_once 'product.php';
