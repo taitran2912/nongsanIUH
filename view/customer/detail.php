@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "nongsan1";
+$dbname = "nongsan";
 
 include_once("../../model/connect.php");
 // Kết nối CSDL
