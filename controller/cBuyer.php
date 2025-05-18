@@ -217,5 +217,16 @@ class cBuyer{
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
     }
+    // updateProduct
+    public function updateProduct($id, $name, $price, $quantity, $description, $id_cate, $unit){
+        $p = new mBuyer();
+            $str = "UPDATE products SET name = '$name', price = '$price', quantity = '$quantity', description = '$description', id_categories = '$id_cate', unit = '$unit' WHERE id = $id";
+            $tbl = $p->sumDT($str);
+            if ($tbl) {
+                return true;
+            } else {
+                return false;  
+            }
+    }
 }
 ?>

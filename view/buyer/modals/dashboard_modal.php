@@ -9,6 +9,7 @@
             <div class="modal-body">
                 <form id="restockForm" method="POST" action="?action=<?php echo $location;?>">
                     <input type="hidden" id="productId" name="product_id" value="">
+                    <input type="hidden" name="action_type" value="restock">
                     
                     <div class="mb-3">
                         <label for="restockQuantity" class="form-label">Số lượng nhập thêm</label>
