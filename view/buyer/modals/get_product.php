@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
     $conn = (new clsketnoi())->moKetNoi();
     $conn->set_charset("utf8");
 
-    $stmt = $conn->prepare("SELECT id, name, description, price, quantity, created_at, unit FROM products WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, name, description, price, quantity, created_at, unit FROM products WHERE id = ? AND status = 0");
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {

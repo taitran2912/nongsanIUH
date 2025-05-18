@@ -131,6 +131,7 @@ class cBuyer{
                     JOIN products p ON c.id = p.id_categories 
                     JOIN farms f ON p.farm_id = f.id 
                     WHERE f.id = $id && p.quantity <= 50 
+                    AND p.status = 0
                     ORDER BY p.quantity 
                     ASC LIMIT 6;
                     ";
@@ -164,6 +165,7 @@ class cBuyer{
                     JOIN products p ON c.id = p.id_categories 
                     JOIN farms f ON p.farm_id = f.id 
                     WHERE f.id = $id
+                    AND p.status = 0
                     ORDER BY p.quantity;
                     ";
             $tbl = $p->sumDT($str);
@@ -180,9 +182,7 @@ class cBuyer{
 
     public function getAllCategory(){
         $p = new mBuyer();
-            $str = "SELECT *
-                    FROM categories;
-                    ";
+            $str = "SELECT * FROM categories;";
             $tbl = $p->sumDT($str);
             if ($tbl) {
                 if ($tbl->num_rows > 0) {
@@ -203,6 +203,7 @@ class cBuyer{
                     JOIN farms f ON p.farm_id = f.id 
                     WHERE f.id = $id
                     AND c.id = $id_cate
+                    AND p.status = 0
                     ORDER BY p.quantity;
                     ";
             $tbl = $p->sumDT($str);
