@@ -135,6 +135,20 @@ class mProfile{
             return false;
         }
     }
+    public function mUpdateOrderStatus($id, $status, $note){
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+            $id = $conn->real_escape_string($id); // tránh SQL injection
+            $str = "UPDATE orders SET status = '$status', notes = '$note' WHERE id = '$id';";
+            $tbl = $conn->query($str);
+            $p->dongKetNoi($conn);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 ?>

@@ -2,6 +2,19 @@
     session_start();
     $id = isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
     $role = $_SESSION["role"];
+    include_once("../../controller/cProfile.php");
+    $p = new cProfile();
+
+    // hủy đơn
+    if(isset($_GET['action']) && $_GET['action'] == 'cancelorder'){
+        $orderId = $_GET['id'];
+        if($p->updateOrderStatus($orderId, 3, "Đã hủy")){
+            echo "<script>alert('Hủy đơn hàng thành công!');</script>";
+            echo "<script>window.location.href='index.php?action=profile';</script>";
+        } else {
+            echo "<script>alert('Hủy đơn hàng thất bại!');</script>";
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">

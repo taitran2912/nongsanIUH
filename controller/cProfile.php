@@ -103,5 +103,14 @@
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
         }
+        public function updateOrderStatus($id, $status, $note){
+            $p = new mProfile();
+            $tbl = $p->mUpdateOrderStatus($id, $status, $note);
+            if ($tbl) {
+                return true;
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+        }
     }
 ?>
