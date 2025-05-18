@@ -41,271 +41,28 @@ $transaction_query = "SELECT * FROM transactions WHERE order_id = $order_id";
 $transaction_result = $conn->query($transaction_query);
 $transaction = $transaction_result->fetch_assoc();
 ?>
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết đơn hàng #<?php echo $order_id; ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #1e8449; /* Màu xanh lá đậm */
-            --secondary-color: #fce4ec; /* Màu hồng nhạt */
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-        
-        .top-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 0;
-        }
-        
-        .top-header a {
-            color: white;
-            text-decoration: none;
-        }
-        
-        .main-header {
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px 0;
-        }
-        
-        .nav-link {
-            color: #333;
-            font-weight: 500;
-            margin: 0 15px;
-        }
-        
-        .nav-link.active {
-            color: var(--primary-color);
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            background-color: var(--secondary-color);
-            border-bottom: 1px solid #ddd;
-            font-weight: bold;
-        }
-        
-        .sidebar {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .sidebar .nav-link {
-            color: #333;
-            padding: 12px 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .sidebar .nav-link.active {
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        
-        .sidebar .nav-link i {
-            color: var(--primary-color);
-            margin-right: 10px;
-        }
-        
-        .order-status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-processing {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-        
-        .status-shipped {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .status-delivered {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-        
-        .status-cancelled {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .product-img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <div class="top-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <i class="fas fa-phone-alt me-2"></i> 0123 456 789
-                    <i class="fas fa-envelope ms-3 me-2"></i> info@nongsanxanh.com
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="main-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <a href="index.php" class="text-decoration-none">
-                        <img src="assets/images/logo.png" alt="Nông Sản Xanh" height="60">
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <nav class="navbar navbar-expand-lg">
-                        <div class="container-fluid">
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNav">
-                                <ul class="navbar-nav">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="../customer/index.php">Trang chủ</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="products.php">Sản phẩm</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="about.php">Về chúng tôi</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-                <div class="col-md-3 text-end">
-                    <a href="profile.php" class="btn btn-outline-primary me-2">
-                        <i class="fas fa-user"></i>
-                    </a>
-                    <a href="logout.php" class="btn btn-outline-primary me-2">
-                        Đăng xuất
-                    </a>
-                    <a href="cart.php" class="btn btn-primary position-relative">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                        </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Main Content -->
     <div class="container my-5">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3">
-                <div class="sidebar">
-                    <div class="p-3 text-center">
-                        <h5 class="mb-1"><?php echo isset($order['customer_name']) ? $order['customer_name'] : 'Khách hàng'; ?></h5>
-                        <p class="text-muted mb-0"><?php echo isset($order['customer_email']) ? $order['customer_email'] : 'email@example.com'; ?></p>
-                    </div>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="profile.php">
-                                <i class="fas fa-tachometer-alt"></i> Tổng quan
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="profile_info.php">
-                                <i class="fas fa-user"></i> Thông tin cá nhân
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="orders.php">
-                                <i class="fas fa-shopping-bag"></i> Đơn hàng của tôi
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="addresses.php">
-                                <i class="fas fa-map-marker-alt"></i> Sổ địa chỉ
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="wishlist.php">
-                                <i class="fas fa-heart"></i> Sản phẩm yêu thích
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="reviews.php">
-                                <i class="fas fa-star"></i> Đánh giá của tôi
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="settings.php">
-                                <i class="fas fa-cog"></i> Cài đặt tài khoản
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
             
             <!-- Order Details -->
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Chi tiết đơn hàng #<?php echo $order_id; ?></h5>
-                        <a href="../customer/index.php?action=profile" class="btn btn-sm btn-outline-primary">
+                        <a href="#" onclick="goBack()" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-arrow-left me-1"></i> Quay lại
                         </a>
+
+                        <script>
+                        function goBack() {
+                            if (document.referrer !== "") {
+                                window.history.back();
+                            } else {
+                                window.location.href = '../customer/index.php?action=profile'; // fallback
+                            }
+                        }
+                        </script>
                     </div>
                     <div class="card-body">
                         <?php if (isset($order) && $order): ?>
@@ -606,53 +363,7 @@ $transaction = $transaction_result->fetch_assoc();
         </div>
     </div>
     
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>Nông Sản Xanh</h5>
-                    <p>Cung cấp các sản phẩm nông sản sạch, an toàn và chất lượng cao.</p>
-                    <p>
-                        <i class="fas fa-map-marker-alt me-2"></i> 123 Đường ABC, Quận XYZ, TP. HCM<br>
-                        <i class="fas fa-phone-alt me-2"></i> 0123 456 789<br>
-                        <i class="fas fa-envelope me-2"></i> info@nongsanxanh.com
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Liên kết nhanh</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Trang chủ</a></li>
-                        <li><a href="#" class="text-white">Sản phẩm</a></li>
-                        <li><a href="#" class="text-white">Về chúng tôi</a></li>
-                        <li><a href="#" class="text-white">Liên hệ</a></li>
-                        <li><a href="#" class="text-white">Chính sách bảo mật</a></li>
-                        <li><a href="#" class="text-white">Điều khoản sử dụng</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Đăng ký nhận tin</h5>
-                    <p>Nhận thông tin khuyến mãi và sản phẩm mới nhất.</p>
-                    <form>
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="Email của bạn">
-                            <button class="btn btn-primary" type="button">Đăng ký</button>
-                        </div>
-                    </form>
-                    <div class="mt-3">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-tiktok"></i></a>
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="text-center">
-                <p class="mb-0">© 2023 Nông Sản Xanh. Tất cả quyền được bảo lưu.</p>
-            </div>
-        </div>
-    </footer>
+   
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -682,5 +393,3 @@ $transaction = $transaction_result->fetch_assoc();
             window.location.href = 'orders.php';
         });
     </script>
-</body>
-</html>

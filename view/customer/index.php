@@ -31,6 +31,8 @@
     <?php
     if (isset($_GET['action']) && $_GET['action'] === 'detail') {
         echo '<link rel="stylesheet" href="../../asset/css/detail.css">';
+    }elseif (isset($_GET['action']) && $_GET['action'] === 'chitietdonhang') {
+        echo '<link rel="stylesheet" href="../../asset/css/order_detail.css">';    
     }
     ?>
 </head>
@@ -161,6 +163,9 @@ Danh muc
                     break;
                 case 'detail':
                     include_once("detail.php");
+                    break;
+                case 'order_detail':
+                    include_once("chitietdonhang.php");
                     break;
                 case 'dashboard':
                 default:
