@@ -38,7 +38,7 @@
         }
         public function getOrderStatus($id, $s){
             $p = new mProfile();
-            $tbl = $p->mOrderStatus($id, $s);
+            $tbl = $p->getOrderStatus($id, $s);
             if ($tbl) {
                 if ($tbl->num_rows > 0) {
                     return $tbl;

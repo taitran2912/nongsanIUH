@@ -1,13 +1,12 @@
 <?php
 // Kết nối database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "nongsan";
+include_once("../../model/connect.php");
+// Kết nối CSDL
+// $conn = mysqli_connect("localhost", "root", "", "nongsan");
+$kn = new clsketnoi();
+$conn = $kn->moKetNoi();
+$conn->set_charset('utf8');
 
-// Tạo kết nối
-$conn = new mysqli($servername, $username, $password, $dbname);
-$conn->set_charset("utf8mb4");
 
 // Kiểm tra kết nối
 if ($conn->connect_error) {
@@ -216,7 +215,7 @@ $transaction = $transaction_result->fetch_assoc();
                             <div class="collapse navbar-collapse" id="navbarNav">
                                 <ul class="navbar-nav">
                                     <li class="nav-item">
-                                        <a class="nav-link" href="index.php">Trang chủ</a>
+                                        <a class="nav-link" href="../customer/index.php">Trang chủ</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" href="products.php">Sản phẩm</a>
@@ -302,7 +301,7 @@ $transaction = $transaction_result->fetch_assoc();
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Chi tiết đơn hàng #<?php echo $order_id; ?></h5>
-                        <a href="orders.php" class="btn btn-sm btn-outline-primary">
+                        <a href="../customer/index.php?action=profile" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-arrow-left me-1"></i> Quay lại
                         </a>
                     </div>
@@ -412,14 +411,14 @@ $transaction = $transaction_result->fetch_assoc();
                                         $subtotal = 0;
                                         if ($items_result && $items_result->num_rows > 0): 
                                             while($item = $items_result->fetch_assoc()): 
-                                                $item_total = $item['unit_price'] * $item['quantity'];
+                                                $item_total = $item['unit'] * $item['quantity'];
                                                 $subtotal += $item_total;
                                         ?>
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <?php if ($item['product_image']): ?>
-                                                    <img src="assets/images/products/<?php echo $item['product_image']; ?>" alt="<?php echo $item['product_name']; ?>" class="product-img me-3">
+                                                    <img src="../../image/<?php echo $item['product_image']; ?>" alt="<?php echo $item['product_name']; ?>" class="product-img me-3">
                                                     <?php else: ?>
                                                     <div class="product-img me-3 bg-light d-flex align-items-center justify-content-center">
                                                         <i class="fas fa-image text-muted"></i>
@@ -434,7 +433,7 @@ $transaction = $transaction_result->fetch_assoc();
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><?php echo number_format($item['unit_price'], 0, ',', '.'); ?>đ</td>
+                                            <td><?php echo number_format($item['unit'], 0, ',', '.'); ?>đ</td>
                                             <td><?php echo $item['quantity']; ?></td>
                                             <td class="text-end"><?php echo number_format($item_total, 0, ',', '.'); ?>đ</td>
                                         </tr>

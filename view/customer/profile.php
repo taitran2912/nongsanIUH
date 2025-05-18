@@ -167,7 +167,7 @@
                                                                     <td>'.$orderDate.'</td>
                                                                     <td>'.$totalPrice.'</td>
                                                                     <td><span class="badge '.$color.'">'.$statusText.'</span></td>
-                                                                    <td><a href="?action=orderdetail&id='.$orderId.'" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
+                                                                    <td><a href="../buyer/chitietdonhang.php?id='.$orderId.'" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
                                                                 </tr>';
                                                         };
                                                 } else {
@@ -299,7 +299,7 @@
                                                             <td>'.$totalPrice.'</td>
                                                             <td><span class="badge '.$color.'">'.$statusText.'</span></td>
                                                             <td>
-                                                                <a href="?action=orderdetail&id='.$orderId.'" class="btn btn-sm btn-outline-success">Chi tiết</a>
+                                                                <a href="../buyer/chitietdonhang.php?id='.$orderId.'" class="btn btn-sm btn-outline-success">Chi tiết</a>
                                                                 '.$cancelBtn.'
                                                             </td>
                                                         </tr>';
