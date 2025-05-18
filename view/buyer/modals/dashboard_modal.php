@@ -3,11 +3,11 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="restockModalLabel">Nhập thêm sản phẩm</h5>
+                <h5 class="modal-title" id="restockModalLabel">Nhập thêm</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="restockForm" method="POST" action="?action=dashboard">
+                <form id="restockForm" method="POST" action="?action=<?php echo $location;?>">
                     <input type="hidden" id="productId" name="product_id" value="">
                     
                     <div class="mb-3">

@@ -1,5 +1,5 @@
 <?php
-
+$location = 'product';
 $idCate = isset($_GET['idCate']) ? $_GET['idCate'] : 0; 
 // Pagination settings
 $items_per_page = 15;
@@ -180,11 +180,11 @@ if($listSP && $listSP->num_rows > 0){
                                 <i class="fas fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#viewProductModal" data-product-id="1"><i class="fas fa-eye me-2"></i>Xem chi tiết</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" data-product-id="1"><i class="fas fa-edit me-2"></i>Chỉnh sửa</a></li>
-                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#restockModal" onclick="document.getElementById("productId").value="1""><i class="fas fa-plus-circle me-2"></i>Nhập thêm</a></li>
+                                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#viewProductModal" onclick="loadProductDetails(' . $row['id'] . ')">Xem chi tiết</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" data-product-id="'.$row['id'].'"><i class="fas fa-edit me-2"></i>Chỉnh sửa</a></li>
+                                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#restockModal" onclick="document.getElementById(\'productId\').value=\''.$row['id'].'\'"><i class="fas fa-plus-circle me-2"></i>Nhập thêm</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteProductModal" data-product-id="1"><i class="fas fa-trash-alt me-2"></i>Xóa</a></li>
+                                <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteProductModal" data-product-id="'.$row['id'].'"><i class="fas fa-trash-alt me-2"></i>Xóa</a></li>
                             </ul>
                         </div>
                     </td>
@@ -283,3 +283,28 @@ if($listSP && $listSP->num_rows > 0){
 
 <!-- Nhập thêm sản phẩm Modal -->
 <?php include_once 'modals/restock_product.php'; ?>
+
+<script>
+    function loadProductDetails(productId) {
+    fetch('modals/get_product.php?id=' + productId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const product = data.product;
+                document.getElementById('productName').innerText = product.name;
+                document.getElementById('productDescription').innerText = product.description;
+                document.getElementById('productPrice').innerText = Number(product.price).toLocaleString();
+                document.getElementById('productQuantity').innerText = product.quantity;
+                document.getElementById('productUnit').innerText = product.unit;
+                document.getElementById('productCreatedAt').innerText = product.created_at;
+            } else {
+                alert('Không tìm thấy sản phẩm!');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Đã xảy ra lỗi khi lấy thông tin sản phẩm.');
+        });
+}
+
+</script>

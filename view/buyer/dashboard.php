@@ -1,4 +1,5 @@
 <?php
+    $location = 'dashboard';
     // Tính doanh thu tháng này
     $tbl = $p->tinhTongDoanhThu($storeId);
     if ($tbl && $tbl->num_rows > 0) {
