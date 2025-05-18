@@ -251,10 +251,10 @@ if ($lSPGanHet && $lSPGanHet->num_rows > 0) {
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <div>'.$row['name'].'</div>
+                                                        <div>'.ucwords($row['name']).'</div>
                                                     </div>
                                                 </td>
-                                                <td>'.$row['c_name'].'</td>
+                                                <td>'.ucwords($row['c_name']).'</td>
                                                 <td>'.number_format($row['price'], 0, ',', '.').'đ</td>
                                                 <td>
                                                     <div class="progress" style="height: 6px;">

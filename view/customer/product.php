@@ -65,7 +65,7 @@ $offset = ($current_page - 1) * $items_per_page;
                 </div>
 
                 <!-- Filter by Price -->
-                <div class="sidebar-widget mb-4">
+                <!-- <div class="sidebar-widget mb-4">
                     <h4 class="widget-title">Lọc theo giá</h4>
                     <div class="widget-content">
                         <div class="price-range-slider">
@@ -78,7 +78,7 @@ $offset = ($current_page - 1) * $items_per_page;
                             <button class="btn btn-success btn-sm mt-3 w-100">Áp dụng</button>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <!-- Products -->
@@ -230,25 +230,7 @@ $offset = ($current_page - 1) * $items_per_page;
     </div>
 </section>
 
-<!-- Newsletter -->
-<section class="newsletter py-5 bg-success text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <h3>Đăng ký nhận tin</h3>
-                <p class="mb-0">Nhận thông tin về sản phẩm mới và khuyến mãi hấp dẫn</p>
-            </div>
-            <div class="col-lg-6">
-                <form class="newsletter-form">
-                    <div class="input-group">
-                        <input type="email" class="form-control" placeholder="Nhập email của bạn">
-                        <button class="btn btn-light" type="submit">Đăng ký</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- Back to Top -->
 <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>

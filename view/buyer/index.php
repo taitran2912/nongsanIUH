@@ -145,6 +145,9 @@ if($r && $r->num_rows > 0){
                     case 'setting':
                         include_once 'setting.php';
                         break;
+                    case 'addProduct':
+                        include_once 'addProduct.php';
+                        break;
                     default:
                         include_once 'dashboard.php';
                         break;
