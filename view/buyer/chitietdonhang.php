@@ -24,8 +24,10 @@ $order_query = "SELECT o.*, u.name as customer_name, u.email as customer_email, 
 $order_result = $conn->query($order_query);
 $order = $order_result->fetch_assoc();
 
-// Lấy chi tiết đơn hàng
-$items_query = "SELECT od.*, p.name as product_name, p.description as product_description, pi.img as product_image, c.name as category_name, f.shopname as farm_name 
+// Lấy chi tiết đơn hàng - THÊM p.price và p.unit vào câu truy vấn
+$items_query = "SELECT od.*, p.name as product_name, p.description as product_description, 
+                p.price as price, p.unit as unit, pi.img as product_image, 
+                c.name as category_name, f.shopname as farm_name 
                 FROM order_details od 
                 JOIN products p ON od.product_id = p.id 
                 LEFT JOIN product_images pi ON p.id = pi.product_id 
@@ -327,23 +329,19 @@ $transaction = $transaction_result->fetch_assoc();
                                                 $status_class = '';
                                                 $status_text = '';
                                                 switch($order['status']) {
-                                                    case 'pending':
+                                                    case '0':
                                                         $status_text = 'Chờ xác nhận';
                                                         $status_class = 'status-pending';
                                                         break;
-                                                    case 'processing':
+                                                    case '1':
                                                         $status_text = 'Đang xử lý';
                                                         $status_class = 'status-processing';
                                                         break;
-                                                    case 'shipped':
-                                                        $status_text = 'Đang giao hàng';
-                                                        $status_class = 'status-shipped';
-                                                        break;
-                                                    case 'delivered':
+                                                    case '2':
                                                         $status_text = 'Đã giao hàng';
                                                         $status_class = 'status-delivered';
                                                         break;
-                                                    case 'cancelled':
+                                                    case '3':
                                                         $status_text = 'Đã hủy';
                                                         $status_class = 'status-cancelled';
                                                         break;
@@ -381,7 +379,7 @@ $transaction = $transaction_result->fetch_assoc();
                                         </tr>
                                         <tr>
                                             <td><strong>Địa chỉ:</strong></td>
-                                            <td><?php echo $order['customer_address']; ?></td>
+                                            <td><?php echo isset($order['Shipping_address']) ? $order['Shipping_address'] : $order['customer_address']; ?></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -411,7 +409,8 @@ $transaction = $transaction_result->fetch_assoc();
                                         $subtotal = 0;
                                         if ($items_result && $items_result->num_rows > 0): 
                                             while($item = $items_result->fetch_assoc()): 
-                                                $item_total = $item['unit'] * $item['quantity'];
+                                                // Tính thành tiền cho mỗi sản phẩm
+                                                $item_total = $item['price'] * $item['quantity'];
                                                 $subtotal += $item_total;
                                         ?>
                                         <tr>
@@ -427,13 +426,13 @@ $transaction = $transaction_result->fetch_assoc();
                                                     <div>
                                                         <h6 class="mb-0"><?php echo $item['product_name']; ?></h6>
                                                         <small class="text-muted">
-                                                            <?php echo $item['category_name']; ?> | 
-                                                            <?php echo $item['farm_name']; ?>
+                                                            <?php echo isset($item['category_name']) ? $item['category_name'] : ''; ?> 
+                                                            <?php echo isset($item['farm_name']) ? '| '.$item['farm_name'] : ''; ?>
                                                         </small>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td><?php echo number_format($item['unit'], 0, ',', '.'); ?>đ</td>
+                                            <td><?php echo number_format($item['price'], 0, ',', '.'); ?>đ<?php echo isset($item['unit']) ? '/'.$item['unit'] : ''; ?></td>
                                             <td><?php echo $item['quantity']; ?></td>
                                             <td class="text-end"><?php echo number_format($item_total, 0, ',', '.'); ?>đ</td>
                                         </tr>
@@ -482,7 +481,7 @@ $transaction = $transaction_result->fetch_assoc();
                                             ]
                                         ];
                                         
-                                        if ($order['status'] != 'pending' && $order['status'] != 'cancelled') {
+                                        if ($order['status'] != '0' && $order['status'] != '3') {
                                             $history[] = [
                                                 'status' => 'Đơn hàng đã được xác nhận',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +1 hour')),
@@ -490,15 +489,15 @@ $transaction = $transaction_result->fetch_assoc();
                                             ];
                                         }
                                         
-                                        if ($order['status'] == 'shipped' || $order['status'] == 'delivered') {
+                                        if ($order['status'] == '1') {
                                             $history[] = [
-                                                'status' => 'Đơn hàng đang được giao',
+                                                'status' => 'Đơn hàng đang được xử lý',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +1 day')),
                                                 'icon' => 'fa-truck'
                                             ];
                                         }
                                         
-                                        if ($order['status'] == 'delivered') {
+                                        if ($order['status'] == '2') {
                                             $history[] = [
                                                 'status' => 'Đơn hàng đã giao thành công',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +3 days')),
@@ -506,7 +505,7 @@ $transaction = $transaction_result->fetch_assoc();
                                             ];
                                         }
                                         
-                                        if ($order['status'] == 'cancelled') {
+                                        if ($order['status'] == '3') {
                                             $history[] = [
                                                 'status' => 'Đơn hàng đã bị hủy',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +2 hours')),
@@ -537,13 +536,13 @@ $transaction = $transaction_result->fetch_assoc();
                             
                             <!-- Actions -->
                             <div class="d-flex justify-content-end mt-4">
-                                <?php if ($order['status'] == 'pending'): ?>
+                                <?php if ($order['status'] == '0'): ?>
                                 <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
                                     <i class="fas fa-times me-1"></i> Hủy đơn hàng
                                 </button>
                                 <?php endif; ?>
                                 
-                                <?php if ($order['status'] == 'delivered'): ?>
+                                <?php if ($order['status'] == '2'): ?>
                                 <a href="review.php?order_id=<?php echo $order_id; ?>" class="btn btn-outline-primary me-2">
                                     <i class="fas fa-star me-1"></i> Đánh giá sản phẩm
                                 </a>
