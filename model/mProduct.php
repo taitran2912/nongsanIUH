@@ -49,6 +49,22 @@ class mProduct
             return false;
         }
     }
+
+    public function mAddCart($idProduct, $idUser)
+    {
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+             // tránh SQL injection
+            $str = "INSERT INTO cart (customer_id, product_id, quantity) VALUES ($idUser, $idProduct, 1)";
+            $tbl = $conn->query($str);
+            $p->dongKetNoi($conn);
+            return $tbl;
+        } else {
+            return false;
+        }
+    }
             
 }
 ?>

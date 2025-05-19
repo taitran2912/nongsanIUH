@@ -94,31 +94,31 @@ class mProfile{
     } 
 
     public function mChangeP($id, $cP, $nP){
-            $p = new clsketnoi();
-            $conn = $p->moKetNoi();
-            $conn->set_charset('utf8');
-            if($conn){
-                $id = $conn->real_escape_string($id); // tránh SQL injection
-                $str = "SELECT password FROM users WHERE id = '$id';";
-                $oP = $conn->query($str);
-                if ($oP->num_rows > 0) {
-                    $row = $oP->fetch_assoc();
-                    $hashedPassword = $row['password'];
-                } else {
-                    return false; 
-                }
-                if($cP == $hashedPassword){
-                    $str = "UPDATE users SET password = '$nP' WHERE id = '$id';";
-                    $tbl = $conn->query($str);
-                } else {
-                    return false; 
-                }
-
-                $p->dongKetNoi($conn);
-                return $tbl;
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+            $id = $conn->real_escape_string($id); // tránh SQL injection
+            $str = "SELECT password FROM users WHERE id = '$id';";
+            $oP = $conn->query($str);
+            if ($oP->num_rows > 0) {
+                $row = $oP->fetch_assoc();
+                $hashedPassword = $row['password'];
             } else {
-                return false;
+                return false; 
             }
+            if($cP == $hashedPassword){
+                $str = "UPDATE users SET password = '$nP' WHERE id = '$id';";
+                $tbl = $conn->query($str);
+            } else {
+                return false; 
+            }
+
+            $p->dongKetNoi($conn);
+            return $tbl;
+        } else {
+            return false;
+        }
     }
     
     public function mBuyer($id){
@@ -145,6 +145,20 @@ class mProfile{
             $tbl = $conn->query($str);
             $p->dongKetNoi($conn);
             return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function mCountCart($id){
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+            $str = "SELECT count(*) as count FROM cart c WHERE c.customer_id = $id;";
+            $tbl = $conn->query($str);
+            $p->dongKetNoi($conn);
+            return $tbl;
         } else {
             return false;
         }

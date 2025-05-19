@@ -15,6 +15,14 @@
             echo "<script>alert('Hủy đơn hàng thất bại!');</script>";
         }
     }
+
+    $count = 0;
+    $countCart = $p->countCart($id);
+
+    if ($countCart && $countCart->num_rows > 0) {
+        $row = $countCart->fetch_assoc();
+        $count = (int) $row['count'];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +31,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nông Sản Xanh - Sản phẩm nông nghiệp sạch</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../asset/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
     <link rel="stylesheet" href="../../asset/css/styles.css">
     <link rel="stylesheet" href="../../asset/css/products.css">
@@ -37,11 +45,14 @@
         echo '<link rel="stylesheet" href="../../asset/css/order_detail.css">';    
     }
     ?>
+    <link rel="stylesheet" href="../../asset/css/cart.css">
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../asset/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="script.js"></script>
+    <script src="../../asset/js/script.js"></script>
+
+</body>
 </head>
 
 <body>
@@ -126,9 +137,15 @@ Danh muc
                     ?>
                     <a href="?action=shopping-cart" class="btn btn-success position-relative <?php  echo (isset($_REQUEST['action']) && $_REQUEST['action'] === 'shopping-cart') ? 'active' : '';  ?>">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                        </span>
+                        <?php 
+
+                        if($count >0){
+                            echo'
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                '.$count.'
+                            </span>';
+                        };
+                        ?>
                     </a>
 
                 </div>

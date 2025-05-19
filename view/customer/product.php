@@ -141,9 +141,10 @@ $offset = ($current_page - 1) * $items_per_page;
                                                 <div class="product-thumb">
                                                     <img src="../../image/'.$row['img'].'" class="img-fluid" alt="'.$row['name'].'">
                                                     <div class="product-action">
-                                                    <a href="#" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>
-                                                    <a href="#" class="btn btn-light btn-sm"><i class="fas fa-heart"></i></a>
-                                                    <a href="#" class="btn btn-success btn-sm"><i class="fas fa-shopping-cart"></i></a>
+                                                    <form action="" method="POST">
+                                                        <input type="hidden" name="txtID" value="'.$row['id'].'">
+                                                        <button type="submit" name="btnADD" class="btn btn-primary"><i class="fas fa-shopping-cart"></i></button>
+                                                    </form>
                                                 </div>
                                             </div>
                                             <div class="product-info p-3">
@@ -239,3 +240,14 @@ $offset = ($current_page - 1) * $items_per_page;
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Custom JS -->
 <script src="../../asset/js/script.js"></script>
+
+<?php
+    if (isset($_POST["btnADD"])) {
+        if($p->addCart($_POST["txtID"], $id)){
+            echo "<script>alert('Thêm vào giỏ hàng thành công!');</script>";
+            echo "<script>window.location.href='?action=product';</script>";
+        } else {
+            echo "<script>alert('Thêm vào giỏ hàng thất bại!');</script>";
+        }
+    }
+?>

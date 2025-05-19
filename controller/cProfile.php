@@ -112,5 +112,19 @@
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
         }
+
+        public function countCart($id){
+            $p = new mProfile();
+            $tbl = $p->mCountCart($id);
+            if ($tbl) {
+                if ($tbl->num_rows > 0) {
+                    return $tbl;
+                } else {
+                    return -1;  // Không có dữ liệu
+                }
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+        }
     }
 ?>

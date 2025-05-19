@@ -46,5 +46,20 @@ include_once("../../model/mProduct.php");
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
         }
+
+        public function addCart($idProduct, $idUser)
+        {
+            $p = new mProduct();
+            $result = $p->mAddCart($idProduct, $idUser);
+            if ($result) {
+                if ($result->num_rows > 0) {
+                    return $result;
+                } else {
+                    return -1;  // Không có dữ liệu
+                }
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+        }
     }
 ?>
