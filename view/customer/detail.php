@@ -156,6 +156,191 @@ while ($row = $related_result->fetch_assoc()) {
             </div>
         </div>
     </div>
+
+
+    <!-- Product Details -->
+    
+    <!-- Shop Information Section -->
+    <div class="container my-4 border rounded-lg p-4 bg-white">
+        <?php
+        // Get farm information from the current product
+        $farm_id = $product['farm_id'];
+        $farm_name = $product['farm_name'];
+        
+        // Query additional farm information
+        $sql_farm = "SELECT f.*, u.name as owner_name 
+                    FROM farms f 
+                    JOIN users u ON f.owner_id = u.id 
+                    WHERE f.id = ?";
+        
+        $stmt_farm = $conn->prepare($sql_farm);
+        
+        if ($stmt_farm) {
+            $stmt_farm->bind_param("i", $farm_id);
+            $stmt_farm->execute();
+            $farm_result = $stmt_farm->get_result();
+            $farm_data = $farm_result->fetch_assoc();
+            
+            // Count products from this farm
+            $sql_product_count = "SELECT COUNT(*) as count FROM products WHERE farm_id = ?";
+            $stmt_product_count = $conn->prepare($sql_product_count);
+            $stmt_product_count->bind_param("i", $farm_id);
+            $stmt_product_count->execute();
+            $product_count_result = $stmt_product_count->get_result();
+            $product_count_data = $product_count_result->fetch_assoc();
+            $product_count = $product_count_data['count'];
+            
+            // Get average rating for farm's products
+            $sql_avg_rating = "SELECT AVG(r.rating) as avg_rating, COUNT(r.id) as review_count 
+                            FROM reviews r 
+                            JOIN products p ON r.product_id = p.id 
+                            WHERE p.farm_id = ?";
+            $stmt_avg_rating = $conn->prepare($sql_avg_rating);
+            $stmt_avg_rating->bind_param("i", $farm_id);
+            $stmt_avg_rating->execute();
+            $avg_rating_result = $stmt_avg_rating->get_result();
+            $avg_rating_data = $avg_rating_result->fetch_assoc();
+            $avg_rating = round($avg_rating_data['avg_rating'] ?? 0, 1);
+            $review_count = $avg_rating_data['review_count'] ?? 0;
+            
+            // Format numbers for display
+            $formatted_product_count = $product_count > 1000 ? round($product_count / 1000, 1) . 'k' : $product_count;
+            $formatted_review_count = $review_count > 1000 ? round($review_count / 1000, 1) . 'k' : $review_count;
+            
+            // Since there's no follower table in the database, we'll use a placeholder value
+            $follower_count = rand(500, 6000); // Random placeholder
+            $formatted_follower_count = $follower_count > 1000 ? round($follower_count / 1000, 1) . 'k' : $follower_count;
+            
+            // Response rate placeholder (since it's not in the database)
+            $response_rate = rand(90, 99);
+            
+            // Calculate years since joining (using current timestamp as reference)
+            // Since there's no created_at field in farms table, we'll use a placeholder
+            $years_since = rand(1, 5); // Random placeholder between 1-5 years
+        } else {
+            // Fallback to default values if query fails
+            $product_count = $formatted_product_count = "1,6k";
+            $review_count = $formatted_review_count = "65,3k";
+            $follower_count = $formatted_follower_count = "6k";
+            $response_rate = 99;
+            $years_since = 4;
+            $avg_rating = 4.8;
+        }
+        ?>
+        
+        <div class="row">
+            <!-- Shop Avatar and Basic Info -->
+            <div class="col-md-6 d-flex align-items-center gap-3">
+                <!-- <div class="position-relative" style="width: 64px; height: 64px;">
+                    <?php 
+                    // Since there's no farm avatar in the database, we'll use a default image
+                    $farm_avatar = "../../image/default_shop_avatar.jpg";
+                    ?>
+                    <img src="<?php echo $farm_avatar; ?>" alt="<?php echo htmlspecialchars($farm_name); ?>" 
+                        class="rounded-circle border" style="width: 100%; height: 100%; object-fit: cover;">
+                </div> -->
+                <div>
+                    <h3 class="fw-semibold"><?php echo htmlspecialchars($farm_name); ?></h3>
+                </div>
+            </div>
+
+            <!-- Shop Actions -->
+            <div class="col-md-6 d-flex justify-content-md-end align-items-center gap-2 my-2 my-md-0">
+                <a href="javascript:void(0);" onclick="openChatWithFarm(<?php echo $farm_id; ?>)" class="btn btn-outline-danger">
+                    <i class="fas fa-comment-dots me-1"></i> Chat Ngay
+                </a>
+                <a href="farm-detail.php?id=<?php echo $farm_id; ?>" class="btn btn-outline-secondary">
+                    <i class="fas fa-store me-1"></i> Xem Shop
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script> 
+// Function to open chat widget with specific chat
+function openChatWithFarm(farmId) {
+    <?php if (isset($_SESSION['id'])): ?>
+        // Show loading indicator
+        const chatButton = document.querySelector('.btn-outline-danger');
+        const originalContent = chatButton.innerHTML;
+        chatButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kết nối...';
+        chatButton.disabled = true;
+        
+        // Check if chat already exists or create a new one
+        $.ajax({
+            url: 'check_chat.php',
+            type: 'POST',
+            data: {
+                farm_id: farmId,
+                user_id: <?php echo isset($_SESSION['id']) ? $_SESSION['id'] : 0; ?>
+            },
+            success: function(response) {
+                try {
+                    var data = JSON.parse(response);
+                    if (data.exists) {
+                        // Open chat widget and load this specific chat
+                        openChatWidget(data.chat_id, '<?php echo htmlspecialchars($farm_name); ?>');
+                        // Reset button
+                        chatButton.innerHTML = originalContent;
+                        chatButton.disabled = false;
+                    } else {
+                        // Create new chat
+                        $.ajax({
+                            url: 'create_chat.php',
+                            type: 'POST',
+                            data: {
+                                farm_id: farmId,
+                                user_id: <?php echo isset($_SESSION['id']) ? $_SESSION['id'] : 0; ?>
+                            },
+                            success: function(response) {
+                                try {
+                                    var data = JSON.parse(response);
+                                    if (data.success) {
+                                        // Open chat widget with the new chat
+                                        openChatWidget(data.chat_id, '<?php echo htmlspecialchars($farm_name); ?>');
+                                    } else {
+                                        alert('Có lỗi xảy ra khi tạo cuộc trò chuyện: ' + (data.message || 'Không xác định'));
+                                    }
+                                } catch (e) {
+                                    console.error('Error parsing JSON:', e, response);
+                                    alert('Có lỗi xảy ra khi xử lý phản hồi từ máy chủ.');
+                                }
+                                // Reset button
+                                chatButton.innerHTML = originalContent;
+                                chatButton.disabled = false;
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('AJAX Error:', status, error);
+                                alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+                                // Reset button
+                                chatButton.innerHTML = originalContent;
+                                chatButton.disabled = false;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error parsing JSON:', e, response);
+                    alert('Có lỗi xảy ra khi xử lý phản hồi từ máy chủ.');
+                    // Reset button
+                    chatButton.innerHTML = originalContent;
+                    chatButton.disabled = false;
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+                // Reset button
+                chatButton.innerHTML = originalContent;
+                chatButton.disabled = false;
+            }
+        });
+    <?php else: ?>
+        alert('Vui lòng đăng nhập để chat với cửa hàng');
+        window.location.href = 'login.php';
+    <?php endif; ?>
+}   
+    </script>
     
     <!-- Product Details Tabs -->
     <div class="container my-5">
@@ -274,52 +459,7 @@ while ($row = $related_result->fetch_assoc()) {
                 </div>
             </div>
             
-            <!-- Shipping Tab -->
-            <!-- <div class="tab-pane fade" id="shipping" role="tabpanel">
-                <h4 class="section-title">Thông tin vận chuyển</h4>
-                <p>Chúng tôi giao hàng đến tất cả các tỉnh thành trên toàn quốc với các hình thức vận chuyển sau:</p>
-                
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <h5><i class="fas fa-truck me-2 text-success"></i> Giao hàng tiêu chuẩn</h5>
-                        <p>Thời gian: 2-3 ngày làm việc</p>
-                        <p>Phí vận chuyển: 30.000đ (miễn phí cho đơn hàng từ 300.000đ)</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><i class="fas fa-shipping-fast me-2 text-success"></i> Giao hàng nhanh</h5>
-                        <p>Thời gian: 1 ngày làm việc</p>
-                        <p>Phí vận chuyển: 50.000đ</p>
-                    </div>
-                </div>
-                
-                <h4 class="section-title mt-5">Phương thức thanh toán</h4>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5><i class="fas fa-money-bill-wave me-2 text-success"></i> Tiền mặt</h5>
-                                <p>Thanh toán khi nhận hàng (COD)</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5><i class="fas fa-credit-card me-2 text-success"></i> Thẻ ngân hàng</h5>
-                                <p>Thanh toán online qua thẻ ATM/Visa/Master</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5><i class="fas fa-wallet me-2 text-success"></i> Ví điện tử</h5>
-                                <p>Thanh toán qua Momo, ZaloPay, VNPay</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+        
         </div>
     </div>
     
