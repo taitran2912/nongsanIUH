@@ -249,7 +249,7 @@ while ($row = $related_result->fetch_assoc()) {
                 <a href="javascript:void(0);" onclick="openChatWithFarm(<?php echo $farm_id; ?>)" class="btn btn-outline-danger">
                     <i class="fas fa-comment-dots me-1"></i> Chat Ngay
                 </a>
-                <a href="farm-detail.php?id=<?php echo $farm_id; ?>" class="btn btn-outline-secondary">
+                <a href="../../view/customer/farm_detail.php?<?php echo $farm_id; ?>" class="btn btn-outline-secondary">
                     <i class="fas fa-store me-1"></i> Xem Shop
                 </a>
             </div>
