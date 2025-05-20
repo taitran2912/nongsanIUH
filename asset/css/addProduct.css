@@ -1,0 +1,47 @@
+.sidebar {
+            background-color: #28a745;
+            color: white;
+            min-height: 100vh;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #218838;
+        }
+        .sidebar .active {
+            background-color: #218838;
+        }
+        .logo {
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .content-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .form-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            display: none;
+        }
+        .image-preview img {
+            width: 100%;
+            height: auto;
+        }

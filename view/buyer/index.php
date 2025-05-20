@@ -19,6 +19,7 @@ if($countShop == 0){
 }
 }
 $storeId = 0;
+
 $r = $p->getFarm($id);
 if($r && $r->num_rows > 0){
     $row = $r->fetch_assoc();
@@ -49,6 +50,9 @@ if($r && $r->num_rows > 0){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
     
     <link rel="stylesheet" href="../../asset/css/seller-dashboard.css">
+    <?php
+    
+    ?>
 </head>
 
 <body>

@@ -80,10 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_type'])) {
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Quản lý sản phẩm</h2>
         <div>
-            <button class="btn btn-outline-success me-2" id="exportProductsBtn">
-                <i class="fas fa-file-export me-2"></i>Xuất Excel
-            </button>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            
+            <button class="btn btn-success">
                 <a href="?action=addProduct" class="text-white text-decoration-none">
                     <i class="fas fa-plus me-2"></i>Thêm sản phẩm
                 </a>

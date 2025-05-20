@@ -259,6 +259,7 @@ while ($row = $related_result->fetch_assoc()) {
 
     <script> 
 // Function to open chat widget with specific chat
+// Function to open chat widget with specific chat
 function openChatWithFarm(farmId) {
     <?php if (isset($_SESSION['id'])): ?>
         // Show loading indicator
@@ -266,6 +267,12 @@ function openChatWithFarm(farmId) {
         const originalContent = chatButton.innerHTML;
         chatButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kết nối...';
         chatButton.disabled = true;
+        
+        // Make sure the chat container is visible
+        const chatContainer = document.getElementById('chatContainer');
+        if (chatContainer) {
+            chatContainer.classList.add('active');
+        }
         
         // Check if chat already exists or create a new one
         $.ajax({
@@ -275,56 +282,49 @@ function openChatWithFarm(farmId) {
                 farm_id: farmId,
                 user_id: <?php echo isset($_SESSION['id']) ? $_SESSION['id'] : 0; ?>
             },
-            success: function(response) {
-                try {
-                    var data = JSON.parse(response);
-                    if (data.exists) {
-                        // Open chat widget and load this specific chat
-                        openChatWidget(data.chat_id, '<?php echo htmlspecialchars($farm_name); ?>');
-                        // Reset button
-                        chatButton.innerHTML = originalContent;
-                        chatButton.disabled = false;
+            dataType: 'json',
+            success: function(data) {
+                if (data.exists) {
+                    // Open chat widget and load this specific chat
+                    if (typeof window.openChat === 'function') {
+                        window.openChat(data.chat_id, '<?php echo htmlspecialchars($farm_name); ?>');
                     } else {
-                        // Create new chat
-                        $.ajax({
-                            url: 'create_chat.php',
-                            type: 'POST',
-                            data: {
-                                farm_id: farmId,
-                                user_id: <?php echo isset($_SESSION['id']) ? $_SESSION['id'] : 0; ?>
-                            },
-                            success: function(response) {
-                                try {
-                                    var data = JSON.parse(response);
-                                    if (data.success) {
-                                        // Open chat widget with the new chat
-                                        openChatWidget(data.chat_id, '<?php echo htmlspecialchars($farm_name); ?>');
-                                    } else {
-                                        alert('Có lỗi xảy ra khi tạo cuộc trò chuyện: ' + (data.message || 'Không xác định'));
-                                    }
-                                } catch (e) {
-                                    console.error('Error parsing JSON:', e, response);
-                                    alert('Có lỗi xảy ra khi xử lý phản hồi từ máy chủ.');
-                                }
-                                // Reset button
-                                chatButton.innerHTML = originalContent;
-                                chatButton.disabled = false;
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('AJAX Error:', status, error);
-                                alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
-                                // Reset button
-                                chatButton.innerHTML = originalContent;
-                                chatButton.disabled = false;
-                            }
-                        });
+                        console.error('openChat function not available');
+                        alert('Có lỗi xảy ra: Không thể mở cuộc trò chuyện');
                     }
-                } catch (e) {
-                    console.error('Error parsing JSON:', e, response);
-                    alert('Có lỗi xảy ra khi xử lý phản hồi từ máy chủ.');
-                    // Reset button
-                    chatButton.innerHTML = originalContent;
-                    chatButton.disabled = false;
+                } else {
+                    // Create new chat
+                    $.ajax({
+                        url: 'create_chat.php',
+                        type: 'POST',
+                        data: {
+                            farm_id: farmId,
+                            user_id: <?php echo isset($_SESSION['id']) ? $_SESSION['id'] : 0; ?>
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.success) {
+                                // Open chat widget with the new chat
+                                if (typeof window.openChat === 'function') {
+                                    window.openChat(data.chat_id, '<?php echo htmlspecialchars($farm_name); ?>');
+                                } else {
+                                    console.error('openChat function not available');
+                                    alert('Có lỗi xảy ra: Không thể mở cuộc trò chuyện');
+                                }
+                            } else {
+                                alert('Có lỗi xảy ra khi tạo cuộc trò chuyện: ' + (data.message || 'Không xác định'));
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                            alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+                        },
+                        complete: function() {
+                            // Reset button
+                            chatButton.innerHTML = originalContent;
+                            chatButton.disabled = false;
+                        }
+                    });
                 }
             },
             error: function(xhr, status, error) {
@@ -333,13 +333,18 @@ function openChatWithFarm(farmId) {
                 // Reset button
                 chatButton.innerHTML = originalContent;
                 chatButton.disabled = false;
+            },
+            complete: function() {
+                // Reset button if not already reset
+                chatButton.innerHTML = originalContent;
+                chatButton.disabled = false;
             }
         });
     <?php else: ?>
         alert('Vui lòng đăng nhập để chat với cửa hàng');
         window.location.href = 'login.php';
     <?php endif; ?>
-}   
+} 
     </script>
     
     <!-- Product Details Tabs -->

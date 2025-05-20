@@ -185,6 +185,8 @@ Danh muc
                 case 'about':
                     include_once("about.php");
                     break;
+                
+                
                 case 'detail':
                     include_once("detail.php");
                     break;
@@ -516,39 +518,39 @@ document.addEventListener('DOMContentLoaded', function() {
         chatMessagesContent.scrollTop = chatMessagesContent.scrollHeight;
     }
     
+    
     // Send chat message
-    function sendChatMessage() {
-        const message = chatInput.value.trim();
-        if (!message || currentChatId === 0) return;
-        
-        // Clear input and reset height
-        chatInput.value = '';
-        chatInput.style.height = 'auto';
-        
-        // Add temporary message to UI
-        const tempId = 'temp-' + Date.now();
-        const tempMessage = `
-            <div class="message message-outgoing" id="${tempId}">
-                <div class="message-content">
-                    ${message.replace(/\n/g, '<br>')}
-                    <div class="message-time">Đang gửi...</div>
-                </div>
+function sendChatMessage() {
+    const message = chatInput.value.trim();
+    if (!message || currentChatId === 0) return;
+    
+    // Clear input and reset height
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    
+    // Add temporary message to UI
+    const tempId = 'temp-' + Date.now();
+    const tempMessage = `
+        <div class="message message-outgoing" id="${tempId}">
+            <div class="message-content">
+                ${message.replace(/\n/g, '<br>')}
+                <div class="message-time">Đang gửi...</div>
             </div>
-        `;
-        chatMessagesContent.insertAdjacentHTML('beforeend', tempMessage);
-        chatMessagesContent.scrollTop = chatMessagesContent.scrollHeight;
-        
-        // Send message to server
-        const formData = new FormData();
-        formData.append('chat_id', currentChatId);
-        formData.append('message', message);
-        
-        fetch('send_message.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
+        </div>
+    `;
+    chatMessagesContent.insertAdjacentHTML('beforeend', tempMessage);
+    chatMessagesContent.scrollTop = chatMessagesContent.scrollHeight;
+    
+    // Send message to server
+    $.ajax({
+        url: 'send_message.php',
+        type: 'POST',
+        data: {
+            chat_id: currentChatId,
+            message: message
+        },
+        dataType: 'json',
+        success: function(data) {
             // Remove temporary message
             document.getElementById(tempId).remove();
             
@@ -571,27 +573,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show error message
                 const errorMessage = `
                     <div class="message-error">
-                        Không thể gửi tin nhắn. Vui lòng thử lại.
+                        Không thể gửi tin nhắn: ${data.message}
                     </div>
                 `;
                 chatMessagesContent.insertAdjacentHTML('beforeend', errorMessage);
                 chatMessagesContent.scrollTop = chatMessagesContent.scrollHeight;
             }
-        })
-        .catch(error => {
-            console.error('Error sending message:', error);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error sending message:', xhr.responseText);
             document.getElementById(tempId).remove();
             
             // Show error message
             const errorMessage = `
                 <div class="message-error">
-                    Không thể gửi tin nhắn. Vui lòng thử lại.
+                    Không thể gửi tin nhắn. Vui lòng thử lại. (${status}: ${error})
                 </div>
             `;
             chatMessagesContent.insertAdjacentHTML('beforeend', errorMessage);
             chatMessagesContent.scrollTop = chatMessagesContent.scrollHeight;
-        });
-    }
+        }
+    });
+}
     
     // Start polling for new messages
     function startChatPolling() {
@@ -748,6 +751,38 @@ window.openChat = function(chatId, chatName) {
 window.loadChatMessages = loadChatMessages;
 window.startChatPolling = startChatPolling;
 window.currentChatId = currentChatId;
+
+function sendMessage(chatId, message) {
+    $.ajax({
+        url: 'send_message.php',
+        type: 'POST',
+        data: {
+            chat_id: chatId,
+            message: message
+        },
+        success: function(response) {
+            try {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    // Message sent successfully
+                    // You can append the message to the chat window here
+                    appendMessage(data.data);
+                    // Clear the message input
+                    $('#messageInput').val('');
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            } catch (e) {
+                console.error('Error parsing JSON:', e, response);
+                alert('Có lỗi xảy ra khi xử lý phản hồi từ máy chủ.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+            alert('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+        }
+    });
+}
 </script>
 
 <style>
