@@ -83,9 +83,6 @@ try {
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h1 style="margin: 0;">Quản lý sản phẩm</h1>
     <form method="GET" style="display: flex; gap: 10px;">
-        <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." 
-               value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" 
-               style="padding: 5px; width: 250px;">
         <select name="status" style="padding: 5px;">
             <option value="all" <?php echo (!isset($_GET['status']) || $_GET['status'] === 'all') ? 'selected' : ''; ?>>Tất cả sản phẩm</option>
             <option value="4" <?php echo (isset($_GET['status']) && $_GET['status'] === '4') ? 'selected' : ''; ?>>Chờ duyệt</option>

@@ -33,7 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
     $unit = $_POST['unit'];
-    $farm_id = $_POST['farm_id'];
     $id_categories = $_POST['id_categories'];
     $status = 4; // Default status as requested
     
@@ -47,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         $stmt = $conn->prepare($sql);
         // Correct parameter binding: s=string, d=double, i=integer
-        $stmt->bind_param("ssdiiisi", $name, $description, $price, $quantity, $farm_id, $id_categories, $unit, $status);
+        $stmt->bind_param("ssdiiisi", $name, $description, $price, $quantity, $storeID, $id_categories, $unit, $status);
         
         if ($stmt->execute()) {
             $product_id = $conn->insert_id; // Get the ID of the newly inserted product
@@ -246,19 +245,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         ?>
                                     </select>
                                 </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="farm_id" class="form-label">Nông trại <span class="text-danger">*</span></label>
-                                <select class="form-select" id="farm_id" name="farm_id" required>
-                                    <?php
-                                    if ($result_farms->num_rows > 0) {
-                                        while($row = $result_farms->fetch_assoc()) {
-                                            echo "<option value='" . $row["id"] . "'>" . $row["shopname"] . "</option>";
-                                        }
-                                    }
-                                    ?>
-                                </select>
                             </div>
                             
                             <div class="mb-3">
