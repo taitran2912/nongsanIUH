@@ -1,233 +1,255 @@
 <?php
-    include_once '../../controller/cCart.php';
-    $p = new cCart();
-    
-    // Get user ID from session
-    $id = isset($_SESSION["id"]) ? $_SESSION["id"] : 0;
+// Kiểm tra đăng nhập
+if (!isset($_SESSION["id"])) {
+    echo "<script>window.location.href = '?action=login';</script>";
+    exit;
+}
+
+$customerId = $_SESSION["id"];
+
+// Kết nối CSDL
+$db = new clsketnoi();
+$conn = $db->moKetNoi();
+$conn->set_charset('utf8');
+
+// Debug
+echo "<!-- Debug: Đã kết nối CSDL -->";
+
+// Lấy danh sách sản phẩm trong giỏ hàng
+$sql = "SELECT c.product_id, p.name, p.price, p.unit, c.quantity, 
+        f.id as shop_id, f.shopname, pi.img, ct.name as category 
+        FROM cart c 
+        JOIN products p ON c.product_id = p.id 
+        JOIN categories ct ON p.id_categories = ct.id
+        JOIN farms f ON p.farm_id = f.id 
+        LEFT JOIN (
+            SELECT product_id, MIN(img) as img 
+            FROM product_images 
+            GROUP BY product_id
+        ) pi ON pi.product_id = p.id 
+        WHERE c.customer_id = ? 
+        GROUP BY c.product_id, p.name, p.price, p.unit, c.quantity, f.id, f.shopname, pi.img, p.id_categories
+        ORDER BY f.id, p.name
+        LIMIT 0, 100
+        ";
+
+echo "<!-- Debug: SQL Query: " . htmlspecialchars($sql) . " -->";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $customerId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+echo "<!-- Debug: Số lượng sản phẩm: " . $result->num_rows . " -->";
+
+// Nhóm sản phẩm theo cửa hàng
+$cartItems = [];
+$totalAmount = 0;
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $shopId = $row['shop_id'];
+        
+        if (!isset($cartItems[$shopId])) {
+            $cartItems[$shopId] = [
+                'shop_name' => $row['shopname'],
+                'products' => []
+            ];
+        }
+        
+        $cartItems[$shopId]['products'][] = $row;
+        $totalAmount += $row['price'] * $row['quantity'];
+    }
+}
+
+// Tính phí vận chuyển
+$shippingFee = ($totalAmount >= 500000) ? 0 : 30000;
+$finalTotal = $totalAmount + $shippingFee;
+
+// Đóng kết nối
+$db->dongKetNoi($conn);
 ?>
 
 <!-- Cart Section -->
 <section class="cart-section py-5">
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="section-title text-center mb-5">
-                <h2>Giỏ hàng của bạn</h2>
-                <p class="text-muted">Xem lại và điều chỉnh sản phẩm trước khi thanh toán</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title text-center mb-5">
+                    <h2>Giỏ hàng của bạn</h2>
+                    <p class="text-muted">Xem lại và điều chỉnh sản phẩm trước khi thanh toán</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <?php
-    // Debug information
-    echo "<!-- Debug: User ID = $id -->";
-    
-    $result = $p->getCart($id);
-    
-    // Check if result is valid and has rows
-    if($result && $result->num_rows > 0) {
-        $cartItems = []; // key = shop_id
-
-        while ($row = $result->fetch_assoc()) {
-            $shopId = $row['shop_id'];
-            
-            if (!isset($cartItems[$shopId])) {
-                $cartItems[$shopId] = [
-                    'shop_name' => $row['shopname'] ?? 'Shop',
-                    'products' => []
-                ];
-            }
-
-            $cartItems[$shopId]['products'][] = $row;
-        }
-        
-        // Debug information
-        echo "<!-- Debug: Found " . count($cartItems) . " shops with products -->";
-    ?>
-    
-    <div class="row" id="cartContent">
-        <div class="col-lg-8">
-            <!-- Cart Items -->
-            <div class="cart-items card mb-4">
-                <div class="card-header bg-white py-3">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h5 class="mb-0">Sản phẩm</h5>
+        <?php if (!empty($cartItems)): ?>
+        <div class="row" id="cartContent">
+            <div class="col-lg-8">
+                <!-- Cart Items -->
+                <div class="cart-items card mb-4">
+                    <div class="card-header bg-white py-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h5 class="mb-0">Sản phẩm</h5>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <!-- Cart Items by Shop -->
-                    <?php 
-                    foreach ($cartItems as $shopId => $shop) { 
-                        echo "<!-- Debug: Shop ID = $shopId with " . count($shop['products']) . " products -->";
-                    ?>
-                        <div class='shop-block mb-4'>
-                            <h5 class='fw-bold mb-3'><?php echo htmlspecialchars($shop['shop_name']); ?></h5>
+                    <div class="card-body">
+                        <!-- Cart Items by Shop -->
+                        <?php foreach ($cartItems as $shopId => $shop): ?>
+                            <div class="shop-block mb-4">
+                                <h5 class="fw-bold mb-3"><?= htmlspecialchars($shop['shop_name']) ?></h5>
 
-                            <?php 
-                            foreach ($shop['products'] as $product) { 
-                                // Make sure product_id is available
-                                $productId = 0;
-                                
-                                // Try to get product_id from cart table
-                                $cartQuery = "SELECT c.product_id 
-                                             FROM cart c 
-                                             JOIN products p ON c.product_id = p.id 
-                                             WHERE c.customer_id = $id AND p.name = '{$product['name']}'";
-                                $cartResult = $p->mCart($cartQuery);
-                                if ($cartResult && $cartRow = $cartResult->fetch_assoc()) {
-                                    $productId = $cartRow['product_id'];
-                                }
-                                
-                                $productName = htmlspecialchars($product['name'] ?? 'Product');
-                                $productCategory = htmlspecialchars($product['category'] ?? 'Category');
-                                $productImage = htmlspecialchars($product['img'] ?? 'default.jpg');
-                                $price = number_format($product['price'] ?? 0, 0, ',', '.') . 'đ';
-                                $quantity = (int)($product['quantity'] ?? 1);
-                                $total = number_format(($product['price'] ?? 0) * $quantity, 0, ',', '.') . 'đ';
-                                
-                                echo "<!-- Debug: Product ID = $productId, Name = $productName -->";
-                            ?>
-                            <div class='cart-item mb-4 pb-4 border-bottom' data-product-id='<?php echo $productId; ?>'>
-                                <div class='row align-items-center'>
-                                    <!-- Hình ảnh -->
-                                    <div class='col-md-2 col-4'>
-                                        <img src='../../image/<?php echo $productImage; ?>' class='img-fluid rounded' alt='<?php echo $productName; ?>'>
-                                    </div>
+                                <?php foreach ($shop['products'] as $product): ?>
+                                    <div class="cart-item mb-4 pb-4 border-bottom" data-product-id="<?= $product['product_id'] ?>">
+                                        <div class="row align-items-center">
+                                            <!-- Hình ảnh -->
+                                            <div class="col-md-2 col-4">
+                                                <img src="../../image/<?= htmlspecialchars($product['img'] ?? 'default.jpg') ?>" 
+                                                     class="img-fluid rounded" 
+                                                     alt="<?= htmlspecialchars($product['name']) ?>">
+                                            </div>
 
-                                    <!-- Tên & danh mục -->
-                                    <div class='col-md-4 col-8'>
-                                        <h6 class='product-title mb-1'>
-                                            <a href='?action=product-detail&id=<?php echo $productId; ?>' class='text-dark text-decoration-none'><?php echo $productName; ?></a>
-                                        </h6>
-                                        <p class='product-category text-muted mb-1'><?php echo $productCategory; ?></p>
-                                        <span class='product-price text-success fw-semibold'><?php echo $price; ?>/<?php echo $product['unit'] ?? 'kg'; ?></span>
-                                    </div>
+                                            <!-- Tên & danh mục -->
+                                            <div class="col-md-4 col-8">
+                                                <h6 class="product-title mb-1">
+                                                    <a href="?action=detail&id=<?= $product['product_id'] ?>" 
+                                                       class="text-dark text-decoration-none">
+                                                        <?= htmlspecialchars($product['name']) ?>
+                                                    </a>
+                                                </h6>
+                                                <p class="product-category text-muted mb-1">
+                                                    <?= htmlspecialchars($product['category'] ?? 'Sản phẩm') ?>
+                                                </p>
+                                                <span class="product-price text-success fw-semibold">
+                                                    <?= number_format($product['price'], 0, ',', '.') ?>đ/<?= $product['unit'] ?>
+                                                </span>
+                                            </div>
 
-                                    <!-- Số lượng -->
-                                    <div class='col-md-3 col-6 mt-3 mt-md-0'>
-                                        <div class='quantity-control d-flex align-items-center'>
-                                            <button class='btn btn-sm btn-outline-secondary quantity-btn' data-action='decrease' data-product-id='<?php echo $productId; ?>'>
-                                                <i class='fas fa-minus'></i>
-                                            </button>
-                                            <input type='number' class='form-control form-control-sm quantity-input mx-2 text-center' 
-                                                value='<?php echo $quantity; ?>' min='1' max='99' style='width: 60px;' data-product-id='<?php echo $productId; ?>' >
-                                            <button class='btn btn-sm btn-outline-secondary quantity-btn' data-action='increase' data-product-id='<?php echo $productId; ?>'>
-                                                <i class='fas fa-plus'></i>
-                                            </button>
+                                            <!-- Số lượng -->
+                                            <div class="col-md-3 col-6 mt-3 mt-md-0">
+                                                <div class="quantity-control d-flex align-items-center">
+                                                    <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                            data-action="decrease" 
+                                                            data-product-id="<?= $product['product_id'] ?>">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <input type="number" 
+                                                           class="form-control form-control-sm quantity-input mx-2 text-center" 
+                                                           value="<?= $product['quantity'] ?>" 
+                                                           min="1" 
+                                                           max="99" 
+                                                           style="width: 60px;" 
+                                                           data-product-id="<?= $product['product_id'] ?>">
+                                                    <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                            data-action="increase" 
+                                                            data-product-id="<?= $product['product_id'] ?>">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tổng giá -->
+                                            <div class="col-md-2 col-3 mt-3 mt-md-0 text-md-end">
+                                                <span class="item-total fw-bold">
+                                                    <?= number_format($product['price'] * $product['quantity'], 0, ',', '.') ?>đ
+                                                </span>
+                                            </div>
+
+                                            <!-- Xóa -->
+                                            <div class="col-md-1 col-3 mt-3 mt-md-0 text-end">
+                                                <button class="btn btn-sm btn-link text-danger remove-item" 
+                                                        data-product-id="<?= $product['product_id'] ?>">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <!-- Tổng giá -->
-                                    <div class='col-md-2 col-3 mt-3 mt-md-0 text-md-end'>
-                                        <span class='item-total fw-bold'><?php echo $total; ?></span>
-                                    </div>
-
-                                    <!-- Xóa -->
-                                    <div class='col-md-1 col-3 mt-3 mt-md-0 text-end'>
-                                        <button class='btn btn-sm btn-link text-danger remove-item' data-product-id='<?php echo $productId; ?>'>
-                                            <i class='fas fa-trash-alt'></i>
-                                        </button>
-                                    </div>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
-                            <?php } ?>
-                        </div>
-                    <?php } ?>
-                </div>
-                <div class="card-footer bg-white py-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a href="?action=product" class="btn btn-outline-success">
-                                <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
-                            </a>
-                        </div>
-                        <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                            <button id="updateCart" class="btn btn-outline-secondary">
-                                <i class="fas fa-sync-alt me-2"></i>Cập nhật giỏ hàng
-                            </button>
-                            <button id="clearCart" class="btn btn-outline-danger ms-2">
-                                <i class="fas fa-trash-alt me-2"></i>Xóa giỏ hàng
-                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="card-footer bg-white py-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="?action=product" class="btn btn-outline-success">
+                                    <i class="fas fa-arrow-left me-2"></i>Tiếp tục mua sắm
+                                </a>
+                            </div>
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                <button id="updateCart" class="btn btn-outline-secondary">
+                                    <i class="fas fa-sync-alt me-2"></i>Cập nhật giỏ hàng
+                                </button>
+                                <button id="clearCart" class="btn btn-outline-danger ms-2">
+                                    <i class="fas fa-trash-alt me-2"></i>Xóa giỏ hàng
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4">
-            <!-- Order Summary -->
-            <div class="card order-summary">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Tóm tắt đơn hàng</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Tạm tính</span>
-                        <span class="fw-bold" id="subtotal">0đ</span>
+            <div class="col-lg-4">
+                <!-- Order Summary -->
+                <div class="card order-summary">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0">Tóm tắt đơn hàng</h5>
                     </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Giảm giá</span>
-                        <span class="fw-bold text-success" id="discount">0đ</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span>Phí vận chuyển</span>
-                        <span class="fw-bold" id="shipping">30.000đ</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="fw-bold">Tổng cộng</span>
-                        <span class="fw-bold text-success fs-5" id="total">0đ</span>
-                    </div>
-                    <div class="alert alert-success d-flex align-items-center mt-3" role="alert">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <div>
-                            Miễn phí vận chuyển cho đơn hàng từ 500.000đ
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Tạm tính</span>
+                            <span class="fw-bold" id="subtotal"><?= number_format($totalAmount, 0, ',', '.') ?>đ</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Giảm giá</span>
+                            <span class="fw-bold text-success" id="discount">0đ</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Phí vận chuyển</span>
+                            <span class="fw-bold" id="shipping"><?= number_format($shippingFee, 0, ',', '.') ?>đ</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="fw-bold">Tổng cộng</span>
+                            <span class="fw-bold text-success fs-5" id="total"><?= number_format($finalTotal, 0, ',', '.') ?>đ</span>
+                        </div>
+                        <div class="alert alert-success d-flex align-items-center mt-3" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <div>
+                                Miễn phí vận chuyển cho đơn hàng từ 500.000đ
+                            </div>
                         </div>
                     </div>
+                    <div class="card-footer bg-white py-3">
+                        <a href="?action=checkout" class="btn btn-success w-100">
+                            Tiến hành thanh toán <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="card-footer bg-white py-3">
-                    <a href="?action=checkout" class="btn btn-success w-100">
-                        Tiến hành thanh toán <i class="fas fa-arrow-right ms-2"></i>
+            </div>
+        </div>
+        <?php else: ?>
+        <!-- Empty Cart -->
+        <div class="row" id="emptyCart">
+            <div class="col-12">
+                <div class="empty-cart text-center py-5">
+                    <div class="empty-cart-icon mb-4">
+                        <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+                    </div>
+                    <h3>Giỏ hàng của bạn đang trống</h3>
+                    <p class="text-muted mb-4">Có vẻ như bạn chưa thêm bất kỳ sản phẩm nào vào giỏ hàng.</p>
+                    <a href="?action=product" class="btn btn-success">
+                        <i class="fas fa-shopping-basket me-2"></i>Tiếp tục mua sắm
                     </a>
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
-    
-    <?php } else { 
-        // Debug information
-        if (!$result) {
-            echo "<!-- Debug: Query failed -->";
-        } else {
-            echo "<!-- Debug: No rows found in result -->";
-        }
-    ?>
-    <!-- Empty Cart -->
-    <div class="row" id="emptyCart">
-        <div class="col-12">
-            <div class="empty-cart text-center py-5">
-                <div class="empty-cart-icon mb-4">
-                    <i class="fas fa-shopping-cart fa-5x text-muted"></i>
-                </div>
-                <h3>Giỏ hàng của bạn đang trống</h3>
-                <p class="text-muted mb-4">Có vẻ như bạn chưa thêm bất kỳ sản phẩm nào vào giỏ hàng.</p>
-                <a href="?action=product" class="btn btn-success">
-                    <i class="fas fa-shopping-basket me-2"></i>Tiếp tục mua sắm
-                </a>
-            </div>
-        </div>
-    </div>
-    <?php } ?>
-</div>
 </section>
 
-<!-- Back to Top -->
-<a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
-
 <!-- Notification Container -->
-<div id="notification-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+<div id="notification-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
 
 <!-- Cart JS -->
 <script>
@@ -251,8 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     console.log('Quantity inputs:', elements.quantityInputs.length);
-    console.log('Quantity buttons:', elements.quantityBtns.length);
-    console.log('Remove buttons:', elements.removeItemBtns.length);
     
     // Format currency helper
     function formatCurrency(value) {
@@ -289,23 +309,15 @@ document.addEventListener('DOMContentLoaded', function() {
             cartItem.classList.add('opacity-75');
         }
         
-        // Create form data
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('quantity', quantity);
-        formData.append('action', 'update');
-        
         // Send AJAX request
-        fetch('../../controller/update-cart.php', {
+        fetch('update-cart.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=update&product_id=${productId}&quantity=${quantity}`
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Update response:', data);
             
@@ -339,22 +351,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show loading indicator
         cartItem.classList.add('opacity-75');
         
-        // Create form data
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('action', 'remove');
-        
         // Send AJAX request
-        fetch('../../controller/update-cart.php', {
+        fetch('update-cart.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=remove&product_id=${productId}`
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Remove response:', data);
             
@@ -372,15 +377,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         updateCartTotals();
                         checkEmptyCart();
                         showNotification('Sản phẩm đã được xóa khỏi giỏ hàng');
-                        
-                        // Update cart count in header if exists
-                        const cartCountElement = document.querySelector('.cart-count');
-                        if (cartCountElement) {
-                            const currentCount = parseInt(cartCountElement.textContent);
-                            if (!isNaN(currentCount) && currentCount > 0) {
-                                cartCountElement.textContent = currentCount - 1;
-                            }
-                        }
                     }, 300);
                 }, 300);
             } else {
@@ -412,21 +408,15 @@ document.addEventListener('DOMContentLoaded', function() {
             item.classList.add('opacity-75');
         });
         
-        // Create form data
-        const formData = new FormData();
-        formData.append('action', 'clear');
-        
         // Send AJAX request
-        fetch('../../controller/update-cart.php', {
+        fetch('update-cart.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=clear'
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             console.log('Clear cart response:', data);
             
