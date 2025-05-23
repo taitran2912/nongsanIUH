@@ -221,8 +221,8 @@ $db->dongKetNoi($conn);
                         </div>
                     </div>
                     <div class="card-footer bg-white py-3">
-                        <a href="?action=checkout" class="btn btn-success w-100">
-                            Tiến hành thanh toán <i class="fas fa-arrow-right ms-2"></i>
+                        <a href="?action=sepay_checkout" class="btn btn-success w-100">
+                            Thanh toán với SePay <i class="fas fa-qrcode ms-2"></i>
                         </a>
                     </div>
                 </div>

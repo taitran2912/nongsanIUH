@@ -170,6 +170,17 @@
                     case 'order_detail':
                         include_once("chitietdonhang.php");
                         break;
+                    case 'checkout':
+                        include_once("checkout.php");
+                        break;
+                    case 'sepay_checkout':
+                        include_once("sepay_checkout.php");
+                        break;
+
+                    case 'thank_you':
+                        include_once("thankyou.php");
+                        break;
+                    
                     case 'dashboard':
                     default:
                         include_once("dashboard.php");

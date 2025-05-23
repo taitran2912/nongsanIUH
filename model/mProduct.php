@@ -9,7 +9,7 @@ class mProduct
         $conn->set_charset('utf8');
         if($conn){
              // tránh SQL injection
-            $str = "SELECT * FROM products p JOIN product_images pi on p.id = pi.product_id";
+            $str = "SELECT * FROM products p JOIN product_images pi on p.id = pi.product_id WHERE p.status = 0";
             $tbl = $conn->query($str);
             $p->dongKetNoi($conn);
             return $tbl;

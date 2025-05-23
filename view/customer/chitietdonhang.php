@@ -294,11 +294,9 @@ $transaction = $transaction_result->fetch_assoc();
                             <!-- Actions -->
                             <div class="d-flex justify-content-end mt-4">
                                 <?php if ($order['status'] == '0'): ?>
-                                <button type="button" class="btn btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
-                                    <i class="fas fa-times me-1"></i> Hủy đơn hàng
-                                </button>
+                                <a href="?action=cancelorder&id=<?php echo $order_id; ?>" class="btn btn-sm btn-outline-danger ms-2" onclick="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">Hủy đơn</a>
                                 <?php endif; ?>
-                                
+                               
                                 <?php if ($order['status'] == '2'): ?>
                                 <a href="review.php?order_id=<?php echo $order_id; ?>" class="btn btn-outline-primary me-2">
                                     <i class="fas fa-star me-1"></i> Đánh giá sản phẩm
@@ -390,6 +388,6 @@ $transaction = $transaction_result->fetch_assoc();
             // Gửi yêu cầu hủy đơn hàng
             // Trong thực tế, bạn sẽ sử dụng AJAX để gửi yêu cầu đến máy chủ
             alert('Đơn hàng đã được hủy thành công!');
-            window.location.href = 'orders.php';
+            window.location.href = '?action=profile.php';
         });
     </script>

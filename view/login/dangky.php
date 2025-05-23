@@ -76,7 +76,7 @@ if (isset($_POST["btnRegister"])) {
 ?>
 <?php if ($success): ?>
     <div class="alert alert-success">
-        Đăng ký thành công! <a href="log.php?login" class="link">Đăng nhập ngay</a>
+        Đăng ký th��nh công! <a href="log.php?login" class="link">Đăng nhập ngay</a>
     </div>
 <?php else: ?>
     <h2 class="text-center">Đăng ký tài khoản</h2>
@@ -123,4 +123,3 @@ if (isset($_POST["btnRegister"])) {
         <p class="text-center">Đã có tài khoản? <a href="?login" class="link">Đăng nhập</a></p>
     </form>
 <?php endif; ?>
-
