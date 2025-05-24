@@ -37,7 +37,8 @@ class cBuyer{
                     JOIN order_details od ON p.id = od.product_id
                     JOIN orders o ON od.order_id = o.id
                     WHERE p.farm_id = $id
-                    AND o.status != 3
+                    AND o.status != 0
+                    AND o.status != 4
                     AND MONTH(o.order_date) = MONTH(CURDATE())
                     AND YEAR(o.order_date) = YEAR(CURDATE());
                     ";
@@ -60,7 +61,8 @@ class cBuyer{
                     JOIN order_details od ON p.id = od.product_id
                     JOIN orders o ON od.order_id = o.id
                     WHERE p.farm_id = $id
-                    AND o.status != 3
+                    AND o.status != 0
+                    AND o.status != 4
                     AND MONTH(o.order_date) = MONTH(CURDATE())
                     AND YEAR(o.order_date) = YEAR(CURDATE());
                     ";
@@ -82,7 +84,8 @@ class cBuyer{
                     FROM products p JOIN order_details od ON p.id = od.product_id 
                     JOIN orders o ON od.order_id = o.id 
                     WHERE p.farm_id = $id
-                    AND o.status != 3
+                    AND o.status != 0
+                    AND o.status != 4
                     AND MONTH(o.order_date) = MONTH(CURDATE()) 
                     AND YEAR(o.order_date) = YEAR(CURDATE());
                     ";
@@ -108,7 +111,7 @@ class cBuyer{
                     WHERE f.id = $id
                     AND MONTH(o.order_date) = MONTH(CURDATE()) 
                     AND YEAR(o.order_date) = YEAR(CURDATE())
-                    AND o.status != 3
+                    AND o.status != 0
                     ORDER BY o.order_date DESC
                     ";
             $tbl = $p->sumDT($str);

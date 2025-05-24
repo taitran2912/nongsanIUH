@@ -9,7 +9,7 @@
     // hủy đơn
     if(isset($_GET['action']) && $_GET['action'] == 'cancelorder'){
         $orderId = $_GET['id'];
-        if($p->updateOrderStatus($orderId, 3, "Đã hủy")){
+        if($p->updateOrderStatus($orderId, 4, "Đã hủy")){
             echo "<script>alert('Hủy đơn hàng thành công!');</script>";
             echo "<script>window.location.href='index.php?action=profile';</script>";
         } else {
@@ -48,6 +48,8 @@
         echo '<link rel="stylesheet" href="../../asset/css/order_detail.css">';    
     } elseif (isset($_GET['action']) && $_GET['action'] === 'farm_detail') {   
         echo '<link rel="stylesheet" href="../../asset/css/farm_detail.css">';
+    } elseif (isset($_GET['action']) && $_GET['action'] === 'checkout') {
+        echo '<link rel="stylesheet" href="../../asset/css/checkout.css">';
     } 
 ?>
 </head>

@@ -154,15 +154,17 @@ if ($dsDH && $dsDH->num_rows > 0) {
             switch ($status) {
                 case 1:
                     $color = "bg-warning";
-                    $statusText = "Chờ xác nhận";
+                    $statusText = "Chuẩn bị hàng";
+                    $nextAction = "Đang giao";
                     break;
                 case 2:
                     $color = "bg-success";
                     $statusText = "Đang giao";
+                    $nextAction = "Giao thành công";
                     break;
                 case 3:
-                    $color = "bg-primary";
-                    $statusText = "Đã giao";
+                    $color = "bg-danger";
+                    $statusText = "Đã giao hàng";
                     break;
                 case 4:
                     $color = "bg-dark";
@@ -170,7 +172,7 @@ if ($dsDH && $dsDH->num_rows > 0) {
                     break;
                 default:
                     $color = "bg-secondary";
-                    $statusText = "Không xác định";
+                    $statusText = "Đơn lỗi";
                 }
 
             echo '              

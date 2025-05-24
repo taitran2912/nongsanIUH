@@ -5,6 +5,23 @@ $p = new cOrder();
 if(isset($_POST['btnChange'])) {
     $orID = $_POST['orderId'];
     $nStatus = $_POST['status']; 
+
+    if($nStatus == 1){
+        $remove = $p->infOr($orID); 
+        if($remove && $remove->num_rows > 0) {
+            while($row = $remove->fetch_assoc()) {
+                $productId = $row['product_id'];
+                $quantity = $row['slBan'];
+                if($quantity > $row['slKho']) {
+                    echo '<script>alert("Số lượng sản phẩm không đủ trong kho!");</script>';
+                    return; // Dừng xử lý nếu số lượng không đủ
+                }
+                // Cập nhật số lượng sản phẩm trong kho
+                $p->updateQLT($productId, $quantity);
+            }  
+        } 
+    }
+
     $changeStatus = $nStatus + 1; // Tăng trạng thái đơn hàng lên 1
 
     // Xử lý xác nhận đơn hàng
@@ -50,25 +67,28 @@ if(isset($_POST['btnChange'])) {
             switch ($status) {
                 case 1:
                     $color = "bg-warning";
-                    $statusText = "Chờ xác nhận";
-                    $nextAction = "Xác nhận đơn hàng";
+                    $statusText = "Chuẩn bị hàng";
+                    $nextAction = "Đang giao";
                     break;
                 case 2:
                     $color = "bg-success";
                     $statusText = "Đang giao";
-                    $nextAction = "Đang giao hàng";
+                    $nextAction = "Giao thành công";
                     break;
                 case 3:
-                    $color = "bg-primary";
+                    $color = "bg-danger";
                     $statusText = "Đã giao hàng";
                     break;
                 case 4:
                     $color = "bg-dark";
                     $statusText = "Đã hủy";
+                    $nextAction = "text-danger";
                     break;
                 default:
                     $color = "bg-secondary";
-                    $statusText = "Không xác định";
+                    $statusText = "Đơn lỗi";
+                    $nextAction = "text-muted";
+
                 }
             echo '
                         <tr>
@@ -113,7 +133,7 @@ if(isset($_POST['btnChange'])) {
                 ';
             } else {
             echo'           <td>
-                                <div class="badge bg-success">'.$statusText.'</div>
+                                <div class="'.$nextAction.'">'.$statusText.'</div>
                             </td>
                         </tr>
                 ';

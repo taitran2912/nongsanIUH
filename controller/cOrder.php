@@ -56,7 +56,8 @@ class cOrder{
                         FROM orders o2 
                         JOIN order_details od2 ON o2.id = od2.order_id 
                         JOIN products p2 ON p2.id = od2.product_id 
-                        WHERE p2.farm_id = $id
+                        WHERE p2.farm_id = $id  
+                        AND o2.status != 0
                 );
         ";
         $tbl = $p->checkOrder($str);
@@ -70,6 +71,38 @@ class cOrder{
             return false;  // Kết nối thất bại hoặc lỗi truy vấn
         }
     }
+    public function infOr($id){
+        $p = new mOrder();
+        $str = "SELECT od.order_id, od.product_id, od.quantity as slBan, p.quantity as slKho 
+                from order_details od 
+                JOIN products p on od.product_id = p.id 
+                where od.order_id = $id";
+        $tbl = $p->checkOrder($str);
+        if ($tbl) {
+            if ($tbl->num_rows > 0) {
+                return $tbl;
+            } else {
+                return -1;  // Không có dữ liệu
+            }
+        } else {
+            return false;  // Kết nối thất bại hoặc lỗi truy vấn
+        }
+    }
+
+    public function updateQLT($id, $qlt){
+        $p = new mOrder();
+        $str = "UPDATE products SET quantity = quantity - $qlt WHERE id = $id";
+        $tbl = $p->checkOrder($str);
+        if ($tbl) {
+            if ($p->conn->affected_rows > 0) {  // dùng affected_rows
+                return true;
+            } else {
+                return -1;  // Không có dòng nào bị ảnh hưởng
+            }
+        } else {
+            return false;  // Lỗi truy vấn
+        }
+    }   
 }
 class customerCheckOrder{
     public function getOrderInfo($id){

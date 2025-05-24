@@ -6,6 +6,7 @@ $password = "";
 $dbname = "nongsan";
 
 include_once("../../model/connect.php");
+
 // Kết nối CSDL
 // $conn = mysqli_connect("localhost", "root", "", "nongsan");
 $kn = new clsketnoi();
@@ -76,6 +77,36 @@ $related_products = [];
 while ($row = $related_result->fetch_assoc()) {
     $related_products[] = $row;
 }
+
+if(isset($_POST['btnCart'])) {
+    $productID = $_POST['productID'];
+    $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
+
+    // Kiểm tra số lượng sản phẩm
+    if ($quantity <= 0) {
+        echo "<script>alert('Số lượng sản phẩm không hợp lệ.');</script>";
+    } else {
+        // Thêm sản phẩm vào giỏ hàng
+        $sql_add_to_cart = "INSERT INTO cart (customer_id, product_id, quantity) VALUES (?, ?, ?)
+                            ON DUPLICATE KEY UPDATE quantity = quantity + ?";
+        $stmt_add_to_cart = $conn->prepare($sql_add_to_cart);
+        $user_id = $_SESSION['id'] ?? 0; // Lấy ID người dùng từ session
+        $stmt_add_to_cart->bind_param("iiii", $user_id, $productID, $quantity, $quantity);
+        
+        if ($stmt_add_to_cart->execute()) {
+            echo "<script>
+                alert('Sản phẩm đã được thêm vào giỏ hàng.');
+                window.location.href = window.location.href; // Reload lại trang
+            </script>";
+        } else {
+            echo "<script>
+                alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+                window.location.href = window.location.href; // Reload luôn nếu muốn
+            </script>";
+        }
+    }   
+    
+}
 ?>
 
     <!-- Product Detail -->
@@ -137,21 +168,22 @@ while ($row = $related_result->fetch_assoc()) {
                     <h5>Mô tả:</h5>
                     <p><?php echo $product['description']; ?></p>
                 </div>
-                
-                <div class="mb-4">
-                    <h5>Số lượng:</h5>
-                    <div class="d-flex align-items-center">
-                        <input type="number" id="quantity" class="form-control mx-2 quantity-input" value="1" min="1">
-                        <span class="ms-3 text-muted">Còn <?php echo $product['quantity']; ?> <?php echo $product['unit']; ?></span>
+                <form action="" method="POST">
+                    <div class="mb-4">
+                        <h5>Số lượng:</h5>
+                        <div class="d-flex align-items-center">
+                            <input type="number" name="quantity" id="quantity" class="form-control mx-2 quantity-input" value="1" min="1" max="<?php echo $product['quantity']; ?>">
+                            <span class="ms-3 text-muted">Còn <?php echo $product['quantity']; ?> <?php echo $product['unit']; ?></span>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="d-flex mt-4">
-                    <button class="btn btn-add-cart btn-lg me-3" onclick="addToCart(<?php echo $product_id; ?>)">
-                        <i class="fas fa-cart-plus me-2"></i> Thêm vào giỏ hàng
-                    </button>
-                </div>
-                
+
+                    <div class="d-flex mt-4">
+                        <input type="hidden" name="productID" value="<?php echo $product_id; ?>">
+                        <button type="submit" name="btnCart" class="btn btn-add-cart btn-lg me-3">
+                            <i class="fas fa-cart-plus me-2"></i> Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                </form>
                 
             </div>
         </div>
