@@ -55,16 +55,38 @@ class mProduct
         $p = new clsketnoi();
         $conn = $p->moKetNoi();
         $conn->set_charset('utf8');
-        if($conn){
-             // tránh SQL injection
-            $str = "INSERT INTO cart (customer_id, product_id, quantity) VALUES ($idUser, $idProduct, 1)";
-            $tbl = $conn->query($str);
+
+        if ($conn) {
+            // Kiểm tra xem đã có sản phẩm trong giỏ chưa
+            $check_sql = "SELECT quantity FROM cart WHERE customer_id = ? AND product_id = ?";
+            $stmt = $conn->prepare($check_sql);
+            $stmt->bind_param("ii", $idUser, $idProduct);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                // Sản phẩm đã tồn tại -> tăng số lượng
+                $update_sql = "UPDATE cart SET quantity = quantity + 1 WHERE customer_id = ? AND product_id = ?";
+                $stmt = $conn->prepare($update_sql);
+                $stmt->bind_param("ii", $idUser, $idProduct);
+                $tbl = $stmt->execute();
+            } else {
+                // Sản phẩm chưa có -> thêm mới
+                $insert_sql = "INSERT INTO cart (customer_id, product_id, quantity) VALUES (?, ?, 1)";
+                $stmt = $conn->prepare($insert_sql);
+                $stmt->bind_param("ii", $idUser, $idProduct);
+                $tbl = $stmt->execute();
+            }
+
+            $stmt->close();
             $p->dongKetNoi($conn);
+
             return $tbl;
         } else {
             return false;
         }
     }
+
     
     public function getProduct($farm_id)
     {
