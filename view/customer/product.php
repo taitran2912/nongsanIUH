@@ -63,22 +63,6 @@ $offset = ($current_page - 1) * $items_per_page;
                         </ul>
                     </div>
                 </div>
-
-                <!-- Filter by Price -->
-                <!-- <div class="sidebar-widget mb-4">
-                    <h4 class="widget-title">Lọc theo giá</h4>
-                    <div class="widget-content">
-                        <div class="price-range-slider">
-                            <div class="price-input d-flex align-items-center mb-3">
-                                <input type="number" class="form-control me-2" value="0" min="0" max="500000">
-                                <span class="mx-2">-</span>
-                                <input type="number" class="form-control ms-2" value="500000" min="0" max="500000">
-                            </div>
-                            <input type="range" class="form-range" min="0" max="500000" step="10000">
-                            <button class="btn btn-success btn-sm mt-3 w-100">Áp dụng</button>
-                        </div>
-                    </div>
-                </div> -->
             </div>
 
             <!-- Products -->
@@ -111,7 +95,7 @@ $offset = ($current_page - 1) * $items_per_page;
                 </div>
 
                 <!-- Products Grid -->
-                <div class="products-grid">
+                <divc class="products-grid">
                     <div class="row g-4">
                     <?php
                         // We need to modify the existing methods to support pagination
@@ -224,7 +208,7 @@ $offset = ($current_page - 1) * $items_per_page;
                         </div>
                         <?php endif; ?>
                     </div>
-                </div>
+                </divc>
             </div>
 
         </div>

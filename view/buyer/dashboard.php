@@ -152,20 +152,20 @@ if ($dsDH && $dsDH->num_rows > 0) {
         $status = $row['status'];
         // $notes = $rowOders['notes'];
             switch ($status) {
-                case 0:
-                    $color = "bg-warning";
-                    $statusText = "Đang xử lý";
-                    break;
                 case 1:
-                    $color = "bg-primary";
-                    $statusText = "Đang giao";
+                    $color = "bg-warning";
+                    $statusText = "Chờ xác nhận";
                     break;
                 case 2:
                     $color = "bg-success";
-                    $statusText = "Đã giao";
+                    $statusText = "Đang giao";
                     break;
                 case 3:
-                    $color = "bg-danger";
+                    $color = "bg-primary";
+                    $statusText = "Đã giao";
+                    break;
+                case 4:
+                    $color = "bg-dark";
                     $statusText = "Đã hủy";
                     break;
                 default:

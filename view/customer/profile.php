@@ -142,26 +142,31 @@
                                                         $status = $rowOders['status'];
                                                         // $notes = $rowOders['notes'];
                                                             switch ($status) {
-                                                                case 0:
-                                                                    $color = "bg-warning";
-                                                                    $statusText = "Đang xử lý";
-                                                                    break;
                                                                 case 1:
-                                                                    $color = "bg-primary";
-                                                                    $statusText = "Đang giao";
+                                                                    $color = "bg-warning";
+                                                                    $statusText = "Chờ xác nhận";
+                                                                    
                                                                     break;
                                                                 case 2:
                                                                     $color = "bg-success";
-                                                                    $statusText = "Đã giao";
+                                                                    $statusText = "Đang giao hàng";
+                                                                    
                                                                     break;
                                                                 case 3:
+                                                                    $color = "bg-success";
+                                                                    $statusText = "Đã giao";
+                                                                    
+                                                                    break;
+                                                                case 4:
                                                                     $color = "bg-danger";
                                                                     $statusText = "Đã hủy";
+                                                                    
                                                                     break;
                                                                 default:
                                                                     $color = "bg-secondary";
                                                                     $statusText = "Không xác định";
-                                                            }
+                                                            
+                                                    }
                                                         echo'   <tr>
                                                                     <td>#'.$orderId.'</td>
                                                                     <td>'.$orderDate.'</td>
@@ -268,22 +273,22 @@
                                                     $status = $rowOders['status'];
                                                     
                                                     switch ($status) {
-                                                        case 0:
+                                                        case 1:
                                                             $color = "bg-warning";
-                                                            $statusText = "Đang xử lý";
+                                                            $statusText = "Chờ xác nhận";
                                                             $cancelBtn = '<a href="?action=cancelorder&id='.$orderId.'" class="btn btn-sm btn-outline-danger ms-2" onclick="return confirm(\'Bạn có chắc chắn muốn hủy đơn hàng này?\')">Hủy đơn</a>';
                                                             break;
-                                                        case 1:
-                                                            $color = "bg-primary";
-                                                            $statusText = "Đang giao";
+                                                        case 2:
+                                                            $color = "bg-success";
+                                                            $statusText = "Đang giao hàng";
                                                             $cancelBtn = '';
                                                             break;
-                                                        case 2:
+                                                        case 3:
                                                             $color = "bg-success";
                                                             $statusText = "Đã giao";
                                                             $cancelBtn = '';
                                                             break;
-                                                        case 3:
+                                                        case 4:
                                                             $color = "bg-danger";
                                                             $statusText = "Đã hủy";
                                                             $cancelBtn = '';
@@ -293,6 +298,9 @@
                                                             $statusText = "Không xác định";
                                                             $cancelBtn = '';
                                                     }
+
+
+                
                                                     echo '<tr>
                                                             <td>#'.$orderId.'</td>
                                                             <td>'.$orderDate.'</td>

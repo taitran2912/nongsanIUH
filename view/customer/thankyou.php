@@ -1,4 +1,6 @@
 <?php
+include_once '../../controller/cOrder.php';
+
 // Kiểm tra đăng nhập
 if (!isset($_SESSION["id"])) {
     echo "<script>window.location.href = '?action=login';</script>";
@@ -12,61 +14,40 @@ $orderId = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 if ($orderId == 0 && isset($_SESSION['sepay_order']['order_id'])) {
     $orderId = $_SESSION['sepay_order']['order_id'];
 }
+    
+$p = new customerCheckOrder();
 
-// Kết nối CSDL
-$db = new clsketnoi();
-$conn = $db->moKetNoi();
-$conn->set_charset('utf8');
+$user_id = $status = '';
+$subtotal = $shippingFee = 0;
 
-// Lấy thông tin đơn hàng
-$orderSql = "SELECT o.*, u.name, u.email, u.phone 
-             FROM orders o 
-             JOIN users u ON o.user_id = u.id 
-             WHERE o.id = ? AND o.user_id = ?";
-$orderStmt = $conn->prepare($orderSql);
-$orderStmt->bind_param("ii", $orderId, $customerId);
-$orderStmt->execute();
-$orderResult = $orderStmt->get_result();
+$result = $p->getOrderInfo($orderId);
+if ($result && $result->num_rows > 0) {
+    $orderInfo = $result->fetch_assoc(); // ✅ đúng biến, đúng thứ tự
+    $user_id = $orderInfo['user_id'];
+    $status = $orderInfo['status'];
+    
+    if($status == 1){
+        $r = $p->updateStatus($orderId);
+        
+    }
 
-if ($orderResult->num_rows === 0) {
-    echo "<script>alert('Không tìm thấy đơn hàng!'); window.location.href = '?action=dashboard';</script>";
+    $total = $orderInfo['total_amount'];
+        if ($total - 30000 < 500000) {
+            $shippingFee = 30000;
+            $subtotal = $total - $shippingFee;
+        } else {
+            $shippingFee = 0;
+            $subtotal = $total; 
+        }
+} else {
+    echo "<script>alert('Đơn hàng không tồn tại!');</script>";
     exit;
 }
 
-$orderInfo = $orderResult->fetch_assoc();
+$orderDetails = $p->getOrderDetails($orderId);
 
-// Lấy chi tiết đơn hàng
-$detailSql = "SELECT od.*, p.name, p.price, p.image 
-              FROM order_details od 
-              JOIN products p ON od.product_id = p.id 
-              WHERE od.order_id = ?";
-$detailStmt = $conn->prepare($detailSql);
-$detailStmt->bind_param("i", $orderId);
-$detailStmt->execute();
-$detailResult = $detailStmt->get_result();
-
-$orderDetails = [];
-$subtotal = 0;
-
-while ($row = $detailResult->fetch_assoc()) {
-    $orderDetails[] = $row;
-    $subtotal += $row['price'] * $row['quantity'];
-}
-
-// Tính phí vận chuyển
-$shippingFee = ($subtotal >= 500000) ? 0 : 30000;
-
-// Đóng kết nối
-$db->dongKetNoi($conn);
-
-// Xóa thông tin thanh toán từ session
-if (isset($_SESSION['sepay_payment'])) {
-    unset($_SESSION['sepay_payment']);
-}
-if (isset($_SESSION['sepay_order'])) {
-    unset($_SESSION['sepay_order']);
-}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -252,7 +233,7 @@ if (isset($_SESSION['sepay_order'])) {
                 
                 <?php foreach ($orderDetails as $item): ?>
                 <div class="product-item">
-                    <img src="<?php echo $item['image']; ?>" alt="<?php echo $item['name']; ?>" class="product-image">
+                    <img src="../../image/<?php echo $item['img']; ?>" alt="<?php echo $item['name']; ?>" class="product-image">
                     <div class="product-info">
                         <h6><?php echo $item['name']; ?></h6>
                         <p class="text-muted">Số lượng: <?php echo $item['quantity']; ?></p>

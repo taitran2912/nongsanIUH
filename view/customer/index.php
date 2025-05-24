@@ -24,6 +24,8 @@
         $row = $countCart->fetch_assoc();
         $count = (int) $row['count'];
     }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -44,8 +46,10 @@
         echo '<link rel="stylesheet" href="../../asset/css/detail.css">';
     } elseif (isset($_GET['action']) && $_GET['action'] === 'chitietdonhang') {
         echo '<link rel="stylesheet" href="../../asset/css/order_detail.css">';    
-    }
-    ?>
+    } elseif (isset($_GET['action']) && $_GET['action'] === 'farm_detail') {   
+        echo '<link rel="stylesheet" href="../../asset/css/farm_detail.css">';
+    } 
+?>
 </head>
 
 <body>
@@ -179,6 +183,11 @@
 
                     case 'thank_you':
                         include_once("thankyou.php");
+                        break;
+                        
+
+                    case 'farm_detail':
+                        include_once("farm_detail.php");
                         break;
                     
                     case 'dashboard':
@@ -401,9 +410,7 @@
                     
                 html += `
                     <div class="chat-item" data-id="${chat.id}" data-name="${chat.display_name}">
-                        <div class="chat-item-avatar">
-                            <img src="../../image/default_shop_avatar.jpg" alt="${chat.display_name}">
-                        </div>
+                        
                         <div class="chat-item-info">
                             <div class="chat-item-name">${chat.display_name}</div>
                             <div class="chat-item-last-message">${chat.last_message}</div>

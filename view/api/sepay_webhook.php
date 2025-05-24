@@ -182,17 +182,18 @@ if (!$updateResult) {
 writeLog("Order status updated successfully", ['order_id' => $orderId]);
 
 // Kiểm tra xem bảng transactions đã tồn tại chưa
-$checkTableSql = "SHOW TABLES LIKE 'transactions'";
 $checkTableResult = $conn->query($checkTableSql);
 
 if ($checkTableResult->num_rows > 0) {
-    // Lưu thông tin giao dịch
-    $transactionSql = "INSERT INTO transactions (order_id, transaction_id, method, amount, status, transaction_date) 
-                    VALUES (?, ?, 'SePay', ?, 'completed', ?)";
-    $transactionStmt = $conn->prepare($transactionSql);
-    $transactionStmt->bind_param("isds", $orderId, $transactionId, $amount, $transactionDate);
-    $transactionStmt->execute();
-    writeLog("Transaction saved", ['transaction_id' => $transactionId]);
+    // Cập nhật trạng thái giao dịch thành 'completed'
+    $updateSql = "UPDATE transactions 
+                  SET status = 'completed' 
+                  WHERE id = ?";
+    $updateStmt = $conn->prepare($updateSql);
+    $updateStmt->bind_param("s", $transactionId);
+    $updateStmt->execute();
+
+    writeLog("Transaction updated", ['transaction_id' => $transactionId]);
 }
 
 // Xóa giỏ hàng của người dùng

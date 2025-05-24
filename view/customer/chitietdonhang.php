@@ -86,19 +86,19 @@ $transaction = $transaction_result->fetch_assoc();
                                                 $status_class = '';
                                                 $status_text = '';
                                                 switch($order['status']) {
-                                                    case '0':
+                                                    case '1':
                                                         $status_text = 'Chờ xác nhận';
                                                         $status_class = 'status-pending';
                                                         break;
-                                                    case '1':
-                                                        $status_text = 'Đang xử lý';
+                                                    case '2':
+                                                        $status_text = 'Đang giao hàng';
                                                         $status_class = 'status-processing';
                                                         break;
-                                                    case '2':
+                                                    case '3':
                                                         $status_text = 'Đã giao hàng';
                                                         $status_class = 'status-delivered';
                                                         break;
-                                                    case '3':
+                                                    case '4':
                                                         $status_text = 'Đã hủy';
                                                         $status_class = 'status-cancelled';
                                                         break;
@@ -174,7 +174,7 @@ $transaction = $transaction_result->fetch_assoc();
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <?php if ($item['product_image']): ?>
-                                                    <img src="../../image/<?php echo $item['product_image']; ?>" alt="<?php echo $item['product_name']; ?>" class="product-img me-3">
+                                                    <img src="../../image/<?php echo $item['product_image']; ?>" alt="<?php echo $item['product_name']; ?>" class="product-img me-3" style="width: 50px; height: 50px; object-fit: cover;">
                                                     <?php else: ?>
                                                     <div class="product-img me-3 bg-light d-flex align-items-center justify-content-center">
                                                         <i class="fas fa-image text-muted"></i>
@@ -209,11 +209,13 @@ $transaction = $transaction_result->fetch_assoc();
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" class="text-end"><strong>Tổng tiền sản phẩm:</strong></td>
-                                            <td class="text-end"><?php echo number_format($subtotal, 0, ',', '.'); ?>đ</td>
+                                            <td class="text-end"><?php echo number_format($subtotal, 0, ',', '.'); 
+                                            if($order['total_amonunt']-30000 > 5000000){$ship_fee = 0;}else{$ship_fee = 30000;}
+                                            ?>đ</td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-end"><strong>Phí vận chuyển:</strong></td>
-                                            <td class="text-end">0đ</td>
+                                            <td class="text-end"><?php echo $ship_fee; ?></td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-end"><strong>Tổng thanh toán:</strong></td>
@@ -238,7 +240,7 @@ $transaction = $transaction_result->fetch_assoc();
                                             ]
                                         ];
                                         
-                                        if ($order['status'] != '0' && $order['status'] != '3') {
+                                        if ($order['status'] != '0') {
                                             $history[] = [
                                                 'status' => 'Đơn hàng đã được xác nhận',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +1 hour')),
@@ -248,7 +250,7 @@ $transaction = $transaction_result->fetch_assoc();
                                         
                                         if ($order['status'] == '1') {
                                             $history[] = [
-                                                'status' => 'Đơn hàng đang được xử lý',
+                                                'status' => 'Đơn hàng chưa được xác nhận',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +1 day')),
                                                 'icon' => 'fa-truck'
                                             ];
@@ -256,13 +258,21 @@ $transaction = $transaction_result->fetch_assoc();
                                         
                                         if ($order['status'] == '2') {
                                             $history[] = [
-                                                'status' => 'Đơn hàng đã giao thành công',
+                                                'status' => 'Đơn hàng đang giao',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +3 days')),
                                                 'icon' => 'fa-check-circle'
                                             ];
                                         }
                                         
                                         if ($order['status'] == '3') {
+                                            $history[] = [
+                                                'status' => 'Đơn hàng đã giao thành công',
+                                                'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +2 hours')),
+                                                'icon' => 'fa-check'
+                                            ];
+                                        }
+
+                                        if ($order['status'] == '4') {
                                             $history[] = [
                                                 'status' => 'Đơn hàng đã bị hủy',
                                                 'time' => date('d/m/Y H:i', strtotime($order['order_date'] . ' +2 hours')),
@@ -302,10 +312,6 @@ $transaction = $transaction_result->fetch_assoc();
                                     <i class="fas fa-star me-1"></i> Đánh giá sản phẩm
                                 </a>
                                 <?php endif; ?>
-                                
-                                <a href="#" class="btn btn-primary" onclick="window.print()">
-                                    <i class="fas fa-print me-1"></i> In đơn hàng
-                                </a>
                             </div>
                         <?php else: ?>
                             <div class="text-center py-5">

@@ -61,5 +61,35 @@ include_once("../../model/mProduct.php");
                 return false;  // Kết nối thất bại hoặc lỗi truy vấn
             }
         }
+
+        public function getProduct($farm_id)
+        {
+            $p = new mProduct();
+            $result = $p->getProduct($farm_id);
+            if ($result) {
+                if ($result->num_rows > 0) {
+                    return $result;
+                } else {
+                    return -1;  // Không có dữ liệu
+                }
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+        }
+
+        public function getByCategory($idCate, $farm_id)
+        {
+            $p = new mProduct();
+            $result = $p->getByCategory($idCate, $farm_id);
+            if ($result) {
+                if ($result->num_rows > 0) {
+                    return $result;
+                } else {
+                    return -1;  // Không có dữ liệu
+                }
+            } else {
+                return false;  // Kết nối thất bại hoặc lỗi truy vấn
+            }
+        }
     }
 ?>
