@@ -184,7 +184,7 @@
                         break;
 
                     case 'thank_you':
-                        include_once("thankyou.php");
+                        include_once("thank_you.php");
                         break;
                         
 

@@ -1,47 +1,83 @@
 <?php
-// Ghi log để debug
-function writeLog($message, $data = null) {
-    $logFile = __DIR__ . '/payment_check_log.txt';
-    $timestamp = date('Y-m-d H:i:s');
-    $logMessage = "[{$timestamp}] {$message}";
-    
-    if ($data !== null) {
-        $logMessage .= " - Data: " . json_encode($data);
-    }
-    
-    file_put_contents($logFile, $logMessage . PHP_EOL, FILE_APPEND);
-}
+// check_sepay_payment.php - API to check payment status
 
-// Set header cho JSON response
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-// Bắt đầu ghi log
-writeLog("Payment check API called");
-
-// Lấy dữ liệu từ request
-$requestData = file_get_contents('php://input');
-$data = json_decode($requestData, true);
-
-writeLog("Request data", $data);
-
-// Kiểm tra dữ liệu đầu vào
-if (empty($data) || !isset($data['order_code'])) {
-    writeLog("Missing order_code");
-    http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Missing order_code']);
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
     exit;
 }
 
-$orderCode = $data['order_code'];
+// Logging function
+function writeLog($message, $data = null) {
+    $logFile = __DIR__ . '/payment_check.log';
+    $timestamp = date('Y-m-d H:i:s');
+    $logMessage = "[{$timestamp}] {$message}";
+    if ($data !== null) {
+        $logMessage .= " - Data: " . json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+    file_put_contents($logFile, $logMessage . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
 
 try {
-    // Kết nối CSDL
-    require_once '../../model/connect.php';
+    writeLog("Payment check API called");
+    
+    // Get request data
+    $requestData = file_get_contents('php://input');
+    $data = json_decode($requestData, true);
+    
+    writeLog("Request data", $data);
+    
+    // Validate input
+    if (empty($data) || !isset($data['order_code'])) {
+        writeLog("Missing order_code");
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Missing order_code']);
+        exit;
+    }
+    
+    $orderCode = $data['order_code'];
+    
+    // Database connection
+    $connectionPaths = [
+        __DIR__ . '/../../model/connect.php',
+        __DIR__ . '/../model/connect.php',
+        dirname(__DIR__) . '/model/connect.php'
+    ];
+    
+    $connected = false;
+    foreach ($connectionPaths as $path) {
+        if (file_exists($path)) {
+            require_once $path;
+            $connected = true;
+            break;
+        }
+    }
+    
+    if (!$connected) {
+        writeLog("Database connection file not found");
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+        exit;
+    }
+    
     $db = new clsketnoi();
     $conn = $db->moKetNoi();
+    
+    if (!$conn) {
+        writeLog("Database connection failed");
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+        exit;
+    }
+    
     $conn->set_charset('utf8');
-
-    // Tìm đơn hàng theo mã đơn hàng
+    
+    // Find order by order code
     $orderSql = "SELECT o.id, o.user_id, o.total_amount, o.status, o.order_date 
                  FROM orders o 
                  WHERE o.notes LIKE ?";
@@ -50,46 +86,47 @@ try {
     $orderStmt->bind_param("s", $searchPattern);
     $orderStmt->execute();
     $orderResult = $orderStmt->get_result();
-
+    
     if ($orderResult->num_rows === 0) {
         writeLog("Order not found", ['order_code' => $orderCode]);
         echo json_encode(['success' => false, 'message' => 'Order not found']);
         $db->dongKetNoi($conn);
         exit;
     }
-
+    
     $orderData = $orderResult->fetch_assoc();
     $orderId = $orderData['id'];
     $orderStatus = $orderData['status'];
-
+    
     writeLog("Order found", [
         'order_id' => $orderId,
         'status' => $orderStatus,
         'order_code' => $orderCode
     ]);
-
-    // Kiểm tra trạng thái thanh toán
-    if ($orderStatus === '1') {
+    
+    // Check payment status
+    if ($orderStatus == '1') {
         writeLog("Payment completed", ['order_id' => $orderId]);
         echo json_encode([
-            'success' => true, 
+            'success' => true,
             'message' => 'Payment completed',
             'order_id' => $orderId,
-            'status' => 'paid'
+            'status' => 'paid',
+            'order_data' => $orderData
         ]);
     } else {
         writeLog("Payment not completed yet", ['order_id' => $orderId]);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => 'Payment not completed yet',
             'order_id' => $orderId,
-            'status' => 'pending'
+            'status' => 'pending',
+            'order_data' => $orderData
         ]);
     }
-
-    // Đóng kết nối
+    
     $db->dongKetNoi($conn);
-
+    
 } catch (Exception $e) {
     writeLog("Error checking payment", ['error' => $e->getMessage()]);
     http_response_code(500);
