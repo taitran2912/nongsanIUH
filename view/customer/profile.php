@@ -64,18 +64,28 @@
                                     if($r && $r->num_rows > 0){
                                         $row = $r->fetch_assoc();
                                         $storeId = $row['id'];
-                                        if($storeId != null){
+                                        $status = $row['status'];
+                                        if($storeId != null && $status == 0){
                                             echo '
-                                                <li class="nav-item mt-2">
+                                                <li class="nav-item">
                                                     <a class="nav-link w-100 text-start" href="../buyer/">
                                                         <i class="fas fa-store me-2"></i> Cửa hàng của tôi
                                                     </a>
                                                 </li>
                                             ';
+                                        }else if($storeId != null && $status == 1){
+                                            echo '
+                                                <li class="nav-item">
+                                                    <a class="nav-link w-100 text-start" href="">
+                                                        <i class="fas fa-store me-2"></i> Chờ duyệt cửa hàng
+                                                    </a>
+                                                    
+                                                </li>
+                                            ';
                                         }
                                     }else{
                                             echo '
-                                                <li class="nav-item mt-2">
+                                                <li class="nav-item">
                                                     <a class="nav-link w-100 text-start" href="../buyer/dangkynguoiban.php">
                                                     <i class="fas fa-store me-2"></i>Đăng ký bán hàng
                                                     </a>

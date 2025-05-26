@@ -9,7 +9,7 @@ if(isset($_POST['createFarm'])) {
     $address = $_POST['address'];
     $description = $_POST['decription'];
     $owner_id = $_SESSION['id'];
-    $status = 1; // Assuming status is always 1 for new shops
+    $status = 2; // Assuming status is always 1 for new shops
     
     $result = $cShop->addShop($shopname, $address, $description, $owner_id, $status);
     if ($result) {

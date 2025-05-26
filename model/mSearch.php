@@ -57,6 +57,20 @@ class mSearch{
         }
     }
 
+    public function mChangeStatus($id){
+        $p = new clsketnoi();
+        $conn = $p->moKetNoi();
+        $conn->set_charset('utf8');
+        if($conn){
+            $str = "UPDATE farms SET status = 0 WHERE farms.id = $id;";
+            $tbl = $conn->query($str);
+            $p->dongKetNoi($conn);
+            return $tbl;
+        }else{
+            return false;
+        }
+    }
+
     public function msearchDK($kw){
         $p = new clsketnoi();
         $conn = $p->moKetNoi();

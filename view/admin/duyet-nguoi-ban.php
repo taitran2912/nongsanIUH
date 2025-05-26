@@ -55,6 +55,7 @@
                     <form method="post">
                         <input type="hidden" name="idShop" value="'.$row['idF'].'">
                         <input type="submit" name="delete" class="btn btn-danger" value="Xóa">
+                        <input type="submit" name="change" class="btn btn-success" value="Duyệt">
                     </form>
                 </td>';
 
@@ -73,11 +74,21 @@
         if ($p->deleteDK($id)) {         
             echo '<script language="javascript">             
                     alert("Xóa thành công!");             
-                    window.location.href = "index.php?action=quan-ly-nguoi-ban";             
+                    window.location.href = "index.php?action=duyet-nguoi-ban";             
                 </script>';     
         } else {         
             echo "<p>Đã xảy ra lỗi khi gửi yêu cầu.</p>";     
         } 
+    }else if (isset($_POST['change'])) {
+        $id = $_POST['idShop'];
+        if ($p->changeStatus($id)) {
+            echo '<script language="javascript">             
+                    alert("Duyệt thành công!");             
+                    window.location.href = "index.php?action=duyet-nguoi-ban";             
+                </script>';
+        } else {
+            echo "<p>Đã xảy ra lỗi khi gửi yêu cầu.</p>";
+        }
     }
 ?>
 

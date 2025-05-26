@@ -159,12 +159,12 @@ if(isset($_POST['btnChange'])) {
             if ($orderDetails && $orderDetails->num_rows > 0) {
                 $count = 1;
                 while ($detail = $orderDetails->fetch_assoc()) {
-                    $total = $detail['quantity'] * $detail['price'];
+                    $total = $detail['sl'] * $detail['price'];
                     echo '
                         <tr>
                             <td>'.$count.'</td>
                             <td>'.$detail['name'].'</td>
-                            <td>'.$detail['quantity'].'</td>
+                            <td>'.$detail['sl'].'</td>
                             <td>'.number_format($detail['price']).' đ</td>
                             <td>'.number_format($total).' đ</td>
                         </tr>

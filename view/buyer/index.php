@@ -27,7 +27,7 @@ if($r && $r->num_rows > 0){
     $storeName = $row['shopname'];
 }else {
     echo "<script>
-            alert('Bạn không có quyền truy cập');
+            alert('Shop của bạn chưa được duyệt hoặc bị khoá');
             window.location.href = '../customer/index.php';
           </script>";
     exit();
@@ -87,32 +87,22 @@ if($r && $r->num_rows > 0){
                         <i class="fas fa-shopping-cart"></i> Đơn hàng
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="?action=customer" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'customer') ? 'active' : ''; ?>">
-                        <i class="fas fa-users"></i> Khách hàng
-                    </a>
-                </li> -->
+
                 <li class="nav-item">
                     <a href="?action=statis" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'statis') ? 'active' : ''; ?>">
                         <i class="fas fa-chart-line"></i> Thống kê
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="?action=review" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'review') ? 'active' : ''; ?>">
                         <i class="fas fa-star"></i> Đánh giá
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="?action=chat" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'chat') ? 'active' : ''; ?>">
-                        <i class="fas fa-comments"></i> Tin nhắn
-                        <span id="sidebarChatBadge" class="badge bg-danger rounded-pill ms-2" style="display: none;"></span>
-                    </a>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                     <a href="?action=setting" class="nav-link <?php echo (isset($_GET['action']) && $_GET['action'] == 'setting') ? 'active' : ''; ?>">
                         <i class="fas fa-cog"></i> Cài đặt
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <a href="../customer/index.php" class="nav-link text-secondary">
                         <i class="fas fa-sign-out-alt"></i> Trở lại mua hàng

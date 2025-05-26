@@ -26,7 +26,7 @@ class mBuyer{
         $conn->set_charset('utf8');
         if($conn){
             $id = $conn->real_escape_string($id); // tránh SQL injection
-            $str = "SELECT id, shopname FROM farms WHERE owner_id = $id;";
+            $str = "SELECT id, shopname FROM farms WHERE owner_id = $id AND status = 0;";
             $tbl = $conn->query($str);
             $p->dongKetNoi($conn);
             return $tbl;

@@ -41,6 +41,20 @@ class cSearch{
             return false;  // Kết nối thất bại hoặc lỗi truy vấn
         }
     }
+
+    public function changeStatus($id) {
+        $p = new mSearch();
+        $tbl = $p->mChangeStatus($id);
+        if ($tbl) {
+            if ($tbl->num_rows > 0) {
+                return $tbl;
+            } else {
+                return -1;  // Không có dữ liệu
+            }
+        } else {
+            return false;  // Kết nối thất bại hoặc lỗi truy vấn
+        }
+    }
     public function count() {
         $p = new mSearch();
         $tbl = $p->mCount();

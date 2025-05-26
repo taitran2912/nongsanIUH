@@ -3,7 +3,7 @@ include_once '../../model/mOrder.php';
 class cOrder{
     public function getProduct($id){
         $p = new mOrder();
-        $str = " SELECT * FROM order_details od 
+        $str = " SELECT od.quantity as sl, p.* FROM order_details od 
                  JOIN products p ON od.product_id = p.id 
                  JOIN product_images pi ON p.id = pi.product_id 
                  WHERE od.order_id = $id
@@ -109,7 +109,8 @@ class customerCheckOrder{
         $p = new mOrder();
         $str = "SELECT o.order_date, o.user_id, o.status, o.total_amount, o.notes, o.Shipping_address,u.name, u.email, u.phone 
                 from orders o 
-                join users u on o.user_id= u.id     where o.id = $id";
+                join users u on o.user_id= u.id 
+                where o.id = $id";
         $tbl = $p->mCCO($str);
         if ($tbl) {
             if ($tbl->num_rows > 0) {
@@ -124,7 +125,10 @@ class customerCheckOrder{
 
     public function getOrderDetails($id){
         $p = new mOrder();
-        $str = "SELECT * FROM order_details od join products p on od.product_id = p.id join product_images pi on p.id = pi.product_id where od.order_id = $id";
+        $str = "SELECT * FROM order_details od 
+                join products p on od.product_id = p.id 
+                join product_images pi on p.id = pi.product_id 
+                where od.order_id = $id";
         $tbl = $p->mCCO($str);
         if ($tbl) {
             if ($tbl->num_rows > 0) {

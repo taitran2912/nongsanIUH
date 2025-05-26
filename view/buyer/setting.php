@@ -1,43 +1,185 @@
+<?php
+// setting.php - Settings page for buyers
+
+// Kiểm tra đăng nhập và quyền truy cập
+if (!isset($_SESSION["id"])) {
+    echo "<script>window.location.href = '../customer/index.php';</script>";
+    exit;
+}
+
+// Kết nối database
+include_once '../../model/connect.php';
+$db = new clsketnoi();
+$conn = $db->moKetNoi();
+$conn->set_charset('utf8');
+
+$userId = $_SESSION["id"];
+$farmId = $storeId; // Từ index.php
+
+// Lấy thông tin farm hiện tại
+$farmSql = "SELECT * FROM farms WHERE user_id = ? AND id = ?";
+$farmStmt = $conn->prepare($farmSql);
+$farmStmt->bind_param("ii", $userId, $farmId);
+$farmStmt->execute();
+$farmResult = $farmStmt->get_result();
+$farmData = $farmResult->fetch_assoc();
+
+// Lấy thông tin user
+$userSql = "SELECT * FROM users WHERE id = ?";
+$userStmt = $conn->prepare($userSql);
+$userStmt->bind_param("i", $userId);
+$userStmt->execute();
+$userResult = $userStmt->get_result();
+$userData = $userResult->fetch_assoc();
+
+// Xử lý cập nhật thông tin
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $action = $_POST['action'] ?? '';
+    
+    if ($action == 'update_farm') {
+        $shopname = trim($_POST['shopname']);
+        $description = trim($_POST['description']);
+        $address = trim($_POST['address']);
+        $phone = trim($_POST['phone']);
+        $email = trim($_POST['email']);
+        $website = trim($_POST['website']);
+        $business_hours = trim($_POST['business_hours']);
+        $delivery_info = trim($_POST['delivery_info']);
+        
+        $updateFarmSql = "UPDATE farms SET 
+            shopname = ?, 
+            description = ?, 
+            address = ?, 
+            phone = ?, 
+            email = ?, 
+            website = ?, 
+            business_hours = ?, 
+            delivery_info = ?
+            WHERE id = ? AND user_id = ?";
+        
+        $updateFarmStmt = $conn->prepare($updateFarmSql);
+        $updateFarmStmt->bind_param("ssssssssii", 
+            $shopname, $description, $address, $phone, $email, 
+            $website, $business_hours, $delivery_info, $farmId, $userId
+        );
+        
+        if ($updateFarmStmt->execute()) {
+            $success_message = "Thông tin cửa hàng đã được cập nhật thành công!";
+            // Reload farm data
+            $farmStmt->execute();
+            $farmResult = $farmStmt->get_result();
+            $farmData = $farmResult->fetch_assoc();
+        } else {
+            $error_message = "Có lỗi xảy ra khi cập nhật thông tin cửa hàng!";
+        }
+    }
+    
+    if ($action == 'update_profile') {
+        $name = trim($_POST['name']);
+        $phone = trim($_POST['user_phone']);
+        $email = trim($_POST['user_email']);
+        $address = trim($_POST['user_address']);
+        
+        $updateUserSql = "UPDATE users SET name = ?, phone = ?, email = ?, address = ? WHERE id = ?";
+        $updateUserStmt = $conn->prepare($updateUserSql);
+        $updateUserStmt->bind_param("ssssi", $name, $phone, $email, $address, $userId);
+        
+        if ($updateUserStmt->execute()) {
+            $success_message = "Thông tin cá nhân đã được cập nhật thành công!";
+            // Reload user data
+            $userStmt->execute();
+            $userResult = $userStmt->get_result();
+            $userData = $userResult->fetch_assoc();
+        } else {
+            $error_message = "Có lỗi xảy ra khi cập nhật thông tin cá nhân!";
+        }
+    }
+    
+    if ($action == 'change_password') {
+        $current_password = $_POST['current_password'];
+        $new_password = $_POST['new_password'];
+        $confirm_password = $_POST['confirm_password'];
+        
+        // Verify current password
+        if (password_verify($current_password, $userData['password'])) {
+            if ($new_password === $confirm_password) {
+                $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                
+                $updatePasswordSql = "UPDATE users SET password = ? WHERE id = ?";
+                $updatePasswordStmt = $conn->prepare($updatePasswordSql);
+                $updatePasswordStmt->bind_param("si", $hashed_password, $userId);
+                
+                if ($updatePasswordStmt->execute()) {
+                    $success_message = "Mật khẩu đã được thay đổi thành công!";
+                } else {
+                    $error_message = "Có lỗi xảy ra khi thay đổi mật khẩu!";
+                }
+            } else {
+                $error_message = "Mật khẩu mới và xác nhận mật khẩu không khớp!";
+            }
+        } else {
+            $error_message = "Mật khẩu hiện tại không đúng!";
+        }
+    }
+}
+
+$db->dongKetNoi($conn);
+?>
+
 <div class="settings-page">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Cài đặt tài khoản</h2>
+        <h2 class="mb-0">Cài đặt</h2>
         <div>
-            <button class="btn btn-success" id="saveAllSettingsBtn">
-                <i class="fas fa-save me-2"></i>Lưu tất cả thay đổi
+            <button class="btn btn-outline-secondary me-2" onclick="resetSettings()">
+                <i class="fas fa-undo me-2"></i>Khôi phục mặc định
+            </button>
+            <button class="btn btn-success" onclick="saveAllSettings()">
+                <i class="fas fa-save me-2"></i>Lưu tất cả
             </button>
         </div>
     </div>
 
+    <?php if (isset($success_message)): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i><?php echo $success_message; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
+
+    <?php if (isset($error_message)): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i><?php echo $error_message; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
+
     <div class="row">
         <!-- Settings Navigation -->
-        <div class="col-md-3 mb-4">
-            <div class="card settings-nav">
+        <div class="col-md-3">
+            <div class="card">
                 <div class="card-body p-0">
-                    <div class="list-group list-group-flush" id="settings-tab" role="tablist">
-                        <a class="list-group-item list-group-item-action active" id="account-tab" data-bs-toggle="list" href="#account" role="tab" aria-controls="account">
-                            <i class="fas fa-user me-2"></i>Thông tin tài khoản
-                        </a>
-                        <a class="list-group-item list-group-item-action" id="store-tab" data-bs-toggle="list" href="#store" role="tab" aria-controls="store">
+                    <div class="list-group list-group-flush">
+                        <a href="#farm-info" class="list-group-item list-group-item-action active" data-bs-toggle="pill">
                             <i class="fas fa-store me-2"></i>Thông tin cửa hàng
                         </a>
-                        <a class="list-group-item list-group-item-action" id="payment-tab" data-bs-toggle="list" href="#payment" role="tab" aria-controls="payment">
-                            <i class="fas fa-credit-card me-2"></i>Phương thức thanh toán
+                        <a href="#profile-info" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                            <i class="fas fa-user me-2"></i>Thông tin cá nhân
                         </a>
-                        <a class="list-group-item list-group-item-action" id="shipping-tab" data-bs-toggle="list" href="#shipping" role="tab" aria-controls="shipping">
-                            <i class="fas fa-truck me-2"></i>Vận chuyển
-                        </a>
-                        <a class="list-group-item list-group-item-action" id="notification-tab" data-bs-toggle="list" href="#notification" role="tab" aria-controls="notification">
-                            <i class="fas fa-bell me-2"></i>Thông báo
-                        </a>
-                        <a class="list-group-item list-group-item-action" id="security-tab" data-bs-toggle="list" href="#security" role="tab" aria-controls="security">
+                        <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="pill">
                             <i class="fas fa-shield-alt me-2"></i>Bảo mật
                         </a>
-                        <a class="list-group-item list-group-item-action" id="api-tab" data-bs-toggle="list" href="#api" role="tab" aria-controls="api">
-                            <i class="fas fa-plug me-2"></i>Tích hợp API
+                        <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                            <i class="fas fa-bell me-2"></i>Thông báo
                         </a>
-                        <a class="list-group-item list-group-item-action" id="tax-tab" data-bs-toggle="list" href="#tax" role="tab" aria-controls="tax">
-                            <i class="fas fa-file-invoice-dollar me-2"></i>Thuế
+                        <a href="#payment" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                            <i class="fas fa-credit-card me-2"></i>Thanh toán
+                        </a>
+                        <a href="#shipping" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                            <i class="fas fa-truck me-2"></i>Vận chuyển
+                        </a>
+                        <a href="#advanced" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                            <i class="fas fa-cogs me-2"></i>Nâng cao
                         </a>
                     </div>
                 </div>
@@ -46,1270 +188,604 @@
 
         <!-- Settings Content -->
         <div class="col-md-9">
-            <div class="tab-content" id="settings-tabContent">
-                <!-- Account Settings -->
-                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thông tin cá nhân</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="accountInfoForm">
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <div class="text-center mb-3">
-                                            <div class="avatar-upload">
-                                                <div class="avatar-preview rounded-circle">
-                                                    <img src="https://via.placeholder.com/150" alt="Avatar" id="avatarPreview" class="rounded-circle img-fluid">
-                                                </div>
-                                                <div class="avatar-edit mt-2">
-                                                    <label for="avatarUpload" class="btn btn-sm btn-outline-primary">Thay đổi ảnh</label>
-                                                    <input type="file" id="avatarUpload" accept="image/*" class="d-none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label for="firstName" class="form-label">Họ</label>
-                                                <input type="text" class="form-control" id="firstName" name="firstName" value="Nguyễn">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="lastName" class="form-label">Tên</label>
-                                                <input type="text" class="form-control" id="lastName" name="lastName" value="Văn A">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="email" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="email" name="email" value="nguyenvana@example.com">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="phone" class="form-label">Số điện thoại</label>
-                                                <input type="tel" class="form-control" id="phone" name="phone" value="0912345678">
-                                            </div>
-                                            <div class="col-12">
-                                                <label for="address" class="form-label">Địa chỉ</label>
-                                                <input type="text" class="form-control" id="address" name="address" value="123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
+            <div class="tab-content">
+                <!-- Farm Information -->
+                <div class="tab-pane fade show active" id="farm-info">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">Đổi mật khẩu</h5>
+                            <h5 class="mb-0">Thông tin cửa hàng</h5>
                         </div>
                         <div class="card-body">
-                            <form id="changePasswordForm">
-                                <div class="row g-3">
-                                    <div class="col-md-12">
-                                        <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="currentPassword" name="currentPassword">
-                                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="currentPassword">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
+                            <form method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="action" value="update_farm">
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="shopname" class="form-label">Tên cửa hàng <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="shopname" name="shopname" value="<?php echo htmlspecialchars($farmData['shopname'] ?? ''); ?>" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="newPassword" name="newPassword">
-                                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="newPassword">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
-                                        <div class="password-strength mt-2">
-                                            <div class="progress" style="height: 5px;">
-                                                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <small class="text-muted">Độ mạnh: <span id="passwordStrength">Yếu</span></small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            <button class="btn btn-outline-secondary toggle-password" type="button" data-target="confirmPassword">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
+                                        <label for="phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($farmData['phone'] ?? ''); ?>" required>
                                     </div>
                                 </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($farmData['email'] ?? ''); ?>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="website" class="form-label">Website</label>
+                                        <input type="url" class="form-control" id="website" name="website" value="<?php echo htmlspecialchars($farmData['website'] ?? ''); ?>" placeholder="https://example.com">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Địa chỉ <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="address" name="address" rows="2" required><?php echo htmlspecialchars($farmData['address'] ?? ''); ?></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Mô tả cửa hàng</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Mô tả về cửa hàng, sản phẩm và dịch vụ của bạn..."><?php echo htmlspecialchars($farmData['description'] ?? ''); ?></textarea>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="business_hours" class="form-label">Giờ hoạt động</label>
+                                        <input type="text" class="form-control" id="business_hours" name="business_hours" value="<?php echo htmlspecialchars($farmData['business_hours'] ?? ''); ?>" placeholder="8:00 - 18:00 (Thứ 2 - Chủ nhật)">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="delivery_info" class="form-label">Thông tin giao hàng</label>
+                                        <input type="text" class="form-control" id="delivery_info" name="delivery_info" value="<?php echo htmlspecialchars($farmData['delivery_info'] ?? ''); ?>" placeholder="Giao hàng trong 2-4 giờ">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="farm_logo" class="form-label">Logo cửa hàng</label>
+                                    <input type="file" class="form-control" id="farm_logo" name="farm_logo" accept="image/*">
+                                    <div class="form-text">Kích thước khuyến nghị: 200x200px, định dạng: JPG, PNG</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="farm_banner" class="form-label">Banner cửa hàng</label>
+                                    <input type="file" class="form-control" id="farm_banner" name="farm_banner" accept="image/*">
+                                    <div class="form-text">Kích thước khuyến nghị: 1200x400px, định dạng: JPG, PNG</div>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-secondary me-2">Hủy</button>
+                                    <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
 
-                <!-- Store Settings -->
-                <div class="tab-pane fade" id="store" role="tabpanel" aria-labelledby="store-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thông tin cửa hàng</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="storeInfoForm">
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <div class="text-center mb-3">
-                                            <div class="store-logo-upload">
-                                                <div class="store-logo-preview">
-                                                    <img src="https://via.placeholder.com/150" alt="Store Logo" id="storeLogoPreview" class="img-fluid">
-                                                </div>
-                                                <div class="store-logo-edit mt-2">
-                                                    <label for="storeLogoUpload" class="btn btn-sm btn-outline-primary">Thay đổi logo</label>
-                                                    <input type="file" id="storeLogoUpload" accept="image/*" class="d-none">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="row g-3">
-                                            <div class="col-md-12">
-                                                <label for="storeName" class="form-label">Tên cửa hàng</label>
-                                                <input type="text" class="form-control" id="storeName" name="storeName" value="Nông Sản Sạch">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="storePhone" class="form-label">Số điện thoại cửa hàng</label>
-                                                <input type="tel" class="form-control" id="storePhone" name="storePhone" value="0987654321">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="storeEmail" class="form-label">Email cửa hàng</label>
-                                                <input type="email" class="form-control" id="storeEmail" name="storeEmail" value="contact@nongsansach.com">
-                                            </div>
-                                            <div class="col-12">
-                                                <label for="storeAddress" class="form-label">Địa chỉ cửa hàng</label>
-                                                <input type="text" class="form-control" id="storeAddress" name="storeAddress" value="456 Đường XYZ, Quận ABC, TP. Hồ Chí Minh">
-                                            </div>
-                                            <div class="col-12">
-                                                <label for="storeDescription" class="form-label">Mô tả cửa hàng</label>
-                                                <textarea class="form-control" id="storeDescription" name="storeDescription" rows="3">Cung cấp các sản phẩm nông sản sạch, hữu cơ, đảm bảo chất lượng và an toàn cho sức khỏe người tiêu dùng.</textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thông tin kinh doanh</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="businessInfoForm">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="businessType" class="form-label">Loại hình kinh doanh</label>
-                                        <select class="form-select" id="businessType" name="businessType">
-                                            <option value="individual">Cá nhân</option>
-                                            <option value="company" selected>Doanh nghiệp</option>
-                                            <option value="cooperative">Hợp tác xã</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="taxCode" class="form-label">Mã số thuế</label>
-                                        <input type="text" class="form-control" id="taxCode" name="taxCode" value="0123456789">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="businessLicense" class="form-label">Giấy phép kinh doanh</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="businessLicense" name="businessLicense" value="GPKD-123456" readonly>
-                                            <button class="btn btn-outline-secondary" type="button" id="uploadLicenseBtn">Tải lên</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="foodSafetyCertificate" class="form-label">Giấy chứng nhận ATTP</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="foodSafetyCertificate" name="foodSafetyCertificate" value="ATTP-789012" readonly>
-                                            <button class="btn btn-outline-secondary" type="button" id="uploadCertificateBtn">Tải lên</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
+                <!-- Profile Information -->
+                <div class="tab-pane fade" id="profile-info">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">Mạng xã hội</h5>
+                            <h5 class="mb-0">Thông tin cá nhân</h5>
                         </div>
                         <div class="card-body">
-                            <form id="socialMediaForm">
-                                <div class="row g-3">
+                            <form method="POST">
+                                <input type="hidden" name="action" value="update_profile">
+                                
+                                <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="facebookUrl" class="form-label">Facebook</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
-                                            <input type="url" class="form-control" id="facebookUrl" name="facebookUrl" value="https://facebook.com/nongsansach">
-                                        </div>
+                                        <label for="name" class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($userData['name'] ?? ''); ?>" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="instagramUrl" class="form-label">Instagram</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fab fa-instagram"></i></span>
-                                            <input type="url" class="form-control" id="instagramUrl" name="instagramUrl" value="https://instagram.com/nongsansach">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="youtubeUrl" class="form-label">YouTube</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fab fa-youtube"></i></span>
-                                            <input type="url" class="form-control" id="youtubeUrl" name="youtubeUrl" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="tiktokUrl" class="form-label">TikTok</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fab fa-tiktok"></i></span>
-                                            <input type="url" class="form-control" id="tiktokUrl" name="tiktokUrl" value="">
-                                        </div>
+                                        <label for="user_phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                        <input type="tel" class="form-control" id="user_phone" name="user_phone" value="<?php echo htmlspecialchars($userData['phone'] ?? ''); ?>" required>
                                     </div>
                                 </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="user_email" class="form-label">Email <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="user_email" name="user_email" value="<?php echo htmlspecialchars($userData['email'] ?? ''); ?>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="username" class="form-label">Tên đăng nhập</label>
+                                        <input type="text" class="form-control" id="username" value="<?php echo htmlspecialchars($userData['username'] ?? ''); ?>" readonly>
+                                        <div class="form-text">Tên đăng nhập không thể thay đổi</div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="user_address" class="form-label">Địa chỉ</label>
+                                    <textarea class="form-control" id="user_address" name="user_address" rows="2"><?php echo htmlspecialchars($userData['address'] ?? ''); ?></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="avatar" class="form-label">Ảnh đại diện</label>
+                                    <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                                    <div class="form-text">Kích thước khuyến nghị: 200x200px, định dạng: JPG, PNG</div>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-secondary me-2">Hủy</button>
+                                    <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="tab-pane fade" id="security">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Bảo mật tài khoản</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <input type="hidden" name="action" value="change_password">
+                                
+                                <div class="mb-3">
+                                    <label for="current_password" class="form-label">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="current_password" name="current_password" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="new_password" class="form-label">Mật khẩu mới <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="new_password" name="new_password" required>
+                                    <div class="form-text">Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và số</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="confirm_password" class="form-label">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-outline-secondary me-2">Hủy</button>
+                                    <button type="submit" class="btn btn-primary">Thay đổi mật khẩu</button>
+                                </div>
+                            </form>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Xác thực hai yếu tố</h6>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-medium">Xác thực qua SMS</div>
+                                    <div class="text-muted small">Nhận mã xác thực qua tin nhắn SMS</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="sms_2fa">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-medium">Xác thực qua Email</div>
+                                    <div class="text-muted small">Nhận mã xác thực qua email</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="email_2fa">
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Phiên đăng nhập</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-medium">Đăng xuất khỏi tất cả thiết bị</div>
+                                    <div class="text-muted small">Đăng xuất khỏi tất cả thiết bị khác ngoại trừ thiết bị hiện tại</div>
+                                </div>
+                                <button type="button" class="btn btn-outline-danger btn-sm">Đăng xuất tất cả</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="tab-pane fade" id="notifications">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Cài đặt thông báo</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-3">Thông báo đơn hàng</h6>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_new_order" checked>
+                                        <label class="form-check-label" for="notify_new_order">
+                                            Đơn hàng mới
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_order_cancelled" checked>
+                                        <label class="form-check-label" for="notify_order_cancelled">
+                                            Đơn hàng bị hủy
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_payment_received" checked>
+                                        <label class="form-check-label" for="notify_payment_received">
+                                            Thanh toán thành công
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_low_stock" checked>
+                                        <label class="form-check-label" for="notify_low_stock">
+                                            Sản phẩm sắp hết hàng
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_product_review" checked>
+                                        <label class="form-check-label" for="notify_product_review">
+                                            Đánh giá sản phẩm mới
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_customer_message" checked>
+                                        <label class="form-check-label" for="notify_customer_message">
+                                            Tin nhắn từ khách hàng
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Phương thức thông báo</h6>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_email" checked>
+                                        <label class="form-check-label" for="notify_email">
+                                            Thông báo qua Email
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_sms" checked>
+                                        <label class="form-check-label" for="notify_sms">
+                                            Thông báo qua SMS
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_browser" checked>
+                                        <label class="form-check-label" for="notify_browser">
+                                            Thông báo trên trình duyệt
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="notify_mobile_app">
+                                        <label class="form-check-label" for="notify_mobile_app">
+                                            Thông báo trên ứng dụng di động
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Thời gian thông báo</h6>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="quiet_hours_start" class="form-label">Bắt đầu giờ yên lặng</label>
+                                    <input type="time" class="form-control" id="quiet_hours_start" value="22:00">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="quiet_hours_end" class="form-label">Kết thúc giờ yên lặng</label>
+                                    <input type="time" class="form-control" id="quiet_hours_end" value="07:00">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-outline-secondary me-2">Khôi phục mặc định</button>
+                                <button type="button" class="btn btn-primary">Lưu cài đặt</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Payment Settings -->
-                <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Tài khoản ngân hàng</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="bank-accounts mb-3">
-                                <div class="bank-account-item card mb-3">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0">Tài khoản chính</h6>
-                                            <div>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-2 edit-bank-account" data-id="1">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-bank-account" data-id="1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Ngân hàng:</strong> Vietcombank</p>
-                                                <p class="mb-1"><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Số tài khoản:</strong> 1234567890</p>
-                                                <p class="mb-1"><strong>Chi nhánh:</strong> TP. Hồ Chí Minh</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bank-account-item card">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0">Tài khoản phụ</h6>
-                                            <div>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-2 edit-bank-account" data-id="2">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-bank-account" data-id="2">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Ngân hàng:</strong> Techcombank</p>
-                                                <p class="mb-1"><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Số tài khoản:</strong> 0987654321</p>
-                                                <p class="mb-1"><strong>Chi nhánh:</strong> TP. Hồ Chí Minh</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-success" id="addBankAccountBtn">
-                                    <i class="fas fa-plus me-2"></i>Thêm tài khoản ngân hàng
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Phương thức thanh toán</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="paymentMethodsForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="codPayment" checked>
-                                            <label class="form-check-label" for="codPayment">Thanh toán khi nhận hàng (COD)</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="bankTransferPayment" checked>
-                                            <label class="form-check-label" for="bankTransferPayment">Chuyển khoản ngân hàng</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="momoPayment" checked>
-                                            <label class="form-check-label" for="momoPayment">Ví MoMo</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="momoSettings">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="momoPartnerCode" class="form-label">Partner Code</label>
-                                                    <input type="text" class="form-control" id="momoPartnerCode" name="momoPartnerCode" value="MOMO123456">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="momoAccessKey" class="form-label">Access Key</label>
-                                                    <input type="text" class="form-control" id="momoAccessKey" name="momoAccessKey" value="abcdef123456">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="zaloPayPayment">
-                                            <label class="form-check-label" for="zaloPayPayment">ZaloPay</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="zaloPaySettings" style="display: none;">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="zaloPayAppId" class="form-label">App ID</label>
-                                                    <input type="text" class="form-control" id="zaloPayAppId" name="zaloPayAppId" value="">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="zaloPayKey1" class="form-label">Key 1</label>
-                                                    <input type="text" class="form-control" id="zaloPayKey1" name="zaloPayKey1" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="vnPayPayment">
-                                            <label class="form-check-label" for="vnPayPayment">VNPay</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="vnPaySettings" style="display: none;">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="vnPayMerchantId" class="form-label">Merchant ID</label>
-                                                    <input type="text" class="form-control" id="vnPayMerchantId" name="vnPayMerchantId" value="">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="vnPaySecretKey" class="form-label">Secret Key</label>
-                                                    <input type="text" class="form-control" id="vnPaySecretKey" name="vnPaySecretKey" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
+                <div class="tab-pane fade" id="payment">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0">Cài đặt thanh toán</h5>
                         </div>
                         <div class="card-body">
-                            <form id="paymentSettingsForm">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="currency" class="form-label">Đơn vị tiền tệ</label>
-                                        <select class="form-select" id="currency" name="currency">
-                                            <option value="VND" selected>Việt Nam Đồng (VND)</option>
-                                            <option value="USD">US Dollar (USD)</option>
-                                        </select>
+                            <h6 class="mb-3">Phương thức thanh toán</h6>
+                            
+                            <div class="payment-method mb-3">
+                                <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="payment_cod" checked>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Thanh toán khi nhận hàng (COD)</div>
+                                            <div class="text-muted small">Khách hàng thanh toán khi nhận hàng</div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="orderPrefix" class="form-label">Tiền tố mã đơn hàng</label>
-                                        <input type="text" class="form-control" id="orderPrefix" name="orderPrefix" value="NSS">
+                                    <button class="btn btn-sm btn-outline-secondary">Cài đặt</button>
+                                </div>
+                            </div>
+
+                            <div class="payment-method mb-3">
+                                <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="payment_bank" checked>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Chuyển khoản ngân hàng</div>
+                                            <div class="text-muted small">Khách hàng chuyển khoản trước khi giao hàng</div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="invoicePrefix" class="form-label">Tiền tố mã hóa đơn</label>
-                                        <input type="text" class="form-control" id="invoicePrefix" name="invoicePrefix" value="INV">
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#bankInfoModal">Cài đặt</button>
+                                </div>
+                            </div>
+
+                            <div class="payment-method mb-3">
+                                <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="payment_momo">
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">Ví MoMo</div>
+                                            <div class="text-muted small">Thanh toán qua ví điện tử MoMo</div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="paymentTerm" class="form-label">Thời hạn thanh toán</label>
+                                    <button class="btn btn-sm btn-outline-secondary">Kết nối</button>
+                                </div>
+                            </div>
+
+                            <div class="payment-method mb-3">
+                                <div class="d-flex justify-content-between align-items-center p-3 border rounded">
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="checkbox" id="payment_sepay" checked>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">SePay</div>
+                                            <div class="text-muted small">Thanh toán qua SePay QR Code</div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#sepayConfigModal">Cài đặt</button>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Cài đặt khác</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="min_order_amount" class="form-label">Giá trị đơn hàng tối thiểu</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="paymentTerm" name="paymentTerm" value="24">
-                                            <span class="input-group-text">giờ</span>
+                                            <input type="number" class="form-control" id="min_order_amount" value="50000">
+                                            <span class="input-group-text">đ</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="free_shipping_amount" class="form-label">Miễn phí vận chuyển từ</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="free_shipping_amount" value="200000">
+                                            <span class="input-group-text">đ</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </form>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-outline-secondary me-2">Khôi phục mặc định</button>
+                                <button type="button" class="btn btn-primary">Lưu cài đặt</button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Shipping Settings -->
-                <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Phương thức vận chuyển</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="shippingMethodsForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="selfDelivery" checked>
-                                            <label class="form-check-label" for="selfDelivery">Tự vận chuyển</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="selfDeliverySettings">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="selfDeliveryRadius" class="form-label">Bán kính giao hàng (km)</label>
-                                                    <input type="number" class="form-control" id="selfDeliveryRadius" name="selfDeliveryRadius" value="10">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="selfDeliveryFee" class="form-label">Phí vận chuyển (VNĐ/km)</label>
-                                                    <input type="number" class="form-control" id="selfDeliveryFee" name="selfDeliveryFee" value="5000">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="ghnDelivery" checked>
-                                            <label class="form-check-label" for="ghnDelivery">Giao Hàng Nhanh (GHN)</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="ghnDeliverySettings">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="ghnApiKey" class="form-label">API Key</label>
-                                                    <input type="text" class="form-control" id="ghnApiKey" name="ghnApiKey" value="ghn123456789">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="ghnShopId" class="form-label">Shop ID</label>
-                                                    <input type="text" class="form-control" id="ghnShopId" name="ghnShopId" value="123456">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="ghtk">
-                                            <label class="form-check-label" for="ghtk">Giao Hàng Tiết Kiệm (GHTK)</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="ghtkSettings" style="display: none;">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="ghtkApiKey" class="form-label">API Key</label>
-                                                    <input type="text" class="form-control" id="ghtkApiKey" name="ghtkApiKey" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="vnpost">
-                                            <label class="form-check-label" for="vnpost">VNPost</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="vnpostSettings" style="display: none;">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="vnpostApiKey" class="form-label">API Key</label>
-                                                    <input type="text" class="form-control" id="vnpostApiKey" name="vnpostApiKey" value="">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="vnpostToken" class="form-label">Token</label>
-                                                    <input type="text" class="form-control" id="vnpostToken" name="vnpostToken" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Kho hàng</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="warehouses mb-3">
-                                <div class="warehouse-item card mb-3">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0">Kho chính</h6>
-                                            <div>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-2 edit-warehouse" data-id="1">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-warehouse" data-id="1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Tên kho:</strong> Kho Trung Tâm</p>
-                                                <p class="mb-1"><strong>Số điện thoại:</strong> 0987654321</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Địa chỉ:</strong> 456 Đường XYZ, Quận ABC, TP. Hồ Chí Minh</p>
-                                                <p class="mb-1"><strong>Trạng thái:</strong> <span class="badge bg-success">Hoạt động</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-success" id="addWarehouseBtn">
-                                    <i class="fas fa-plus me-2"></i>Thêm kho hàng
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="tab-pane fade" id="shipping">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0">Cài đặt vận chuyển</h5>
                         </div>
                         <div class="card-body">
-                            <form id="shippingSettingsForm">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="freeShippingThreshold" class="form-label">Ngưỡng miễn phí vận chuyển</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="freeShippingThreshold" name="freeShippingThreshold" value="300000">
-                                            <span class="input-group-text">VNĐ</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="defaultShippingFee" class="form-label">Phí vận chuyển mặc định</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="defaultShippingFee" name="defaultShippingFee" value="30000">
-                                            <span class="input-group-text">VNĐ</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="estimatedDeliveryTime" class="form-label">Thời gian giao hàng dự kiến</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="estimatedDeliveryTime" name="estimatedDeliveryTime" value="3">
-                                            <span class="input-group-text">ngày</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="maxDeliveryDistance" class="form-label">Khoảng cách giao hàng tối đa</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="maxDeliveryDistance" name="maxDeliveryDistance" value="50">
-                                            <span class="input-group-text">km</span>
-                                        </div>
-                                    </div>
+                            <h6 class="mb-3">Khu vực giao hàng</h6>
+                            
+                            <div class="mb-3">
+                                <label for="delivery_radius" class="form-label">Bán kính giao hàng</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="delivery_radius" value="10">
+                                    <span class="input-group-text">km</span>
                                 </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                                <div class="form-text">Khoảng cách tối đa từ cửa hàng để giao hàng</div>
+                            </div>
 
-                <!-- Notification Settings -->
-                <div class="tab-pane fade" id="notification" role="tabpanel" aria-labelledby="notification-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thông báo đơn hàng</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="orderNotificationForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="newOrderNotification" checked>
-                                            <label class="form-check-label" for="newOrderNotification">Thông báo khi có đơn hàng mới</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="orderStatusChangeNotification" checked>
-                                            <label class="form-check-label" for="orderStatusChangeNotification">Thông báo khi trạng thái đơn hàng thay đổi</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="orderCancelNotification" checked>
-                                            <label class="form-check-label" for="orderCancelNotification">Thông báo khi đơn hàng bị hủy</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="orderReturnNotification" checked>
-                                            <label class="form-check-label" for="orderReturnNotification">Thông báo khi có yêu cầu trả hàng/hoàn tiền</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                            <div class="mb-3">
+                                <label for="delivery_areas" class="form-label">Khu vực giao hàng cụ thể</label>
+                                <textarea class="form-control" id="delivery_areas" rows="3" placeholder="Nhập các quận, huyện, phường... cách nhau bởi dấu phẩy">Quận 1, Quận 3, Quận 5, Quận 7, Quận Bình Thạnh</textarea>
+                            </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thông báo sản phẩm</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="productNotificationForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="lowStockNotification" checked>
-                                            <label class="form-check-label" for="lowStockNotification">Thông báo khi sản phẩm sắp hết hàng</label>
-                                        </div>
-                                        <div class="ms-4 mt-2">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="lowStockThreshold" class="form-label">Ngưỡng cảnh báo</label>
-                                                    <input type="number" class="form-control" id="lowStockThreshold" name="lowStockThreshold" value="10">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="outOfStockNotification" checked>
-                                            <label class="form-check-label" for="outOfStockNotification">Thông báo khi sản phẩm hết hàng</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="productReviewNotification" checked>
-                                            <label class="form-check-label" for="productReviewNotification">Thông báo khi có đánh giá sản phẩm mới</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="productExpiryNotification" checked>
-                                            <label class="form-check-label" for="productExpiryNotification">Thông báo khi sản phẩm sắp hết hạn</label>
-                                        </div>
-                                        <div class="ms-4 mt-2">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="expiryNotificationDays" class="form-label">Số ngày trước khi hết hạn</label>
-                                                    <input type="number" class="form-control" id="expiryNotificationDays" name="expiryNotificationDays" value="30">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                            <hr class="my-4">
 
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Phương thức nhận thông báo</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="notificationMethodsForm">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="emailNotification" checked>
-                                            <label class="form-check-label" for="emailNotification">Email</label>
-                                        </div>
-                                        <div class="ms-4 mt-2">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="notificationEmail" class="form-label">Email nhận thông báo</label>
-                                                    <input type="email" class="form-control" id="notificationEmail" name="notificationEmail" value="nguyenvana@example.com">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="smsNotification" checked>
-                                            <label class="form-check-label" for="smsNotification">SMS</label>
-                                        </div>
-                                        <div class="ms-4 mt-2">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="notificationPhone" class="form-label">Số điện thoại nhận thông báo</label>
-                                                    <input type="tel" class="form-control" id="notificationPhone" name="notificationPhone" value="0912345678">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="pushNotification" checked>
-                                            <label class="form-check-label" for="pushNotification">Thông báo đẩy</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="telegramNotification">
-                                            <label class="form-check-label" for="telegramNotification">Telegram</label>
-                                        </div>
-                                        <div class="ms-4 mt-2" id="telegramSettings" style="display: none;">
-                                            <div class="row g-2">
-                                                <div class="col-md-6">
-                                                    <label for="telegramChatId" class="form-label">Chat ID</label>
-                                                    <input type="text" class="form-control" id="telegramChatId" name="telegramChatId" value="">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="telegramBotToken" class="form-label">Bot Token</label>
-                                                    <input type="text" class="form-control" id="telegramBotToken" name="telegramBotToken" value="">
-                                                </div>
-                                            </div>
+                            <h6 class="mb-3">Phí vận chuyển</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="base_shipping_fee" class="form-label">Phí vận chuyển cơ bản</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="base_shipping_fee" value="20000">
+                                            <span class="input-group-text">đ</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security Settings -->
-                <div class="tab-pane fade" id="security" role="tabpanel" aria-labelledby="security-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Xác thực hai yếu tố</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h6 class="mb-1">Xác thực hai yếu tố (2FA)</h6>
-                                    <p class="text-muted mb-0">Bảo vệ tài khoản của bạn bằng cách yêu cầu xác thực thêm khi đăng nhập.</p>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="enable2FA">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="additional_km_fee" class="form-label">Phí mỗi km thêm</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="additional_km_fee" value="5000">
+                                            <span class="input-group-text">đ/km</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div id="setup2FA" style="display: none;">
-                                <hr>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Thời gian giao hàng</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="preparation_time" class="form-label">Thời gian chuẩn bị</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="preparation_time" value="30">
+                                            <span class="input-group-text">phút</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="delivery_time" class="form-label">Thời gian giao hàng</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="delivery_time" value="60">
+                                            <span class="input-group-text">phút</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Khung giờ giao hàng</label>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h6>Quét mã QR</h6>
-                                        <p class="text-muted">Sử dụng ứng dụng xác thực như Google Authenticator, Authy hoặc Microsoft Authenticator để quét mã QR.</p>
-                                        <div class="qr-code-container text-center p-3 bg-light rounded mb-3">
-                                            <img src="https://via.placeholder.com/150" alt="QR Code" class="img-fluid">
-                                        </div>
-                                        <p class="text-muted small">Hoặc nhập mã này vào ứng dụng xác thực của bạn: <strong>ABCD EFGH IJKL MNOP</strong></p>
+                                        <label for="delivery_start_time" class="form-label small">Bắt đầu</label>
+                                        <input type="time" class="form-control" id="delivery_start_time" value="08:00">
                                     </div>
                                     <div class="col-md-6">
-                                        <h6>Xác nhận thiết lập</h6>
-                                        <p class="text-muted">Nhập mã xác thực từ ứng dụng của bạn để hoàn tất thiết lập.</p>
-                                        <form id="verify2FAForm">
-                                            <div class="mb-3">
-                                                <label for="verificationCode" class="form-label">Mã xác thực</label>
-                                                <input type="text" class="form-control" id="verificationCode" name="verificationCode" placeholder="Nhập mã 6 chữ số">
-                                            </div>
-                                            <button type="submit" class="btn btn-primary">Xác nhận</button>
-                                        </form>
+                                        <label for="delivery_end_time" class="form-label small">Kết thúc</label>
+                                        <input type="time" class="form-control" id="delivery_end_time" value="20:00">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Lịch sử đăng nhập</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Thời gian</th>
-                                            <th>Thiết bị</th>
-                                            <th>Địa chỉ IP</th>
-                                            <th>Vị trí</th>
-                                            <th>Trạng thái</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>15/05/2023 10:30 AM</td>
-                                            <td>Chrome trên Windows</td>
-                                            <td>192.168.1.1</td>
-                                            <td>TP. Hồ Chí Minh, Việt Nam</td>
-                                            <td><span class="badge bg-success">Thành công</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>14/05/2023 08:45 AM</td>
-                                            <td>Safari trên iPhone</td>
-                                            <td>192.168.1.2</td>
-                                            <td>TP. Hồ Chí Minh, Việt Nam</td>
-                                            <td><span class="badge bg-success">Thành công</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>13/05/2023 14:20 PM</td>
-                                            <td>Firefox trên Windows</td>
-                                            <td>192.168.1.3</td>
-                                            <td>TP. Hồ Chí Minh, Việt Nam</td>
-                                            <td><span class="badge bg-danger">Thất bại</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>12/05/2023 09:15 AM</td>
-                                            <td>Chrome trên Windows</td>
-                                            <td>192.168.1.1</td>
-                                            <td>TP. Hồ Chí Minh, Việt Nam</td>
-                                            <td><span class="badge bg-success">Thành công</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>11/05/2023 16:40 PM</td>
-                                            <td>Chrome trên Android</td>
-                                            <td>192.168.1.4</td>
-                                            <td>TP. Hồ Chí Minh, Việt Nam</td>
-                                            <td><span class="badge bg-success">Thành công</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thiết bị đã đăng nhập</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="device-list">
-                                <div class="device-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="device-icon me-3">
-                                            <i class="fas fa-laptop fa-2x text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Windows PC (Chrome)</h6>
-                                            <p class="text-muted mb-0 small">TP. Hồ Chí Minh, Việt Nam • Hoạt động gần đây: 15/05/2023 10:30 AM</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="badge bg-success me-2">Hiện tại</span>
-                                        <button class="btn btn-sm btn-outline-danger">Đăng xuất</button>
-                                    </div>
-                                </div>
-                                <div class="device-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="device-icon me-3">
-                                            <i class="fas fa-mobile-alt fa-2x text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">iPhone (Safari)</h6>
-                                            <p class="text-muted mb-0 small">TP. Hồ Chí Minh, Việt Nam • Hoạt động gần đây: 14/05/2023 08:45 AM</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-danger">Đăng xuất</button>
-                                    </div>
-                                </div>
-                                <div class="device-item d-flex justify-content-between align-items-center p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="device-icon me-3">
-                                            <i class="fas fa-tablet-alt fa-2x text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Android (Chrome)</h6>
-                                            <p class="text-muted mb-0 small">TP. Hồ Chí Minh, Việt Nam • Hoạt động gần đây: 11/05/2023 16:40 PM</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-danger">Đăng xuất</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-end mt-3">
-                                <button type="button" class="btn btn-danger" id="logoutAllDevicesBtn">Đăng xuất tất cả thiết bị khác</button>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-outline-secondary me-2">Khôi phục mặc định</button>
+                                <button type="button" class="btn btn-primary">Lưu cài đặt</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- API Integration Settings -->
-                <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
-                    <div class="card mb-4">
+                <!-- Advanced Settings -->
+                <div class="tab-pane fade" id="advanced">
+                    <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">API Keys</h5>
+                            <h5 class="mb-0">Cài đặt nâng cao</h5>
                         </div>
                         <div class="card-body">
+                            <h6 class="mb-3">Tự động hóa</h6>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-medium">Tự động xác nhận đơn hàng</div>
+                                    <div class="text-muted small">Tự động xác nhận đơn hàng khi thanh toán thành công</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="auto_confirm_order" checked>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-medium">Tự động cập nhật tồn kho</div>
+                                    <div class="text-muted small">Tự động giảm số lượng tồn kho khi có đơn hàng</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="auto_update_stock" checked>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-medium">Tự động gửi email xác nhận</div>
+                                    <div class="text-muted small">Gửi email xác nhận đơn hàng cho khách hàng</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="auto_send_email" checked>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Sao lưu dữ liệu</h6>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-medium">Sao lưu tự động</div>
+                                    <div class="text-muted small">Tự động sao lưu dữ liệu hàng ngày</div>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="auto_backup" checked>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="backup_time" class="form-label">Thời gian sao lưu</label>
+                                <input type="time" class="form-control" id="backup_time" value="02:00" style="max-width: 200px;">
+                            </div>
+
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-primary">Sao lưu ngay</button>
+                                <button type="button" class="btn btn-outline-secondary ms-2">Khôi phục dữ liệu</button>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">API & Tích hợp</h6>
+                            <div class="mb-3">
+                                <label for="api_key" class="form-label">API Key</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="api_key" value="sk_live_xxxxxxxxxxxxxxxx" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="toggleApiKey()">
+                                        <i class="fas fa-eye" id="apiKeyIcon"></i>
+                                    </button>
+                                    <button class="btn btn-outline-primary" type="button">Tạo mới</button>
+                                </div>
+                                <div class="form-text">Sử dụng API key này để tích hợp với các ứng dụng bên ngoài</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="webhook_url" class="form-label">Webhook URL</label>
+                                <input type="url" class="form-control" id="webhook_url" placeholder="https://your-app.com/webhook">
+                                <div class="form-text">URL để nhận thông báo về các sự kiện từ hệ thống</div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <h6 class="mb-3">Xóa dữ liệu</h6>
                             <div class="alert alert-warning">
                                 <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Lưu ý:</strong> Không chia sẻ API key của bạn với bất kỳ ai. API key có quyền truy cập vào dữ liệu cửa hàng của bạn.
+                                <strong>Cảnh báo:</strong> Các thao tác dưới đây không thể hoàn tác.
                             </div>
-                            <div class="api-keys mb-3">
-                                <div class="api-key-item card mb-3">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0">API Key chính</h6>
-                                            <div>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary me-2 regenerate-api-key" data-id="1">
-                                                    <i class="fas fa-sync-alt me-1"></i>Tạo lại
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger revoke-api-key" data-id="1">
-                                                    <i class="fas fa-ban me-1"></i  data-id="1">
-                                                    <i class="fas fa-ban me-1"></i>Thu hồi
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Tên:</strong> API Key Chính</p>
-                                                <p class="mb-1"><strong>Ngày tạo:</strong> 01/05/2023</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Key:</strong> 
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" value="sk_live_abcdef123456789" readonly>
-                                                        <button class="btn btn-outline-secondary copy-api-key" type="button">
-                                                            <i class="fas fa-copy"></i>
-                                                        </button>
-                                                    </div>
-                                                </p>
-                                                <p class="mb-1"><strong>Trạng thái:</strong> <span class="badge bg-success">Hoạt động</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="api-key-item card">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0">API Key phụ</h6>
-                                            <div>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary me-2 regenerate-api-key" data-id="2">
-                                                    <i class="fas fa-sync-alt me-1"></i>Tạo lại
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger revoke-api-key" data-id="2">
-                                                    <i class="fas fa-ban me-1"></i>Thu hồi
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Tên:</strong> API Key Phụ</p>
-                                                <p class="mb-1"><strong>Ngày tạo:</strong> 10/05/2023</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Key:</strong> 
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" value="sk_live_xyz987654321" readonly>
-                                                        <button class="btn btn-outline-secondary copy-api-key" type="button">
-                                                            <i class="fas fa-copy"></i>
-                                                        </button>
-                                                    </div>
-                                                </p>
-                                                <p class="mb-1"><strong>Trạng thái:</strong> <span class="badge bg-success">Hoạt động</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-success" id="createApiKeyBtn">
-                                    <i class="fas fa-plus me-2"></i>Tạo API Key mới
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Webhooks</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="webhooks mb-3">
-                                <div class="webhook-item card mb-3">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0">Webhook đơn hàng</h6>
-                                            <div>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-2 edit-webhook" data-id="1">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-webhook" data-id="1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>URL:</strong> https://example.com/webhook/orders</p>
-                                                <p class="mb-1"><strong>Sự kiện:</strong> Đơn hàng mới, Cập nhật đơn hàng</p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p class="mb-1"><strong>Secret:</strong> whsec_abcdef123456</p>
-                                                <p class="mb-1"><strong>Trạng thái:</strong> <span class="badge bg-success">Hoạt động</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-outline-warning me-2">Xóa tất cả đơn hàng cũ</button>
+                                <button type="button" class="btn btn-outline-danger">Xóa tài khoản</button>
                             </div>
-                            <div class="text-end">
-                                <button type="button" class="btn btn-success" id="createWebhookBtn">
-                                    <i class="fas fa-plus me-2"></i>Tạo Webhook mới
-                                </button>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-outline-secondary me-2">Khôi phục mặc định</button>
+                                <button type="button" class="btn btn-primary">Lưu cài đặt</button>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Tích hợp bên thứ ba</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="third-party-integrations">
-                                <div class="integration-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="integration-icon me-3">
-                                            <i class="fab fa-facebook fa-2x text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Facebook</h6>
-                                            <p class="text-muted mb-0 small">Kết nối cửa hàng với Facebook Shop</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-primary">Kết nối</button>
-                                    </div>
-                                </div>
-                                <div class="integration-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="integration-icon me-3">
-                                            <i class="fab fa-google fa-2x text-danger"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Google Analytics</h6>
-                                            <p class="text-muted mb-0 small">Theo dõi lưu lượng và chuyển đổi</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="badge bg-success me-2">Đã kết nối</span>
-                                        <button class="btn btn-sm btn-outline-danger">Ngắt kết nối</button>
-                                    </div>
-                                </div>
-                                <div class="integration-item d-flex justify-content-between align-items-center mb-3 p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="integration-icon me-3">
-                                            <i class="fab fa-mailchimp fa-2x text-warning"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Mailchimp</h6>
-                                            <p class="text-muted mb-0 small">Email marketing và tự động hóa</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-primary">Kết nối</button>
-                                    </div>
-                                </div>
-                                <div class="integration-item d-flex justify-content-between align-items-center p-3 border rounded">
-                                    <div class="d-flex align-items-center">
-                                        <div class="integration-icon me-3">
-                                            <i class="fab fa-slack fa-2x text-info"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1">Slack</h6>
-                                            <p class="text-muted mb-0 small">Thông báo và cập nhật</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-primary">Kết nối</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tax Settings -->
-                <div class="tab-pane fade" id="tax" role="tabpanel" aria-labelledby="tax-tab">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Cài đặt thuế</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="taxSettingsForm">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="taxCalculation" class="form-label">Tính thuế dựa trên</label>
-                                        <select class="form-select" id="taxCalculation" name="taxCalculation">
-                                            <option value="shipping">Địa chỉ giao hàng</option>
-                                            <option value="billing">Địa chỉ thanh toán</option>
-                                            <option value="store" selected>Địa chỉ cửa hàng</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="pricesIncludeTax" class="form-label">Giá sản phẩm</label>
-                                        <select class="form-select" id="pricesIncludeTax" name="pricesIncludeTax">
-                                            <option value="1">Đã bao gồm thuế</option>
-                                            <option value="0" selected>Chưa bao gồm thuế</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="taxClass" class="form-label">Thuế suất mặc định</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="taxClass" name="taxClass" value="10">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="displayTaxTotals" class="form-label">Hiển thị tổng thuế</label>
-                                        <select class="form-select" id="displayTaxTotals" name="displayTaxTotals">
-                                            <option value="itemized" selected>Chi tiết theo từng mục</option>
-                                            <option value="single">Một dòng tổng</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Thuế suất theo khu vực</h5>
-                            <button type="button" class="btn btn-sm btn-success" id="addTaxRateBtn">
-                                <i class="fas fa-plus me-1"></i>Thêm thuế suất
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Tên</th>
-                                            <th>Quốc gia</th>
-                                            <th>Tỉnh/Thành phố</th>
-                                            <th>Thuế suất</th>
-                                            <th>Ưu tiên</th>
-                                            <th>Thao tác</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Thuế GTGT</td>
-                                            <td>Việt Nam</td>
-                                            <td>Tất cả</td>
-                                            <td>10%</td>
-                                            <td>0</td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-1 edit-tax-rate" data-id="1">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-tax-rate" data-id="1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Thuế GTGT - TP.HCM</td>
-                                            <td>Việt Nam</td>
-                                            <td>TP. Hồ Chí Minh</td>
-                                            <td>10%</td>
-                                            <td>1</td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-1 edit-tax-rate" data-id="2">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-tax-rate" data-id="2">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Thuế GTGT - Hà Nội</td>
-                                            <td>Việt Nam</td>
-                                            <td>Hà Nội</td>
-                                            <td>10%</td>
-                                            <td>1</td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-outline-primary me-1 edit-tax-rate" data-id="3">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger delete-tax-rate" data-id="3">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Thông tin thuế</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="taxInfoForm">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="companyName" class="form-label">Tên công ty</label>
-                                        <input type="text" class="form-control" id="companyName" name="companyName" value="Công ty TNHH Nông Sản Sạch">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="taxId" class="form-label">Mã số thuế</label>
-                                        <input type="text" class="form-control" id="taxId" name="taxId" value="0123456789">
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="taxAddress" class="form-label">Địa chỉ đăng ký thuế</label>
-                                        <input type="text" class="form-control" id="taxAddress" name="taxAddress" value="456 Đường XYZ, Quận ABC, TP. Hồ Chí Minh">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="taxRepresentative" class="form-label">Người đại diện</label>
-                                        <input type="text" class="form-control" id="taxRepresentative" name="taxRepresentative" value="Nguyễn Văn A">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="taxPosition" class="form-label">Chức vụ</label>
-                                        <input type="text" class="form-control" id="taxPosition" name="taxPosition" value="Giám đốc">
-                                    </div>
-                                </div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -1318,108 +794,87 @@
     </div>
 </div>
 
-<!-- Modals -->
-<!-- Add Bank Account Modal -->
-<div class="modal fade" id="addBankAccountModal" tabindex="-1" aria-labelledby="addBankAccountModalLabel" aria-hidden="true">
+<!-- Bank Info Modal -->
+<div class="modal fade" id="bankInfoModal" tabindex="-1" aria-labelledby="bankInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addBankAccountModalLabel">Thêm tài khoản ngân hàng</h5>
+                <h5 class="modal-title" id="bankInfoModalLabel">Thông tin tài khoản ngân hàng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addBankAccountForm">
+                <form id="bankInfoForm">
                     <div class="mb-3">
-                        <label for="bankName" class="form-label">Tên ngân hàng</label>
-                        <select class="form-select" id="bankName" name="bankName" required>
+                        <label for="bank_name" class="form-label">Tên ngân hàng</label>
+                        <select class="form-select" id="bank_name" name="bank_name" required>
                             <option value="">Chọn ngân hàng</option>
-                            <option value="Vietcombank">Vietcombank</option>
-                            <option value="Techcombank">Techcombank</option>
-                            <option value="BIDV">BIDV</option>
-                            <option value="Agribank">Agribank</option>
-                            <option value="VPBank">VPBank</option>
-                            <option value="ACB">ACB</option>
-                            <option value="MBBank">MBBank</option>
-                            <option value="TPBank">TPBank</option>
-                            <option value="Sacombank">Sacombank</option>
-                            <option value="VIB">VIB</option>
+                            <option value="vietcombank">Vietcombank</option>
+                            <option value="techcombank">Techcombank</option>
+                            <option value="bidv">BIDV</option>
+                            <option value="vietinbank">VietinBank</option>
+                            <option value="agribank">Agribank</option>
+                            <option value="mbbank">MB Bank</option>
+                            <option value="acb">ACB</option>
+                            <option value="vpbank">VPBank</option>
                         </select>
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="accountName" class="form-label">Tên chủ tài khoản</label>
-                        <input type="text" class="form-control" id="accountName" name="accountName" required>
-                        <div class="form-text">Nhập chính xác tên chủ tài khoản như trên thẻ/sổ ngân hàng.</div>
+                        <label for="account_number" class="form-label">Số tài khoản</label>
+                        <input type="text" class="form-control" id="account_number" name="account_number" required>
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="accountNumber" class="form-label">Số tài khoản</label>
-                        <input type="text" class="form-control" id="accountNumber" name="accountNumber" required>
+                        <label for="account_holder" class="form-label">Tên chủ tài khoản</label>
+                        <input type="text" class="form-control" id="account_holder" name="account_holder" required>
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="bankBranch" class="form-label">Chi nhánh</label>
-                        <input type="text" class="form-control" id="bankBranch" name="bankBranch">
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="isPrimaryAccount" name="isPrimaryAccount">
-                            <label class="form-check-label" for="isPrimaryAccount">
-                                Đặt làm tài khoản chính
-                            </label>
-                        </div>
+                        <label for="branch_name" class="form-label">Chi nhánh</label>
+                        <input type="text" class="form-control" id="branch_name" name="branch_name">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="addBankAccountForm" class="btn btn-primary">Thêm tài khoản</button>
+                <button type="button" class="btn btn-primary" onclick="saveBankInfo()">Lưu thông tin</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add Warehouse Modal -->
-<div class="modal fade" id="addWarehouseModal" tabindex="-1" aria-labelledby="addWarehouseModalLabel" aria-hidden="true">
+<!-- SePay Config Modal -->
+<div class="modal fade" id="sepayConfigModal" tabindex="-1" aria-labelledby="sepayConfigModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addWarehouseModalLabel">Thêm kho hàng</h5>
+                <h5 class="modal-title" id="sepayConfigModalLabel">Cấu hình SePay</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addWarehouseForm">
+                <form id="sepayConfigForm">
                     <div class="mb-3">
-                        <label for="warehouseName" class="form-label">Tên kho</label>
-                        <input type="text" class="form-control" id="warehouseName" name="warehouseName" required>
+                        <label for="sepay_api_key" class="form-label">SePay API Key</label>
+                        <input type="password" class="form-control" id="sepay_api_key" name="sepay_api_key" required>
+                        <div class="form-text">Lấy API key từ tài khoản SePay của bạn</div>
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="warehousePhone" class="form-label">Số điện thoại</label>
-                        <input type="tel" class="form-control" id="warehousePhone" name="warehousePhone" required>
+                        <label for="sepay_account_number" class="form-label">Số tài khoản SePay</label>
+                        <input type="text" class="form-control" id="sepay_account_number" name="sepay_account_number" required>
                     </div>
+                    
                     <div class="mb-3">
-                        <label for="warehouseAddress" class="form-label">Địa chỉ</label>
-                        <input type="text" class="form-control" id="warehouseAddress" name="warehouseAddress" required>
+                        <label for="sepay_webhook_url" class="form-label">Webhook URL</label>
+                        <input type="url" class="form-control" id="sepay_webhook_url" name="sepay_webhook_url" value="<?php echo $_SERVER['HTTP_HOST']; ?>/buyer/sepay_webhook.php" readonly>
+                        <div class="form-text">URL này sẽ được sử dụng để nhận thông báo từ SePay</div>
                     </div>
-                    <div class="mb-3">
-                        <label for="warehouseCity" class="form-label">Tỉnh/Thành phố</label>
-                        <select class="form-select" id="warehouseCity" name="warehouseCity" required>
-                            <option value="">Chọn tỉnh/thành phố</option>
-                            <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
-                            <option value="Cần Thơ">Cần Thơ</option>
-                            <option value="Hải Phòng">Hải Phòng</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="warehouseDistrict" class="form-label">Quận/Huyện</label>
-                        <select class="form-select" id="warehouseDistrict" name="warehouseDistrict" required>
-                            <option value="">Chọn quận/huyện</option>
-                        </select>
-                    </div>
+                    
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="isPrimaryWarehouse" name="isPrimaryWarehouse">
-                            <label class="form-check-label" for="isPrimaryWarehouse">
-                                Đặt làm kho chính
+                            <input class="form-check-input" type="checkbox" id="sepay_test_mode" name="sepay_test_mode">
+                            <label class="form-check-label" for="sepay_test_mode">
+                                Chế độ test
                             </label>
                         </div>
                     </div>
@@ -1427,211 +882,179 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="addWarehouseForm" class="btn btn-primary">Thêm kho</button>
+                <button type="button" class="btn btn-success" onclick="testSepayConnection()">Test kết nối</button>
+                <button type="button" class="btn btn-primary" onclick="saveSepayConfig()">Lưu cấu hình</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add API Key Modal -->
-<div class="modal fade" id="addApiKeyModal" tabindex="-1" aria-labelledby="addApiKeyModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addApiKeyModalLabel">Tạo API Key mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addApiKeyForm">
-                    <div class="mb-3">
-                        <label for="apiKeyName" class="form-label">Tên API Key</label>
-                        <input type="text" class="form-control" id="apiKeyName" name="apiKeyName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="apiKeyPermissions" class="form-label">Quyền truy cập</label>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="permissionReadProducts" name="permissions[]" value="read_products" checked>
-                            <label class="form-check-label" for="permissionReadProducts">
-                                Đọc sản phẩm
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="permissionWriteProducts" name="permissions[]" value="write_products">
-                            <label class="form-check-label" for="permissionWriteProducts">
-                                Ghi sản phẩm
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="permissionReadOrders" name="permissions[]" value="read_orders" checked>
-                            <label class="form-check-label" for="permissionReadOrders">
-                                Đọc đơn hàng
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="permissionWriteOrders" name="permissions[]" value="write_orders">
-                            <label class="form-check-label" for="permissionWriteOrders">
-                                Ghi đơn hàng
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="permissionReadCustomers" name="permissions[]" value="read_customers" checked>
-                            <label class="form-check-label" for="permissionReadCustomers">
-                                Đọc khách hàng
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="permissionWriteCustomers" name="permissions[]" value="write_customers">
-                            <label class="form-check-label" for="permissionWriteCustomers">
-                                Ghi khách hàng
-                            </label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="apiKeyExpiration" class="form-label">Thời hạn</label>
-                        <select class="form-select" id="apiKeyExpiration" name="apiKeyExpiration">
-                            <option value="never">Không giới hạn</option>
-                            <option value="30">30 ngày</option>
-                            <option value="90">90 ngày</option>
-                            <option value="180">180 ngày</option>
-                            <option value="365">365 ngày</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="addApiKeyForm" class="btn btn-primary">Tạo API Key</button>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+.settings-page .list-group-item {
+    border: none;
+    padding: 0.75rem 1rem;
+    color: #6c757d;
+    transition: all 0.2s ease;
+}
 
-<!-- Add Webhook Modal -->
-<div class="modal fade" id="addWebhookModal" tabindex="-1" aria-labelledby="addWebhookModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addWebhookModalLabel">Tạo Webhook mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addWebhookForm">
-                    <div class="mb-3">
-                        <label for="webhookUrl" class="form-label">URL</label>
-                        <input type="url" class="form-control" id="webhookUrl" name="webhookUrl" required>
-                        <div class="form-text">URL này sẽ nhận các sự kiện từ cửa hàng của bạn.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="webhookEvents" class="form-label">Sự kiện</label>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="eventOrderCreated" name="events[]" value="order.created" checked>
-                            <label class="form-check-label" for="eventOrderCreated">
-                                Đơn hàng mới
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="eventOrderUpdated" name="events[]" value="order.updated" checked>
-                            <label class="form-check-label" for="eventOrderUpdated">
-                                Cập nhật đơn hàng
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="eventOrderCancelled" name="events[]" value="order.cancelled">
-                            <label class="form-check-label" for="eventOrderCancelled">
-                                Hủy đơn hàng
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="eventProductCreated" name="events[]" value="product.created">
-                            <label class="form-check-label" for="eventProductCreated">
-                                Sản phẩm mới
-                            </label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" type="checkbox" id="eventProductUpdated" name="events[]" value="product.updated">
-                            <label class="form-check-label" for="eventProductUpdated">
-                                Cập nhật sản phẩm
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="eventCustomerCreated" name="events[]" value="customer.created">
-                            <label class="form-check-label" for="eventCustomerCreated">
-                                Khách hàng mới
-                            </label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="webhookDescription" class="form-label">Mô tả</label>
-                        <textarea class="form-control" id="webhookDescription" name="webhookDescription" rows="2"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="addWebhookForm" class="btn btn-primary">Tạo Webhook</button>
-            </div>
-        </div>
-    </div>
-</div>
+.settings-page .list-group-item:hover {
+    background-color: #f8f9fa;
+    color: #495057;
+}
 
-<!-- Add Tax Rate Modal -->
-<div class="modal fade" id="addTaxRateModal" tabindex="-1" aria-labelledby="addTaxRateModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addTaxRateModalLabel">Thêm thuế suất</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addTaxRateForm">
-                    <div class="mb-3">
-                        <label for="taxRateName" class="form-label">Tên</label>
-                        <input type="text" class="form-control" id="taxRateName" name="taxRateName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="taxRateCountry" class="form-label">Quốc gia</label>
-                        <select class="form-select" id="taxRateCountry" name="taxRateCountry" required>
-                            <option value="VN" selected>Việt Nam</option>
-                            <option value="US">United States</option>
-                            <option value="JP">Japan</option>
-                            <option value="SG">Singapore</option>
-                            <option value="KR">South Korea</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="taxRateState" class="form-label">Tỉnh/Thành phố</label>
-                        <select class="form-select" id="taxRateState" name="taxRateState">
-                            <option value="">Tất cả</option>
-                            <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
-                            <option value="Cần Thơ">Cần Thơ</option>
-                            <option value="Hải Phòng">Hải Phòng</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="taxRateValue" class="form-label">Thuế suất (%)</label>
-                        <input type="number" class="form-control" id="taxRateValue" name="taxRateValue" min="0" max="100" step="0.01" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="taxRatePriority" class="form-label">Ưu tiên</label>
-                        <input type="number" class="form-control" id="taxRatePriority" name="taxRatePriority" min="0" value="0">
-                        <div class="form-text">Thuế suất với ưu tiên cao hơn sẽ được áp dụng trước.</div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="taxRateCompound" name="taxRateCompound">
-                            <label class="form-check-label" for="taxRateCompound">
-                                Thuế ghép (áp dụng sau các thuế khác)
-                            </label>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="addTaxRateForm" class="btn btn-primary">Thêm thuế suất</button>
-            </div>
-        </div>
-    </div>
-</div>
+.settings-page .list-group-item.active {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-left: 3px solid #1976d2;
+}
+
+.payment-method {
+    transition: all 0.2s ease;
+}
+
+.payment-method:hover {
+    background-color: #f8f9fa;
+}
+
+.form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+.btn {
+    border-radius: 0.375rem;
+}
+
+.form-control, .form-select {
+    border-radius: 0.375rem;
+}
+
+.alert {
+    border-radius: 0.5rem;
+}
+</style>
+
+<script>
+function toggleApiKey() {
+    const apiKeyInput = document.getElementById('api_key');
+    const apiKeyIcon = document.getElementById('apiKeyIcon');
+    
+    if (apiKeyInput.type === 'password') {
+        apiKeyInput.type = 'text';
+        apiKeyIcon.className = 'fas fa-eye-slash';
+    } else {
+        apiKeyInput.type = 'password';
+        apiKeyIcon.className = 'fas fa-eye';
+    }
+}
+
+function saveBankInfo() {
+    const form = document.getElementById('bankInfoForm');
+    const formData = new FormData(form);
+    
+    // Simulate saving
+    setTimeout(() => {
+        alert('Thông tin ngân hàng đã được lưu thành công!');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('bankInfoModal'));
+        modal.hide();
+    }, 1000);
+}
+
+function saveSepayConfig() {
+    const form = document.getElementById('sepayConfigForm');
+    const formData = new FormData(form);
+    
+    // Simulate saving
+    setTimeout(() => {
+        alert('Cấu hình SePay đã được lưu thành công!');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('sepayConfigModal'));
+        modal.hide();
+    }, 1000);
+}
+
+function testSepayConnection() {
+    const apiKey = document.getElementById('sepay_api_key').value;
+    const accountNumber = document.getElementById('sepay_account_number').value;
+    
+    if (!apiKey || !accountNumber) {
+        alert('Vui lòng nhập đầy đủ thông tin API Key và số tài khoản!');
+        return;
+    }
+    
+    // Simulate testing connection
+    const btn = event.target;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang kiểm tra...';
+    
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = 'Test kết nối';
+        alert('Kết nối SePay thành công!');
+    }, 2000);
+}
+
+function resetSettings() {
+    if (confirm('Bạn có chắc chắn muốn khôi phục tất cả cài đặt về mặc định?')) {
+        alert('Đã khôi phục cài đặt mặc định!');
+        location.reload();
+    }
+}
+
+function saveAllSettings() {
+    alert('Đã lưu tất cả cài đặt thành công!');
+}
+
+// Auto-save functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Auto-save after 2 seconds of no changes
+            clearTimeout(this.saveTimeout);
+            this.saveTimeout = setTimeout(() => {
+                console.log('Auto-saving...', this.name, this.value);
+                // Implement auto-save logic here
+            }, 2000);
+        });
+    });
+});
+
+// Password strength checker
+document.getElementById('new_password')?.addEventListener('input', function() {
+    const password = this.value;
+    const strength = checkPasswordStrength(password);
+    
+    // Update UI to show password strength
+    console.log('Password strength:', strength);
+});
+
+function checkPasswordStrength(password) {
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    return strength;
+}
+</script>
