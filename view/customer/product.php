@@ -77,20 +77,7 @@ $offset = ($current_page - 1) * $items_per_page;
                                 trên <?php echo $total_products; ?> sản phẩm
                             </p>
                         </div>
-                        <div class="col-md-4">
-                            <div class="sort-by d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
-                                <label class="me-2">Sắp xếp theo:</label>
-                                <select class="form-select">
-                                    <option selected>Mặc định</option>
-                                    <option>Giá: Thấp đến cao</option>
-                                    <option>Giá: Cao đến thấp</option>
-                                    <option>Tên: A-Z</option>
-                                    <option>Tên: Z-A</option>
-                                    <option>Mới nhất</option>
-                                    <option>Bán chạy nhất</option>
-                                </select>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
 

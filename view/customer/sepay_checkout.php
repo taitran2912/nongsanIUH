@@ -57,7 +57,7 @@ $finalTotal = $totalAmount + $shippingFee;
 $orderCode = "ORD" . time() . rand(1000, 9999);
 
 // Cấu hình SePay
-$ngrokUrl = "https://6a2b-113-172-97-18.ngrok-free.app"; // Thay đổi URL ngrok của bạn
+$ngrokUrl = "https://5f08-113-172-97-18.ngrok-free.app"; // Thay đổi URL ngrok của bạn
 $sepayConfig = [
     'account_number' => '91902203843',
     'account_name' => 'TranTanTai',

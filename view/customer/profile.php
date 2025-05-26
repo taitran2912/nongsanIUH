@@ -50,21 +50,6 @@
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link w-100 text-start" id="addresses-tab" data-bs-toggle="tab" data-bs-target="#addresses" type="button" role="tab" aria-controls="addresses" aria-selected="false">
-                                        <i class="fas fa-map-marker-alt me-2"></i> Sổ địa chỉ
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link w-100 text-start" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist" type="button" role="tab" aria-controls="wishlist" aria-selected="false">
-                                        <i class="fas fa-heart me-2"></i> Sản phẩm yêu thích
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link w-100 text-start" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">
-                                        <i class="fas fa-star me-2"></i> Đánh giá của tôi
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
                                     <button class="nav-link w-100 text-start" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">
                                         <i class="fas fa-cog me-2"></i> Cài đặt tài khoản
                                     </button>
@@ -324,35 +309,6 @@
                                 </div>
                             </div>
 
-                            <!-- Addresses Tab -->
-                            <div class="tab-pane fade" id="addresses" role="tabpanel" aria-labelledby="addresses-tab">
-                                <div class="content-header mb-4">
-                                    <h3>Sổ địa chỉ</h3>
-                                </div>
-                                <div class="alert alert-info">
-                                    Tính năng đang được phát triển. Vui lòng quay lại sau.
-                                </div>
-                            </div>
-
-                            <!-- Wishlist Tab -->
-                            <div class="tab-pane fade" id="wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
-                                <div class="content-header mb-4">
-                                    <h3>Sản phẩm yêu thích</h3>
-                                </div>
-                                <div class="alert alert-info">
-                                    Tính năng đang được phát triển. Vui lòng quay lại sau.
-                                </div>
-                            </div>
-
-                            <!-- Reviews Tab -->
-                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                                <div class="content-header mb-4">
-                                    <h3>Đánh giá của tôi</h3>
-                                </div>
-                                <div class="alert alert-info">
-                                    Tính năng đang được phát triển. Vui lòng quay lại sau.
-                                </div>
-                            </div>
 
                             <!-- Settings Tab -->
                             <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">

@@ -31,13 +31,9 @@ include_once 'xlydknguoiban.php';
                             <div class="form-section">
                                 <h4 class="form-section-title">Thông Tin Liên Hệ</h4>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="mb-3">
                                         <label for="shopname" class="form-label required-field">Tên nông trại</label>
                                         <input type="shopname" class="form-control" id="shopname" name="shopname" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="phone" class="form-label">Số điện thoại</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone">
                                     </div>
                                  </div>
                                 <div class="mb-3">
@@ -64,9 +60,7 @@ include_once 'xlydknguoiban.php';
                                 <button type="submit" class="btn btn-primary btn-lg" name="createFarm">Đăng Ký</button>
                             </div>
 
-                            <div class="login-link">
-                                Đã có tài khoản? <a href="login.php">Đăng nhập</a>
-                            </div>
+                           
                         </form>
                     </div>
                 </div>
@@ -85,7 +79,7 @@ include_once 'xlydknguoiban.php';
                         </ul>
                         <div class="mt-4">
                             <h5>Cần hỗ trợ?</h5>
-                            <p><i class="fas fa-phone me-2"></i> 1900 xxxx</p>
+                            <p><i class="fas fa-phone me-2"></i> 0123456789 </p>
                             <p><i class="fas fa-envelope me-2"></i> hotro@nongsan.vn</p>
                         </div>
                     </div>

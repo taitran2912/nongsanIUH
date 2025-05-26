@@ -177,9 +177,6 @@ $db->dongKetNoi($conn);
                                 </a>
                             </div>
                             <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                                <button id="updateCart" class="btn btn-outline-secondary">
-                                    <i class="fas fa-sync-alt me-2"></i>Cập nhật giỏ hàng
-                                </button>
                                 <button id="clearCart" class="btn btn-outline-danger ms-2">
                                     <i class="fas fa-trash-alt me-2"></i>Xóa giỏ hàng
                                 </button>

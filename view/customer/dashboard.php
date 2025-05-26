@@ -394,22 +394,3 @@
             </div>
         </div>
     </section>
-
-    <!-- Newsletter -->
-    <section class="newsletter py-5 bg-success text-white">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h3>Đăng ký trở thành nhà cung cấp</h3>
-                    <p class="mb-0"></p>
-                </div>
-                <div class="col-lg-6">
-                    <form class="newsletter-form">
-                        <div class="input-group">
-                            <a class="btn btn-light" href="../../view/buyer/dangkynguoiban.php">Đăng ký</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
