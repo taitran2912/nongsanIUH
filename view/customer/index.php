@@ -1,4 +1,5 @@
 <?php
+    error_reporting();
     session_start();
     $id = isset($_SESSION["id"]) ? intval($_SESSION["id"]) : 0;
     $role = isset($_SESSION["role"]) ? $_SESSION["role"] : '';

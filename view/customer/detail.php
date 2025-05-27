@@ -79,32 +79,39 @@ while ($row = $related_result->fetch_assoc()) {
 }
 
 if(isset($_POST['btnCart'])) {
-    $productID = $_POST['productID'];
-    $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
+    if($id != 0){
+        $productID = $_POST['productID'];
+        $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
 
-    // Kiểm tra số lượng sản phẩm
-    if ($quantity <= 0) {
-        echo "<script>alert('Số lượng sản phẩm không hợp lệ.');</script>";
-    } else {
-        // Thêm sản phẩm vào giỏ hàng
-        $sql_add_to_cart = "INSERT INTO cart (customer_id, product_id, quantity) VALUES (?, ?, ?)
-                            ON DUPLICATE KEY UPDATE quantity = quantity + ?";
-        $stmt_add_to_cart = $conn->prepare($sql_add_to_cart);
-        $user_id = $_SESSION['id'] ?? 0; // Lấy ID người dùng từ session
-        $stmt_add_to_cart->bind_param("iiii", $user_id, $productID, $quantity, $quantity);
-        
-        if ($stmt_add_to_cart->execute()) {
-            echo "<script>
-                alert('Sản phẩm đã được thêm vào giỏ hàng.');
-                window.location.href = window.location.href; // Reload lại trang
-            </script>";
+        // Kiểm tra số lượng sản phẩm
+        if ($quantity <= 0) {
+            echo "<script>alert('Số lượng sản phẩm không hợp lệ.');</script>";
         } else {
-            echo "<script>
-                alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
-                window.location.href = window.location.href; // Reload luôn nếu muốn
-            </script>";
-        }
-    }   
+            // Thêm sản phẩm vào giỏ hàng
+            $sql_add_to_cart = "INSERT INTO cart (customer_id, product_id, quantity) VALUES (?, ?, ?)
+                                ON DUPLICATE KEY UPDATE quantity = quantity + ?";
+            $stmt_add_to_cart = $conn->prepare($sql_add_to_cart);
+            $user_id = $_SESSION['id'] ?? 0; // Lấy ID người dùng từ session
+            $stmt_add_to_cart->bind_param("iiii", $user_id, $productID, $quantity, $quantity);
+            
+            if ($stmt_add_to_cart->execute()) {
+                echo "<script>
+                    alert('Sản phẩm đã được thêm vào giỏ hàng.');
+                    window.location.href = window.location.href; // Reload lại trang
+                </script>";
+            } else {
+                echo "<script>
+                    alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+                    window.location.href = window.location.href; // Reload luôn nếu muốn
+                </script>";
+            }
+        }   
+    }else {
+        echo "<script>
+            alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.');
+        </script>";
+        echo "<script>window.location.href='../../log.php';</script>";
+    }
     
 }
 ?>
@@ -374,7 +381,8 @@ function openChatWithFarm(farmId) {
         });
     <?php else: ?>
         alert('Vui lòng đăng nhập để chat với cửa hàng');
-        window.location.href = 'login.php';
+        window.location.href = '../../log.php';
+        
     <?php endif; ?>
 } 
     </script>

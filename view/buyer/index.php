@@ -1,4 +1,5 @@
 <?php
+error_reporting();
 session_start();
 include_once '../../controller/cBuyer.php';
 

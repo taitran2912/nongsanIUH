@@ -214,11 +214,16 @@ $offset = ($current_page - 1) * $items_per_page;
 
 <?php
     if (isset($_POST["btnADD"])) {
-        if($p->addCart($_POST["txtID"], $id)){
-            echo "<script>alert('Thêm vào giỏ hàng thành công!');</script>";
-            echo "<script>window.location.href='?action=product';</script>";
+        if($id != 0){  
+            if($p->addCart($_POST["txtID"], $id)){
+                    echo "<script>alert('Thêm vào giỏ hàng thành công!');</script>";
+                    echo "<script>window.location.href='?action=product';</script>";
+                } else {
+                    echo "<script>alert('Thêm vào giỏ hàng thất bại!');</script>";
+                }
         } else {
-            echo "<script>alert('Thêm vào giỏ hàng thất bại!');</script>";
-        }
+            echo "<script>alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');</script>";
+            echo "<script>window.location.href='../../log.php';</script>";
+        }    
     }
 ?>
